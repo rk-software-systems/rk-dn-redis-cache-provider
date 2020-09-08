@@ -2,7 +2,7 @@
 This packages contains abstractions that could be used to add Redis caching to .NET core applications
 
 ### NuGet
-[![NuGet Badge](https://buildstats.info/nuget/nunit)](https://www.nuget.org/packages/RKSoftware.Packages.Caching/)
+[![NuGet Badge](https://buildstats.info/nuget/RKSoftware.Packages.Caching)](https://www.nuget.org/packages/RKSoftware.Packages.Caching/)
 
 # Getting Started
 To use caching do the following:
