@@ -52,6 +52,11 @@ namespace RKSoftware.Packages.Caching.Implementation
                 throw new ArgumentNullException(nameof(redisCacheProvider));
             }
 
+            if (string.IsNullOrEmpty(scopedKeyPrefix))
+            {
+                throw new ArgumentNullException(nameof(scopedKeyPrefix));
+            }
+
             _redisCacheSettings = redisCacheProvider.Value;
             _logger = logger;
             _connectionProvider = connectionProvider;
