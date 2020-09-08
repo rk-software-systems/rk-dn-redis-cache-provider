@@ -11,8 +11,9 @@ namespace RKSoftware.Packages.Caching.Implementation
     /// Implementation of <see cref="IConnectionProvider"/>
     /// This class is used to manage Redis connections
     /// </summary>
-    public class RedisConnectionProvider : IConnectionProvider
+    public class RedisConnectionProvider : IConnectionProvider, IDisposable
     {
+        private bool isDisposed;
         private static IConnectionMultiplexer _connectionMultiplexer;
         private static object _multiplexerInitLock = new object();
         private readonly RedisCacheSettings _redisCacheSettings;
@@ -35,6 +36,7 @@ namespace RKSoftware.Packages.Caching.Implementation
             _redisCacheSettings = redisCacheSettingsAccessor.Value;
             _logger = logger;
         }
+
 
         /// <summary>
         /// Get redis database connection multiplexer
@@ -71,5 +73,45 @@ namespace RKSoftware.Packages.Caching.Implementation
 
             return _connectionMultiplexer;
         }
+
+        #region IDisposable
+        /// <summary>
+        /// <see cref="IDisposable"/> Dispose method implementation
+        /// </summary>
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        /// <summary>
+        /// Dispose pattern implementation
+        /// </summary>
+        /// <param name="disposing">THis flag indicates if managed resource are subject o be disposed</param>
+        protected virtual void Dispose(bool disposing)
+        {
+            if (isDisposed)
+            {
+                return;
+            }
+
+            if (disposing)
+            {
+                _connectionMultiplexer.Close(true);
+                _connectionMultiplexer.Dispose();
+            }
+
+            isDisposed = true;
+
+        }
+
+        /// <summary>
+        /// Finilizer
+        /// </summary>
+        ~RedisConnectionProvider()
+        {
+            Dispose(false);
+        }
+        #endregion
     }
 }
