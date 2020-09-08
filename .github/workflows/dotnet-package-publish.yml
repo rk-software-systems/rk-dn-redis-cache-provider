@@ -14,23 +14,15 @@ jobs:
     runs-on: ubuntu-latest
     name: Update or Create NuGet package
     steps:
-
-      - name: Checkout repository
-        uses: actions/checkout@v2
-
-      - name: Setup .NET Core @ Latest
+      - uses: actions/checkout@v2
+      - name: Setup .NET Core
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: 3.1.301
-        env:
-          NUGET_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
-
-      - name: Build solution and generate NuGet package
-        run: |
-          ls
-          cd RKSoftware.Packages.Caching
-          ls
-          dotnet pack -c Release -o out /warnaserror
+      - name: Install dependencies
+        run: dotnet restore
+      - name: Build
+        run: dotnet build --configuration Release --no-restore
 
       - name: Push generated package to GitHub registry
-        run: dotnet nuget push ./RKSoftware.Packages.Caching/out/*.nupkg --skip-duplicate --no-symbols true --api-key ${{secrets.NUGET_API_KEY}} --source https://api.nuget.org/v3/index.json
+        run: dotnet nuget push ./RKSoftware.Packages.Caching/bin/Release/*.nupkg --skip-duplicate --no-symbols true --api-key ${{secrets.NUGET_API_KEY}} --source https://api.nuget.org/v3/index.json
