@@ -9,7 +9,8 @@ namespace RKSoftware.Packages.Cachinig.Newtonsoft.Json.Converter
     public static class RegistrationExtensions
     {
         /// <summary>
-        /// This method is used to register Object to Text converter that uses System.Text.Json serialization <see cref="SystemTextJsonTextConverter"/>.
+        /// This method is used to register Object to Text converter that uses System.Text.Json serialization 
+        /// <see cref="NewtonsoftJsonTextConverter"/>.
         /// </summary>
         /// <param name="services">Service collection to register <see cref="IObjectToTextConverter"/></param>
         /// <returns>Services collection with registered service</returns>
