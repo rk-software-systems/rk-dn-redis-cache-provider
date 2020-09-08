@@ -1,7 +1,8 @@
 ﻿using RKSoftware.Packages.Caching.Contract;
+using System;
 using System.Text.Json;
 
-namespace RKSoftware.Packages.Caching.Implementation
+namespace RKSoftware.Packages.Caching.System.Text.Json.Converter
 {
     /// <summary>
     /// Object converted realization using JSON Serialization with System.Text.Json

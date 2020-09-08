@@ -11,6 +11,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		README.md = README.md
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RKSoftware.Packages.Caching.System.Text.Json.Converter", "RKSoftware.Packages.Caching.System.Text.Json.Converter\RKSoftware.Packages.Caching.System.Text.Json.Converter.csproj", "{C2765E2B-9BB9-44CC-819D-F488E7E788C7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RKSoftware.Packages.Cachinig.Newtonsoft.Json.Converter", "RKSoftware.Packages.Cachinig.Newtonsoft.Json.Converter\RKSoftware.Packages.Cachinig.Newtonsoft.Json.Converter.csproj", "{491B351F-471F-4194-8E55-400FA158BDEF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +25,14 @@ Global
 		{3DD5C26D-9F16-42FA-8927-CC79A665CB36}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3DD5C26D-9F16-42FA-8927-CC79A665CB36}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3DD5C26D-9F16-42FA-8927-CC79A665CB36}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C2765E2B-9BB9-44CC-819D-F488E7E788C7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C2765E2B-9BB9-44CC-819D-F488E7E788C7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C2765E2B-9BB9-44CC-819D-F488E7E788C7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C2765E2B-9BB9-44CC-819D-F488E7E788C7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{491B351F-471F-4194-8E55-400FA158BDEF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{491B351F-471F-4194-8E55-400FA158BDEF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{491B351F-471F-4194-8E55-400FA158BDEF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{491B351F-471F-4194-8E55-400FA158BDEF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

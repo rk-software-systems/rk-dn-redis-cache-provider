@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Authors>Konstantin Koryakov</Authors>
+    <Company>RK Software Systems</Company>
+    <Product>Objecet to string and vise versa converter for RKSoftware.Packages.Caching</Product>
+    <Description>This package contains converter together with registration extensions to utilize Newtonsoft.Json serializer to convert objects to string and vise versa.</Description>
+    <PackageProjectUrl>https://github.com/rk-software-systems/rk-dn-redis-cache-provider</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/rk-software-systems/rk-dn-redis-cache-provider</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>Redis, .NET core</PackageTags>
+    <NeutralLanguage>en</NeutralLanguage>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DocumentationFile>bin\Release\netstandard2.1\RKSoftware.Packages.Cachinig.Newtonsoft.Json.Converter\RKSoftware.Packages.Cachinig.Newtonsoft.Json.Converter.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+    <PackageReference Include="RKSoftware.Packages.Caching" Version="1.0.2" />
+  </ItemGroup>
+
+</Project>

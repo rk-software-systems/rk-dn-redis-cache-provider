@@ -23,8 +23,7 @@ namespace RKSoftware.Packages.Caching.Infrastructure
         {
             services.UseRKSoftwareCache(scopedKeyPrefix)
                 .UseAppSettingsSettingsProvider(configuration)
-                .UseDefaultConnectionProvider()
-                .UseSystemTextJsonTextConverter();
+                .UseDefaultConnectionProvider();
 
             return services;
         }
@@ -75,17 +74,6 @@ namespace RKSoftware.Packages.Caching.Infrastructure
         public static IServiceCollection UseDefaultConnectionProvider(this IServiceCollection services)
         {
             services.AddSingleton<IConnectionProvider, RedisConnectionProvider>();
-            return services;
-        }
-
-        /// <summary>
-        /// This method is used to register Object to Text converter that uses System.Text.Json serialization <see cref="SystemTextJsonTextConverter"/>.
-        /// </summary>
-        /// <param name="services">Service collection to register <see cref="IObjectToTextConverter"/></param>
-        /// <returns>Services collection with registered service</returns>
-        public static IServiceCollection UseSystemTextJsonTextConverter(this IServiceCollection services)
-        {
-            services.AddSingleton<IObjectToTextConverter, SystemTextJsonTextConverter>();
             return services;
         }
     }

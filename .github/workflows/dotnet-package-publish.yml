@@ -24,5 +24,11 @@ jobs:
       - name: Build
         run: dotnet build --configuration Release --no-restore
 
-      - name: Push generated package to GitHub registry
+      - name: Push generated Caching package to NuGet repository
         run: dotnet nuget push ./RKSoftware.Packages.Caching/bin/Release/*.nupkg --skip-duplicate --no-symbols true --api-key ${{secrets.NUGET_API_KEY}} --source https://api.nuget.org/v3/index.json
+
+      - name: Push generated System.Text.Json Converter package to NuGet repository
+        run: dotnet nuget push ./RKSoftware.Packages.Caching.System.Text.Json.Converter/bin/Release/*.nupkg --skip-duplicate --no-symbols true --api-key ${{secrets.NUGET_API_KEY}} --source https://api.nuget.org/v3/index.json
+
+      - name: Push generated Newtonsoft Converter package to NuGet repository
+        run: dotnet nuget push ./RKSoftware.Packages.Cachinig.Newtonsoft.Json.Converter/bin/Release/*.nupkg --skip-duplicate --no-symbols true --api-key ${{secrets.NUGET_API_KEY}} --source https://api.nuget.org/v3/index.json
