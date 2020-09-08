@@ -8,7 +8,7 @@ namespace RKSoftware.Packages.Caching.ErrorHandling
     public class CacheMissException : Exception
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref=CacheMissException"/> class.
+        /// Initializes a new instance of the <see cref="CacheMissException"/> class.
         /// </summary>
         public CacheMissException()
             : base()

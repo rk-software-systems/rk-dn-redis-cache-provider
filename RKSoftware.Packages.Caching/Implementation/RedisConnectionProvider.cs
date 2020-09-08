@@ -7,6 +7,10 @@ using System;
 
 namespace RKSoftware.Packages.Caching.Implementation
 {
+    /// <summary>
+    /// Implementation of <see cref="IConnectionProvider"/>
+    /// This class is used to manage Redis connections
+    /// </summary>
     public class RedisConnectionProvider : IConnectionProvider
     {
         private static IConnectionMultiplexer _connectionMultiplexer;
@@ -35,7 +39,7 @@ namespace RKSoftware.Packages.Caching.Implementation
         /// <summary>
         /// Get redis database connection multiplexer
         /// </summary>
-        /// <returns>Redis database connection multiplexer <see cref=IConnectionMultiplexer"/></returns>
+        /// <returns>Redis database connection multiplexer <see cref="IConnectionMultiplexer"/></returns>
         public IConnectionMultiplexer GetConnection()
         {
             if (_connectionMultiplexer != null)

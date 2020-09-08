@@ -33,6 +33,14 @@ namespace RKSoftware.Packages.Caching.Implementation
 
         #region Constructor
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CacheService"/> class
+        /// </summary>
+        /// <param name="redisCacheProvider">Redis connectivity settings</param>
+        /// <param name="logger"><see cref="ILogger"/></param>
+        /// <param name="connectionProvider">This class is used to obtain Connection Multiplexer <see cref="IConnectionProvider"/></param>
+        /// <param name="objectConverter">This service is used to serialize objects from / to strings</param>
+        /// <param name="scopedKeyPrefix">This prefix is used as a starting part of Redis DB keys</param>
         public CacheService(IOptions<RedisCacheSettings> redisCacheProvider,
             ILogger<CacheService> logger,
             IConnectionProvider connectionProvider,
@@ -484,7 +492,7 @@ namespace RKSoftware.Packages.Caching.Implementation
         /// <summary>
         /// Bulk reset entry in cache
         /// </summary>
-        /// <param name="key">Cache storage key</param>
+        /// <param name="keys">Cache storage keys</param>
         /// <param name="projectName">specific project system name</param>
         public Task ResetBulkAsync(IEnumerable<string> keys, string projectName = null)
         {
@@ -494,7 +502,7 @@ namespace RKSoftware.Packages.Caching.Implementation
         /// <summary>
         /// Bulk reset entry in cache
         /// </summary>
-        /// <param name="key">Cache storage key</param>
+        /// <param name="keys">Cache storage keys</param>
         /// <param name="global">This flag indicates if cache entry should be set in Global cache (available for all containers)</param>
         /// <param name="projectName">specific project system name</param>
         public Task ResetBulkAsync(IEnumerable<string> keys, bool global, string projectName = null)
@@ -798,6 +806,7 @@ namespace RKSoftware.Packages.Caching.Implementation
         /// Get key that were used to store object
         /// </summary>
         /// <param name="key">Key that is used inside project</param>
+        /// <param name="global">This flag indicates if key should be project unspecific</param>
         /// <param name="projectName">specific project system name</param>
         /// <returns>Inter project independent cache key</returns>
         private string GetFullyQualifiedKey(string key,
@@ -851,6 +860,7 @@ namespace RKSoftware.Packages.Caching.Implementation
         /// <param name="key">Cache key</param>
         /// <param name="objectReceiver">Delegate that allows us to obtain object to be cached</param>
         /// <param name="storageDuration">Time span to keep value in cache, in seconds, nullable</param>
+        /// <param name="global">This flag indicates if object should be set for Global / Project specific cache</param>
         /// <returns>Object from cache</returns>
         private T GetOrSetBase<T>(string key, Func<T> objectReceiver, long? storageDuration, bool global)
         {

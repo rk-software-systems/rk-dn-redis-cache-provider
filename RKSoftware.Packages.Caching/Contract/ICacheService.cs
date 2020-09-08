@@ -288,6 +288,7 @@ namespace RKSoftware.Packages.Caching.Contract
         /// Bulk reset entry in cache
         /// </summary>
         /// <param name="keys">list of cache storage key</param>
+        /// <param name="projectName">Reset keys in terms of specified project name</param>
         void ResetBulk(IEnumerable<string> keys, string projectName = null);
 
         /// <summary>
@@ -301,13 +302,14 @@ namespace RKSoftware.Packages.Caching.Contract
         /// <summary>
         /// Bulk reset entry in cache
         /// </summary>
-        /// <param name="key">Cache storage key</param>
+        /// <param name="keys">Cache storage key</param>
+        /// <param name="projectName">This parameter provides Project name to be appended to key</param>
         Task ResetBulkAsync(IEnumerable<string> keys, string projectName = null);
 
         /// <summary>
         /// Bulk reset entry in cache
         /// </summary>
-        /// <param name="key">Cache storage key</param>
+        /// <param name="keys">Cache storage keys</param>
         /// <param name="useGlobalCache">This flag indicates if cache entry should be set in Global cache (available for all containers)</param>
         /// <param name="projectName">specific project system name</param>
         Task ResetBulkAsync(IEnumerable<string> keys, bool useGlobalCache, string projectName = null);

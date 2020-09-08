@@ -10,7 +10,7 @@ namespace RKSoftware.Packages.Caching.Contract
         /// <summary>
         /// Get redis database connection multiplexer
         /// </summary>
-        /// <returns>Redis database connection multiplexer <see cref=IConnectionMultiplexer"/></returns>
+        /// <returns>Redis database connection multiplexer <see cref="IConnectionMultiplexer"/></returns>
         IConnectionMultiplexer GetConnection();
     }
 }

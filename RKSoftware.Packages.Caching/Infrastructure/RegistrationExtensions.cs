@@ -16,6 +16,7 @@ namespace RKSoftware.Packages.Caching.Infrastructure
         /// </summary>
         /// <param name="services">Service collection to add registrations.</param>
         /// <param name="configuration">Configuration Section that contains Redis settings</param>
+        /// <param name="scopedKeyPrefix">This key is used as a prefix to all Redis keys</param>
         public static IServiceCollection UseRKSoftwareCache(this IServiceCollection services, 
             IConfigurationSection configuration,
             string scopedKeyPrefix)
