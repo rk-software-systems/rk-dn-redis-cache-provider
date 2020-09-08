@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using RKSoftware.Packages.Caching.Contract;
 
-namespace RKSoftware.Packages.Cachinig.Newtonsoft.Json.Converter
+namespace RKSoftware.Packages.Caching.Newtonsoft.Json.Converter
 {
     /// <summary>
     /// This class contains registration extension that is used to register SystemJson.TextConverter to be used in Redis Service

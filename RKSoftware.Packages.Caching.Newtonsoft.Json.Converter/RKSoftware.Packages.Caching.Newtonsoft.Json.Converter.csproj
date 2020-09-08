@@ -15,7 +15,7 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <DocumentationFile>bin\Release\netstandard2.1\RKSoftware.Packages.Cachinig.Newtonsoft.Json.Converter\RKSoftware.Packages.Cachinig.Newtonsoft.Json.Converter.xml</DocumentationFile>
+    <DocumentationFile>bin\Release\netstandard2.1\RKSoftware.Packages.Caching.Newtonsoft.Json.Converter.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>

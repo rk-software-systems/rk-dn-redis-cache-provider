@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using RKSoftware.Packages.Caching.Contract;
 
-namespace RKSoftware.Packages.Cachinig.Newtonsoft.Json.Converter
+namespace RKSoftware.Packages.Caching.Newtonsoft.Json.Converter
 {
     /// <summary>
     /// This class is used to convert objects to string and vise versa using Newtonsoft JSON library
