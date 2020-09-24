@@ -619,29 +619,11 @@ namespace RKSoftware.Packages.Caching.Implementation
         /// <param name="obj">Object to be stored</param>
         /// <param name="global">This flag indicates if cache entry should be set in Global cache (available for all containers)</param>
         public void SetCachedObject<T>(string key, T obj, bool global)
-        {
-            key = GetFullyQualifiedKey(key, global);
-
-            try
-            {
-                var db = GetDatabase();
-
-                db.StringSet(
-                    key,
-                    _objectConverter.ToString(obj),
-                    TimeSpan.FromSeconds(_redisCacheSettings.DefaultCacheDuration),
-                    flags: CommandFlags.FireAndForget);
-            }
-            catch (RedisConnectionException ex)
-            {
-                _logger.LogError(ex, LogMessageResource.RedisSetObjectError, key);
-                throw;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, LogMessageResource.RedisSetObjectError, key);
-                throw;
-            }
+        {           
+            SetCachedObject(key, 
+                obj, 
+                _redisCacheSettings.DefaultCacheDuration, 
+                false);
         }
 
         /// <summary>
@@ -707,46 +689,15 @@ namespace RKSoftware.Packages.Caching.Implementation
         /// </summary>
         /// <typeparam name="T">Type of the object to be set</typeparam>
         /// <param name="key">Object cache storage key</param>
-        /// <param name="obj">Object to be stored</param>
+        /// <param name="obj">Object to be stored</param>        
         /// <param name="global">This flag indicates if cache entry should be set in Global cache (available for all containers)</param>
         /// <returns>Task awaiter</returns>
         public Task SetCachedObjectAsync<T>(string key, T obj, bool global)
         {
-            key = GetFullyQualifiedKey(key, global);
-
-            try
-            {
-                var db = GetDatabase();
-
-                return db.StringSetAsync(
-                    key,
-                    _objectConverter.ToString(obj),
-                    TimeSpan.FromSeconds(_redisCacheSettings.DefaultCacheDuration),
-                    flags: CommandFlags.FireAndForget);
-            }
-            catch (RedisConnectionException ex)
-            {
-                _logger.LogError(ex, LogMessageResource.RedisSetObjectError, key);
-                throw;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, LogMessageResource.RedisSetObjectError, key);
-                throw;
-            }
-        }
-
-        /// <summary>
-        /// Set object value in cache asynchronously
-        /// </summary>
-        /// <typeparam name="T">Type of the object to be set</typeparam>
-        /// <param name="key">Object cache storage key</param>
-        /// <param name="obj">Object to be stored</param>
-        /// <returns>Task awaiter</returns>
-        /// <param name="storageDuration">Time span to keep value in cache, in seconds</param>
-        public Task SetAsync<T>(string key, T obj, long storageDuration)
-        {
-            return SetAsync(key, obj, storageDuration, false);
+            return SetCachedObjectAsync(key, 
+                obj, 
+                _redisCacheSettings.DefaultCacheDuration, 
+                false);
         }
 
         /// <summary>
@@ -758,13 +709,8 @@ namespace RKSoftware.Packages.Caching.Implementation
         /// <param name="storageDuration">Time span to keep value in cache, in seconds</param>
         /// <param name="global">This flag indicates if cache entry should be set in Global cache (available for all containers)</param>
         /// <returns>Task awaiter</returns>
-        public Task SetAsync<T>(string key, T obj, long storageDuration, bool global)
+        public Task SetCachedObjectAsync<T>(string key, T obj, long storageDuration, bool global)
         {
-            if (string.IsNullOrEmpty(key))
-            {
-                throw new ArgumentNullException(nameof(key));
-            }
-
             key = GetFullyQualifiedKey(key, global);
 
             try
@@ -788,7 +734,6 @@ namespace RKSoftware.Packages.Caching.Implementation
                 throw;
             }
         }
-
         #endregion
 
         #region helpers
@@ -965,7 +910,7 @@ namespace RKSoftware.Packages.Caching.Implementation
 
                 if (storageDuration.HasValue)
                 {
-                    await SetAsync(key, val, storageDuration.Value, global)
+                    await SetCachedObjectAsync(key, val, storageDuration.Value, global)
                         .ConfigureAwait(false);
                 }
                 else
@@ -1033,7 +978,7 @@ namespace RKSoftware.Packages.Caching.Implementation
 
                 if (storageDuration.HasValue)
                 {
-                    await SetAsync(key, val, storageDuration.Value, global)
+                    await SetCachedObjectAsync(key, val, storageDuration.Value, global)
                         .ConfigureAwait(false);
                 }
                 else

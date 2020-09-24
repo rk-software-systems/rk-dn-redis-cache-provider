@@ -240,22 +240,12 @@ namespace RKSoftware.Packages.Caching.Contract
         /// </summary>
         /// <typeparam name="T">Type of the object to be set</typeparam>
         /// <param name="key">Object cache storage key</param>
-        /// <param name="objectToCache">Object to be stored</param>
-        /// <returns>Task awaiter</returns>
-        /// <param name="storageDuration">Time span to keep value in cache, in seconds</param>
-        Task SetAsync<T>(string key, T objectToCache, long storageDuration);
-
-        /// <summary>
-        /// Set object value in cache asynchronously
-        /// </summary>
-        /// <typeparam name="T">Type of the object to be set</typeparam>
-        /// <param name="key">Object cache storage key</param>
-        /// <param name="objectToCache">Object to be stored</param>
+        /// <param name="obj">Object to be stored</param>
         /// <param name="storageDuration">Time span to keep value in cache, in seconds</param>
         /// <param name="useGlobalCache">This flag indicates if cache entry should be set in Global cache (available for all containers)</param>
         /// <returns>Task awaiter</returns>
-        Task SetAsync<T>(string key, T objectToCache, long storageDuration, bool useGlobalCache);
-
+        Task SetCachedObjectAsync<T>(string key, T obj, long storageDuration, bool useGlobalCache);
+                
         /// <summary>
         /// Reset entry in cache
         /// </summary>
