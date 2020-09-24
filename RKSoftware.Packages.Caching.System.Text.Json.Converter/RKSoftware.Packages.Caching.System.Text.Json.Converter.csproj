@@ -12,6 +12,7 @@
     <PackageTags>Redis, .NET core</PackageTags>
     <NeutralLanguage>en</NeutralLanguage>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Version>1.0.1</Version>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
@@ -19,7 +20,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="RKSoftware.Packages.Caching" Version="1.0.2" />
+    <PackageReference Include="RKSoftware.Packages.Caching" Version="1.0.6" />
     <PackageReference Include="System.Text.Json" Version="4.7.2" />
   </ItemGroup>
 
