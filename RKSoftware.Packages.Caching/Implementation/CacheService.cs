@@ -407,6 +407,7 @@ namespace RKSoftware.Packages.Caching.Implementation
             catch (RedisConnectionException ex)
             {
                 _logger.LogError(ex, LogMessageResource.RedisConnectionError, key);
+                throw;
             }
             catch (Exception ex)
             {
@@ -491,6 +492,7 @@ namespace RKSoftware.Packages.Caching.Implementation
             catch (RedisConnectionException ex)
             {
                 _logger.LogError(ex, LogMessageResource.RedisBulkResetError, keyArr);
+                throw;
             }
         }
 
@@ -563,6 +565,7 @@ namespace RKSoftware.Packages.Caching.Implementation
             catch (RedisConnectionException ex)
             {
                 _logger.LogError(ex, LogMessageResource.RedisBulkPartialReset, partOfKey, projectName ?? "");
+                throw;
             }
         }
 
@@ -632,6 +635,7 @@ namespace RKSoftware.Packages.Caching.Implementation
             catch (RedisConnectionException ex)
             {
                 _logger.LogError(ex, LogMessageResource.RedisSetObjectError, key);
+                throw;
             }
             catch (Exception ex)
             {
@@ -677,6 +681,7 @@ namespace RKSoftware.Packages.Caching.Implementation
             catch (RedisConnectionException ex)
             {
                 _logger.LogError(ex, LogMessageResource.RedisSetObjectError, key);
+                throw;
             }
             catch (Exception ex)
             {
