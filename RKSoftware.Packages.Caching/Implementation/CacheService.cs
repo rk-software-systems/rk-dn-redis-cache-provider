@@ -619,10 +619,10 @@ namespace RKSoftware.Packages.Caching.Implementation
         /// <param name="obj">Object to be stored</param>
         /// <param name="global">This flag indicates if cache entry should be set in Global cache (available for all containers)</param>
         public void SetCachedObject<T>(string key, T obj, bool global)
-        {           
-            SetCachedObject(key, 
-                obj, 
-                _redisCacheSettings.DefaultCacheDuration, 
+        {
+            SetCachedObject(key,
+                obj,
+                _redisCacheSettings.DefaultCacheDuration,
                 false);
         }
 
@@ -689,14 +689,14 @@ namespace RKSoftware.Packages.Caching.Implementation
         /// </summary>
         /// <typeparam name="T">Type of the object to be set</typeparam>
         /// <param name="key">Object cache storage key</param>
-        /// <param name="obj">Object to be stored</param>        
+        /// <param name="obj">Object to be stored</param>
         /// <param name="global">This flag indicates if cache entry should be set in Global cache (available for all containers)</param>
         /// <returns>Task awaiter</returns>
         public Task SetCachedObjectAsync<T>(string key, T obj, bool global)
         {
-            return SetCachedObjectAsync(key, 
-                obj, 
-                _redisCacheSettings.DefaultCacheDuration, 
+            return SetCachedObjectAsync(key,
+                obj,
+                _redisCacheSettings.DefaultCacheDuration,
                 false);
         }
 
@@ -841,15 +841,15 @@ namespace RKSoftware.Packages.Caching.Implementation
                 if (!isSet)
                 {
                     val = objectReceiver();
-                }
 
-                if (storageDuration.HasValue)
-                {
-                    SetCachedObject(key, val, storageDuration.Value, global);
-                }
-                else
-                {
-                    SetCachedObject(key, val, global);
+                    if (storageDuration.HasValue)
+                    {
+                        SetCachedObject(key, val, storageDuration.Value, global);
+                    }
+                    else
+                    {
+                        SetCachedObject(key, val, global);
+                    }
                 }
             }
             catch (Exception ex)
@@ -871,61 +871,13 @@ namespace RKSoftware.Packages.Caching.Implementation
         /// <param name="storageDuration">Time span to keep value in cache, in seconds, nullable</param>
         /// <param name="global">This flag indicates if cache entry should be set in Global cache (available for all containers)</param>
         /// <returns>Object from cache</returns>
-        private async Task<T> GetOrSetAsyncBase<T>(string key, Func<T> objectReceiver, long? storageDuration, bool global)
+        private Task<T> GetOrSetAsyncBase<T>(string key, Func<T> objectReceiver, long? storageDuration, bool global)
         {
-            if (string.IsNullOrEmpty(key))
+            return GetOrSetAsyncBase(key, async () =>
             {
-                throw new ArgumentNullException(nameof(key));
-            }
-
-            if (objectReceiver == null)
-            {
-                throw new ArgumentNullException(nameof(objectReceiver));
-            }
-
-            T val = default;
-            bool isSet = false;
-            try
-            {
-                val = await GetCachedObjectAsync<T>(key, global)
-                    .ConfigureAwait(false);
-                isSet = true;
-            }
-            catch (CacheMissException ex)
-            {
-                _logger.LogWarning(ex, LogMessageResource.RedisObjectNotFound, key);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, LogMessageResource.RedisGetObjectError, key);
-                throw;
-            }
-
-            try
-            {
-                if (!isSet)
-                {
-                    val = objectReceiver();
-                }
-
-                if (storageDuration.HasValue)
-                {
-                    await SetCachedObjectAsync(key, val, storageDuration.Value, global)
-                        .ConfigureAwait(false);
-                }
-                else
-                {
-                    await SetCachedObjectAsync(key, val, global)
-                        .ConfigureAwait(false);
-                }
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, LogMessageResource.RedisSetObjectError, key);
-                throw;
-            }
-
-            return val;
+                return await Task.FromResult(objectReceiver())
+                .ConfigureAwait(false);
+            }, storageDuration, global);
         }
 
         /// <summary>
@@ -938,7 +890,10 @@ namespace RKSoftware.Packages.Caching.Implementation
         /// <param name="storageDuration">Time span to keep value in cache, in seconds, nullable</param>
         /// <param name="global">This flag indicates if cache entry should be set in Global cache (available for all containers)</param>
         /// <returns>Object from cache</returns>
-        private async Task<T> GetOrSetAsyncBase<T>(string key, Func<Task<T>> objectReceiver, long? storageDuration, bool global)
+        private async Task<T> GetOrSetAsyncBase<T>(string key,
+            Func<Task<T>> objectReceiver,
+            long? storageDuration,
+            bool global)
         {
             if (string.IsNullOrEmpty(key))
             {
@@ -974,17 +929,17 @@ namespace RKSoftware.Packages.Caching.Implementation
                 {
                     val = await objectReceiver()
                         .ConfigureAwait(false);
-                }
 
-                if (storageDuration.HasValue)
-                {
-                    await SetCachedObjectAsync(key, val, storageDuration.Value, global)
-                        .ConfigureAwait(false);
-                }
-                else
-                {
-                    await SetCachedObjectAsync(key, val, global)
-                        .ConfigureAwait(false);
+                    if (storageDuration.HasValue)
+                    {
+                        await SetCachedObjectAsync(key, val, storageDuration.Value, global)
+                            .ConfigureAwait(false);
+                    }
+                    else
+                    {
+                        await SetCachedObjectAsync(key, val, global)
+                            .ConfigureAwait(false);
+                    }
                 }
             }
             catch (Exception ex)
