@@ -115,6 +115,15 @@ namespace RKSoftware.Packages.Caching {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Error while connecting to Redis during GET operation.
+        /// </summary>
+        internal static string RedisGetObjectRedisConnectionError {
+            get {
+                return ResourceManager.GetString("RedisGetObjectRedisConnectionError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Object not found in cache. Key: {key}.
         /// </summary>
         internal static string RedisObjectNotFound {
@@ -138,6 +147,15 @@ namespace RKSoftware.Packages.Caching {
         internal static string RedisSetObjectError {
             get {
                 return ResourceManager.GetString("RedisSetObjectError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error while connecting to Redis during SET operation.
+        /// </summary>
+        internal static string RedisSetObjectRedisConnectionError {
+            get {
+                return ResourceManager.GetString("RedisSetObjectRedisConnectionError", resourceCulture);
             }
         }
     }

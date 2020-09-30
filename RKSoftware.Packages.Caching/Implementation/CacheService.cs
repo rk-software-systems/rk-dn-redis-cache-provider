@@ -807,6 +807,7 @@ namespace RKSoftware.Packages.Caching.Implementation
             }
         }
 
+
         /// <summary>
         /// Base method for getting object from cache 
         /// In case object not found in cache, obtain its value and set it to cache
@@ -817,6 +818,7 @@ namespace RKSoftware.Packages.Caching.Implementation
         /// <param name="storageDuration">Time span to keep value in cache, in seconds, nullable</param>
         /// <param name="global">This flag indicates if object should be set for Global / Project specific cache</param>
         /// <returns>Object from cache</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1031:Do not catch general exception types", Justification = "This warning is suppressed as we need to return result no matter of Redis GET / SET operation result")]
         private T GetOrSetBase<T>(string key, Func<T> objectReceiver, long? storageDuration, bool global)
         {
             T val = default(T);
@@ -830,18 +832,22 @@ namespace RKSoftware.Packages.Caching.Implementation
             {
                 _logger.LogWarning(ex, LogMessageResource.RedisObjectNotFound, key);
             }
+            catch (RedisConnectionException ex)
+            {
+                _logger.LogError(ex, LogMessageResource.RedisGetObjectRedisConnectionError, key);
+            }
             catch (Exception ex)
             {
                 _logger.LogError(ex, LogMessageResource.RedisGetObjectError, key);
-                throw;
             }
 
-            try
-            {
-                if (!isSet)
-                {
-                    val = objectReceiver();
 
+            if (!isSet)
+            {
+                val = objectReceiver();
+
+                try
+                {
                     if (storageDuration.HasValue)
                     {
                         SetCachedObject(key, val, storageDuration.Value, global);
@@ -851,11 +857,14 @@ namespace RKSoftware.Packages.Caching.Implementation
                         SetCachedObject(key, val, global);
                     }
                 }
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, LogMessageResource.RedisSetObjectError, key);
-                throw;
+                catch (RedisConnectionException ex)
+                {
+                    _logger.LogError(ex, LogMessageResource.RedisSetObjectRedisConnectionError, key);
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, LogMessageResource.RedisSetObjectError, key);
+                }
             }
 
             return val;
@@ -880,6 +889,7 @@ namespace RKSoftware.Packages.Caching.Implementation
             }, storageDuration, global);
         }
 
+
         /// <summary>
         /// Base method for getting object from cache asynchronously using asynchronous obtainer
         /// In case object not found in cache, obtain its value and set it to cache
@@ -890,6 +900,7 @@ namespace RKSoftware.Packages.Caching.Implementation
         /// <param name="storageDuration">Time span to keep value in cache, in seconds, nullable</param>
         /// <param name="global">This flag indicates if cache entry should be set in Global cache (available for all containers)</param>
         /// <returns>Object from cache</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1031:Do not catch general exception types", Justification = "This warning is suppressed as we need to return result no matter of Redis GET / SET operation result")]
         private async Task<T> GetOrSetAsyncBase<T>(string key,
             Func<Task<T>> objectReceiver,
             long? storageDuration,
@@ -917,19 +928,23 @@ namespace RKSoftware.Packages.Caching.Implementation
             {
                 _logger.LogWarning(ex, LogMessageResource.RedisObjectNotFound, key);
             }
+            catch (RedisConnectionException ex)
+            {
+                _logger.LogError(ex, LogMessageResource.RedisGetObjectRedisConnectionError, key);
+            }
             catch (Exception ex)
             {
                 _logger.LogError(ex, LogMessageResource.RedisGetObjectError, key);
-                throw;
             }
 
-            try
-            {
-                if (!isSet)
-                {
-                    val = await objectReceiver()
-                        .ConfigureAwait(false);
 
+            if (!isSet)
+            {
+                val = await objectReceiver()
+                    .ConfigureAwait(false);
+
+                try
+                {
                     if (storageDuration.HasValue)
                     {
                         await SetCachedObjectAsync(key, val, storageDuration.Value, global)
@@ -941,12 +956,17 @@ namespace RKSoftware.Packages.Caching.Implementation
                             .ConfigureAwait(false);
                     }
                 }
+                catch(RedisConnectionException ex)
+                {
+                    _logger.LogError(ex, LogMessageResource.RedisSetObjectRedisConnectionError, key);
+                    throw;
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, LogMessageResource.RedisSetObjectError, key);
+                }
             }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, LogMessageResource.RedisSetObjectError, key);
-                throw;
-            }
+
 
             return val;
         }
