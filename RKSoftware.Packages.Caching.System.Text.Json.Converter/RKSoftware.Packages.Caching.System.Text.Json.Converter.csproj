@@ -20,7 +20,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="RKSoftware.Packages.Caching" Version="1.0.6" />
+    <PackageReference Include="RKSoftware.Packages.Caching" Version="1.0.9" />
     <PackageReference Include="System.Text.Json" Version="4.7.2" />
   </ItemGroup>
 
