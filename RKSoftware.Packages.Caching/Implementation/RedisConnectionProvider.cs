@@ -60,11 +60,11 @@ namespace RKSoftware.Packages.Caching.Implementation
                 var options = new ConfigurationOptions()
                 {
                     EndPoints =
-                {
-                    _redisCacheSettings.RedisUrl.ToString()
-                },
-                    SyncTimeout = 3000,
-                    AbortOnConnectFail = false
+                    {
+                        _redisCacheSettings.RedisUrl.ToString()
+                    },
+                    AbortOnConnectFail = false,
+                    SyncTimeout = _redisCacheSettings.SyncTimeout ?? 5000
                 };
 
                 _logger.LogInformation(LogMessageResource.RedisConnectionOpenening);

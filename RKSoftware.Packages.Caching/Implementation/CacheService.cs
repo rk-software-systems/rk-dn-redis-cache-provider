@@ -821,7 +821,7 @@ namespace RKSoftware.Packages.Caching.Implementation
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1031:Do not catch general exception types", Justification = "This warning is suppressed as we need to return result no matter of Redis GET / SET operation result")]
         private T GetOrSetBase<T>(string key, Func<T> objectReceiver, long? storageDuration, bool global)
         {
-            T val = default(T);
+            T val = default;
             bool isSet = false;
             try
             {

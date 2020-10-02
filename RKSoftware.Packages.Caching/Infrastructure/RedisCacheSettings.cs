@@ -21,5 +21,11 @@ namespace RKSoftware.Packages.Caching.Infrastructure
         /// This key prefix is going to be used as a prefix for Global cache entries
         /// </summary>
         public string GlobalCacheKey { get; set; }
+
+        /// <summary>
+        /// Specifies the time in milliseconds that the system should allow for synchronous
+        ///  operations (defaults to 5 seconds)
+        /// </summary>
+        public int? SyncTimeout { get; set; }
     }
 }
