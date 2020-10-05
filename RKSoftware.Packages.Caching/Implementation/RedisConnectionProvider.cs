@@ -14,7 +14,7 @@ namespace RKSoftware.Packages.Caching.Implementation
     public class RedisConnectionProvider : IConnectionProvider, IDisposable
     {
         private bool isDisposed;
-        private IConnectionMultiplexer[] _connectionMultiplexers;
+        private static IConnectionMultiplexer[] _connectionMultiplexers;
         private static object _multiplexerInitLock = new object();
         private readonly RedisCacheSettings _redisCacheSettings;
         private readonly ILogger _logger;
@@ -79,7 +79,7 @@ namespace RKSoftware.Packages.Caching.Implementation
             return GetConnectionMultiplexer();
         }
 
-        private IConnectionMultiplexer GetConnectionMultiplexer()
+        private static IConnectionMultiplexer GetConnectionMultiplexer()
         {
             if (_connectionMultiplexers.Length == 1)
             {
