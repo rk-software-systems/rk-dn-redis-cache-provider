@@ -14,7 +14,7 @@ namespace RKSoftware.Packages.Caching.Implementation
     public class RedisConnectionProvider : IConnectionProvider, IDisposable
     {
         private bool isDisposed;
-        private static IConnectionMultiplexer _connectionMultiplexer;
+        private IConnectionMultiplexer[] _connectionMultiplexers;
         private static object _multiplexerInitLock = new object();
         private readonly RedisCacheSettings _redisCacheSettings;
         private readonly ILogger _logger;
@@ -44,34 +44,50 @@ namespace RKSoftware.Packages.Caching.Implementation
         /// <returns>Redis database connection multiplexer <see cref="IConnectionMultiplexer"/></returns>
         public IConnectionMultiplexer GetConnection()
         {
-            if (_connectionMultiplexer != null)
+            if (_connectionMultiplexers != null)
             {
-                return _connectionMultiplexer;
-
+                return GetConnectionMultiplexer();
             }
 
             lock (_multiplexerInitLock)
             {
-                if (_connectionMultiplexer != null)
+                if (_connectionMultiplexers != null)
                 {
-                    return _connectionMultiplexer;
+                    return GetConnectionMultiplexer();
                 }
 
-                var options = new ConfigurationOptions()
+                var multiplexerCount = _redisCacheSettings.ConnectionMultiplexerPoolSize ?? 1;
+                _connectionMultiplexers = new IConnectionMultiplexer[multiplexerCount];
+
+                for (var i = 0; i < multiplexerCount; i++)
                 {
-                    EndPoints =
+                    var options = new ConfigurationOptions()
+                    {
+                        EndPoints =
                     {
                         _redisCacheSettings.RedisUrl.ToString()
                     },
-                    AbortOnConnectFail = false,
-                    SyncTimeout = _redisCacheSettings.SyncTimeout ?? 5000
-                };
+                        AbortOnConnectFail = false,
+                        SyncTimeout = _redisCacheSettings.SyncTimeout ?? 5000
+                    };
 
+                    _connectionMultiplexers[i] = ConnectionMultiplexer.Connect(options);
+                }
                 _logger.LogInformation(LogMessageResource.RedisConnectionOpenening);
-                _connectionMultiplexer = ConnectionMultiplexer.Connect(options);
             }
 
-            return _connectionMultiplexer;
+            return GetConnectionMultiplexer();
+        }
+
+        private IConnectionMultiplexer GetConnectionMultiplexer()
+        {
+            if (_connectionMultiplexers.Length == 1)
+            {
+                return _connectionMultiplexers[0];
+            }
+
+            var rnd = new Random();
+            return _connectionMultiplexers[rnd.Next(0, _connectionMultiplexers.Length - 1)];
         }
 
         #region IDisposable
@@ -97,12 +113,14 @@ namespace RKSoftware.Packages.Caching.Implementation
 
             if (disposing)
             {
-                _connectionMultiplexer.Close(true);
-                _connectionMultiplexer.Dispose();
+                foreach(var multiplexer in _connectionMultiplexers)
+                {
+                    multiplexer.Close(true);
+                    multiplexer.Dispose();
+                }
             }
 
             isDisposed = true;
-
         }
 
         /// <summary>

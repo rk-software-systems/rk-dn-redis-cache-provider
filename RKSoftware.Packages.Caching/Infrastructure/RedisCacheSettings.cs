@@ -27,5 +27,10 @@ namespace RKSoftware.Packages.Caching.Infrastructure
         ///  operations (defaults to 5 seconds)
         /// </summary>
         public int? SyncTimeout { get; set; }
+
+        /// <summary>
+        /// Size of connection multiplexer pool
+        /// </summary>
+        public int? ConnectionMultiplexerPoolSize { get; set; }
     }
 }
