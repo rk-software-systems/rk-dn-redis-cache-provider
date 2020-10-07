@@ -20,6 +20,10 @@ namespace RKSoftware.Packages.Caching.Implementation
         private readonly RedisCacheSettings _redisCacheSettings;
         private readonly ILogger _logger;
 
+        /// <summary>
+        /// This flag indicates if particular connection is Sentinel one
+        /// it is used to determine if it is possible to use Redis replica fore read
+        /// </summary>
         public bool IsSentinel { get; }
 
         /// <summary>
