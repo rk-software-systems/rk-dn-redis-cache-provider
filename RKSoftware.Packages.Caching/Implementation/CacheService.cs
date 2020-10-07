@@ -104,7 +104,7 @@ namespace RKSoftware.Packages.Caching.Implementation
             {
                 db = GetDatabase();
 
-                result = db.StringGet(key);
+                result = db.StringGet(key, GetReadFlags());
             }
             catch (RedisConnectionException ex)
             {
@@ -160,7 +160,7 @@ namespace RKSoftware.Packages.Caching.Implementation
             {
                 db = GetDatabase();
 
-                result = await db.StringGetAsync(key)
+                result = await db.StringGetAsync(key, GetReadFlags())
                     .ConfigureAwait(false);
             }
             catch (RedisConnectionException ex)
@@ -402,7 +402,7 @@ namespace RKSoftware.Packages.Caching.Implementation
             {
                 var db = GetDatabase();
 
-                db.KeyDelete(key, flags: CommandFlags.FireAndForget);
+                db.KeyDelete(key, flags: CommandFlags.FireAndForget | CommandFlags.DemandMaster);
             }
             catch (RedisConnectionException ex)
             {
@@ -440,7 +440,7 @@ namespace RKSoftware.Packages.Caching.Implementation
             {
                 var db = GetDatabase();
 
-                return db.KeyDeleteAsync(key, flags: CommandFlags.FireAndForget);
+                return db.KeyDeleteAsync(key, flags: CommandFlags.FireAndForget | CommandFlags.DemandMaster);
             }
             catch (RedisConnectionException ex)
             {
@@ -487,7 +487,7 @@ namespace RKSoftware.Packages.Caching.Implementation
             try
             {
                 var db = GetDatabase();
-                db.KeyDelete(keyArr.ToArray(), flags: CommandFlags.FireAndForget);
+                db.KeyDelete(keyArr.ToArray(), flags: CommandFlags.FireAndForget | CommandFlags.DemandMaster);
             }
             catch (RedisConnectionException ex)
             {
@@ -528,7 +528,7 @@ namespace RKSoftware.Packages.Caching.Implementation
             try
             {
                 var db = GetDatabase();
-                return db.KeyDeleteAsync(keyArr.ToArray(), flags: CommandFlags.FireAndForget);
+                return db.KeyDeleteAsync(keyArr.ToArray(), flags: CommandFlags.FireAndForget | CommandFlags.DemandMaster);
             }
             catch (RedisConnectionException ex)
             {
@@ -560,7 +560,7 @@ namespace RKSoftware.Packages.Caching.Implementation
             {
                 var keyArr = GetKeys(partOfKey, projectName, globalCache);
                 var db = GetDatabase();
-                db.KeyDelete(keyArr, flags: CommandFlags.FireAndForget);
+                db.KeyDelete(keyArr, flags: CommandFlags.FireAndForget | CommandFlags.DemandMaster);
             }
             catch (RedisConnectionException ex)
             {
@@ -591,7 +591,7 @@ namespace RKSoftware.Packages.Caching.Implementation
             {
                 var keyArr = GetKeys(partOfKey, projectName, globalCache);
                 var db = GetDatabase();
-                return db.KeyDeleteAsync(keyArr, flags: CommandFlags.FireAndForget);
+                return db.KeyDeleteAsync(keyArr, flags: CommandFlags.FireAndForget | CommandFlags.DemandMaster);
             }
             catch (RedisConnectionException ex)
             {
@@ -658,7 +658,7 @@ namespace RKSoftware.Packages.Caching.Implementation
                     key,
                     _objectConverter.ToString(obj),
                     TimeSpan.FromSeconds(storageDuration),
-                    flags: CommandFlags.FireAndForget);
+                    flags: CommandFlags.FireAndForget | CommandFlags.DemandMaster);
             }
             catch (RedisConnectionException ex)
             {
@@ -721,7 +721,7 @@ namespace RKSoftware.Packages.Caching.Implementation
                     key,
                     _objectConverter.ToString(obj),
                     TimeSpan.FromSeconds(storageDuration),
-                    flags: CommandFlags.FireAndForget);
+                    flags: CommandFlags.FireAndForget | CommandFlags.DemandMaster);
             }
             catch (RedisConnectionException ex)
             {
@@ -749,6 +749,12 @@ namespace RKSoftware.Packages.Caching.Implementation
             var redis = _connectionProvider.GetConnection();
 
             return redis.GetDatabase();
+        }
+
+        private CommandFlags GetReadFlags()
+        {
+            return _connectionProvider.IsSentinel ?
+                CommandFlags.DemandReplica : CommandFlags.None;
         }
 
         private string GetGlobalKey()
@@ -956,7 +962,7 @@ namespace RKSoftware.Packages.Caching.Implementation
                             .ConfigureAwait(false);
                     }
                 }
-                catch(RedisConnectionException ex)
+                catch (RedisConnectionException ex)
                 {
                     _logger.LogError(ex, LogMessageResource.RedisSetObjectRedisConnectionError, key);
                     throw;

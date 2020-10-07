@@ -4,6 +4,7 @@ using RKSoftware.Packages.Caching.Contract;
 using RKSoftware.Packages.Caching.Infrastructure;
 using StackExchange.Redis;
 using System;
+using System.Text;
 
 namespace RKSoftware.Packages.Caching.Implementation
 {
@@ -18,6 +19,8 @@ namespace RKSoftware.Packages.Caching.Implementation
         private static object _multiplexerInitLock = new object();
         private readonly RedisCacheSettings _redisCacheSettings;
         private readonly ILogger _logger;
+
+        public bool IsSentinel { get; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RedisConnectionProvider"/> class.
@@ -35,6 +38,8 @@ namespace RKSoftware.Packages.Caching.Implementation
 
             _redisCacheSettings = redisCacheSettingsAccessor.Value;
             _logger = logger;
+            IsSentinel = _redisCacheSettings.RedisUrl
+                .Contains("serviceName=", StringComparison.InvariantCultureIgnoreCase);
         }
 
 
@@ -61,17 +66,7 @@ namespace RKSoftware.Packages.Caching.Implementation
 
                 for (var i = 0; i < multiplexerCount; i++)
                 {
-                    var options = new ConfigurationOptions()
-                    {
-                        EndPoints =
-                    {
-                        _redisCacheSettings.RedisUrl.ToString()
-                    },
-                        AbortOnConnectFail = false,
-                        SyncTimeout = _redisCacheSettings.SyncTimeout ?? 5000
-                    };
-
-                    _connectionMultiplexers[i] = ConnectionMultiplexer.Connect(options);
+                    _connectionMultiplexers[i] = ConnectionMultiplexer.Connect(GetOptionsString(_redisCacheSettings));
                 }
                 _logger.LogInformation(LogMessageResource.RedisConnectionOpenening);
             }
@@ -88,6 +83,17 @@ namespace RKSoftware.Packages.Caching.Implementation
 
             var rnd = new Random();
             return _connectionMultiplexers[rnd.Next(0, _connectionMultiplexers.Length - 1)];
+        }
+
+        private static string GetOptionsString(RedisCacheSettings settings)
+        {
+            var optionsStringBuilder = new StringBuilder($"{settings.RedisUrl},abortConnect=False");
+            if (settings.SyncTimeout.HasValue)
+            {
+                optionsStringBuilder.Append($",syncTimeout=" + settings.SyncTimeout);
+            }
+
+            return optionsStringBuilder.ToString();
         }
 
         #region IDisposable
@@ -113,7 +119,7 @@ namespace RKSoftware.Packages.Caching.Implementation
 
             if (disposing)
             {
-                foreach(var multiplexer in _connectionMultiplexers)
+                foreach (var multiplexer in _connectionMultiplexers)
                 {
                     multiplexer.Close(true);
                     multiplexer.Dispose();

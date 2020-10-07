@@ -9,8 +9,13 @@ namespace RKSoftware.Packages.Caching.Infrastructure
     {
         /// <summary>
         /// Path to the Redis container
+        /// Single Redis connection: localhost:6379
+        /// Redis Sentinel: localhost:23679,serviceName=redis_master
+        /// Follow StackExchange.Redis endpoint URL convention
+        /// In Sentinel mode all READ operations are processed against READ replica first
         /// </summary>
-        public Uri RedisUrl { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1056:URI-like properties should not be strings", Justification = "This URL may be not an URL, but StackExchange based Connection")]
+        public string RedisUrl { get; set; }
 
         /// <summary>
         /// Amount of second to keep value in cache in case cache timeout have not been implicitly specified

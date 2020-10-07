@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "TestCluster": {
+      "commandName": "Project"
+    },
+    "Docker": {
+      "commandName": "Docker"
+    }
+  }
+}

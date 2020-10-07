@@ -12,5 +12,11 @@ namespace RKSoftware.Packages.Caching.Contract
         /// </summary>
         /// <returns>Redis database connection multiplexer <see cref="IConnectionMultiplexer"/></returns>
         IConnectionMultiplexer GetConnection();
+
+        /// <summary>
+        /// This flag indicates if particular connection is Sentinel one
+        /// it is used to determine if it is possible to use Redis replica fore read
+        /// </summary>
+        bool IsSentinel { get; }
     }
 }

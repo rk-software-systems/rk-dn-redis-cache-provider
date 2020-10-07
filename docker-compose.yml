@@ -1,0 +1,39 @@
+version: '3.4'
+
+services:
+  testcluster:
+    image: ${DOCKER_REGISTRY-}testcluster
+    build:
+      context: .
+      dockerfile: Integration/TestCluster/Dockerfile
+
+  redis.standalone:
+    image: redis:6.0.8
+    restart: always
+
+  redis.master:
+    image: redis:6.0.8
+    restart: always
+
+  sentinel.master:
+    image: rk.sentinel
+    restart: always
+    build: 
+      context: ./Integration/TestCluster/sentinel
+      dockerfile: Dockerfile
+    command: redis-server /etc/redis/sentinel.conf --sentinel
+
+  redis.slave:
+    image: redis:6.0.8
+    scale: 2
+    restart: always
+    command: redis-server --slaveof redis.master 6379
+
+  sentinel:
+    image: rk.sentinel
+    scale: 2
+    build: 
+      context: ./Integration/TestCluster/sentinel
+      dockerfile: Dockerfile
+    restart: always
+    command: redis-server /etc/redis/sentinel.conf --sentinel
