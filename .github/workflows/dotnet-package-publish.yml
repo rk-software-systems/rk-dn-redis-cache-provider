@@ -19,8 +19,13 @@ jobs:
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: 3.1.301
-      - name: Install dependencies
+      - name: Install dependencies RKSoftware.Packages.Caching
         run: dotnet restore RKSoftware.Packages.Caching
+      - name: Install dependencies RKSoftware.Packages.Caching.Newtonsoft.Json.Converter
+        run: dotnet restore RKSoftware.Packages.Caching.Newtonsoft.Json.Converter
+      - name: Install dependencies RKSoftware.Packages.Caching.System.Text.Json.Converter
+        run: dotnet restore RKSoftware.Packages.Caching.System.Text.Json.Converter
+
       - name: Build Cache Service
         run: dotnet build RKSoftware.Packages.Caching --configuration Release --no-restore
       - name: Build Newtonsoft Provider
