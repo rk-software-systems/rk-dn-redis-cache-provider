@@ -103,7 +103,7 @@ namespace RKSoftware.Packages.Caching.Implementation
             try
             {
                 db = GetDatabase();
-
+                _logger.LogInformation("Getting object from redis. Key: {key}", key);
                 result = db.StringGet(key, GetReadFlags());
             }
             catch (RedisConnectionException ex)
@@ -159,7 +159,7 @@ namespace RKSoftware.Packages.Caching.Implementation
             try
             {
                 db = GetDatabase();
-
+                _logger.LogInformation("Getting object from redis. Key: {key}", key);
                 result = await db.StringGetAsync(key, GetReadFlags())
                     .ConfigureAwait(false);
             }
@@ -653,7 +653,7 @@ namespace RKSoftware.Packages.Caching.Implementation
             try
             {
                 var db = GetDatabase();
-
+                _logger.LogInformation("Setting object from redis. Key: {key}", key);
                 db.StringSet(
                     key,
                     _objectConverter.ToString(obj),
@@ -716,7 +716,8 @@ namespace RKSoftware.Packages.Caching.Implementation
             try
             {
                 var db = GetDatabase();
-
+                _logger.LogInformation("Setting object from redis. Key: {key}", key);
+                
                 return db.StringSetAsync(
                     key,
                     _objectConverter.ToString(obj),
