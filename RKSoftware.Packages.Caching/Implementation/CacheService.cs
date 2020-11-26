@@ -85,12 +85,12 @@ namespace RKSoftware.Packages.Caching.Implementation
         /// </summary>
         /// <typeparam name="T">Object type</typeparam>
         /// <param name="key">Cache storage key</param>
-        /// <param name="global">This flag indicates if cache entry should be set in Global cache (available for all containers)</param>
+        /// <param name="useGlobalCache">This flag indicates if cache entry should be set in Global cache (available for all containers)</param>
         /// <exception cref="CacheMissException">This exception may appear in case object not found in cache</exception>
         /// <returns>Object from cache</returns>
-        public T GetCachedObject<T>(string key, bool global)
+        public T GetCachedObject<T>(string key, bool useGlobalCache)
         {
-            key = GetFullyQualifiedKey(key, global);
+            key = GetFullyQualifiedKey(key, useGlobalCache);
 
             if (string.IsNullOrEmpty(key))
             {
@@ -103,17 +103,30 @@ namespace RKSoftware.Packages.Caching.Implementation
             try
             {
                 db = GetDatabase();
-                _logger.LogInformation("Getting object from redis. Key: {key}", key);
+                if (_redisCacheSettings.UseLogging)
+                {
+                    _logger.LogInformation("Getting object from redis. Key: {key}", key);
+                }
+
                 result = db.StringGet(key, GetReadFlags());
             }
             catch (RedisConnectionException ex)
             {
-                _logger.LogError(ex, LogMessageResource.RedisConnectionError, key);
+
+                if (_redisCacheSettings.UseLogging)
+                {
+                    _logger.LogError(ex, LogMessageResource.RedisConnectionError, key);
+                }
+
                 throw;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, LogMessageResource.RedisGetObjectError, key);
+                if (_redisCacheSettings.UseLogging)
+                {
+                    _logger.LogError(ex, LogMessageResource.RedisGetObjectError, key);
+                }
+
                 throw;
             }
 
@@ -142,12 +155,12 @@ namespace RKSoftware.Packages.Caching.Implementation
         /// </summary>
         /// <typeparam name="T">Object type</typeparam>
         /// <param name="key">Cache storage key</param>
-        /// <param name="global">This flag indicates if cache entry should be set in Global cache (available for all containers)</param>
+        /// <param name="useGlobalCache">This flag indicates if cache entry should be set in Global cache (available for all containers)</param>
         /// <exception cref="ArgumentNullException">This exception may appear in case object not found in cache</exception>
         /// <returns>Object from cache</returns>
-        public async Task<T> GetCachedObjectAsync<T>(string key, bool global)
+        public async Task<T> GetCachedObjectAsync<T>(string key, bool useGlobalCache)
         {
-            key = GetFullyQualifiedKey(key, global);
+            key = GetFullyQualifiedKey(key, useGlobalCache);
 
             if (string.IsNullOrEmpty(key))
             {
@@ -159,18 +172,27 @@ namespace RKSoftware.Packages.Caching.Implementation
             try
             {
                 db = GetDatabase();
-                _logger.LogInformation("Getting object from redis. Key: {key}", key);
+                if (_redisCacheSettings.UseLogging)
+                {
+                    _logger.LogInformation("Getting object from redis. Key: {key}", key);
+                }
                 result = await db.StringGetAsync(key, GetReadFlags())
                     .ConfigureAwait(false);
             }
             catch (RedisConnectionException ex)
             {
-                _logger.LogError(ex, LogMessageResource.RedisConnectionError, key);
+                if (_redisCacheSettings.UseLogging)
+                {
+                    _logger.LogError(ex, LogMessageResource.RedisConnectionError, key);
+                }
                 throw;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, LogMessageResource.RedisGetObjectError, key);
+                if (_redisCacheSettings.UseLogging)
+                {
+                    _logger.LogError(ex, LogMessageResource.RedisGetObjectError, key);
+                }
                 throw;
             }
 
@@ -202,16 +224,16 @@ namespace RKSoftware.Packages.Caching.Implementation
         /// <typeparam name="T">Resulting object type</typeparam>
         /// <param name="key">Cache key</param>
         /// <param name="objectReceiver">Delegate that allows us to obtain object to be cached</param>
-        /// <param name="global">This flag indicates if cache entry should be set in Global cache (available for all containers)</param>
+        /// <param name="useGlobalCache">This flag indicates if cache entry should be set in Global cache (available for all containers)</param>
         /// <returns>Object from cache</returns>
-        public T GetOrSetCachedObject<T>(string key, Func<T> objectReceiver, bool global)
+        public T GetOrSetCachedObject<T>(string key, Func<T> objectReceiver, bool useGlobalCache)
         {
             if (objectReceiver == null)
             {
                 throw new ArgumentNullException(nameof(objectReceiver));
             }
 
-            return GetOrSetBase(key, objectReceiver, null, global);
+            return GetOrSetBase(key, objectReceiver, null, useGlobalCache);
         }
 
         /// <summary>
@@ -236,16 +258,16 @@ namespace RKSoftware.Packages.Caching.Implementation
         /// <param name="key">Cache key</param>
         /// <param name="objectReceiver">Delegate that allows us to obtain object to be cached</param>
         /// <param name="storageDuration">Time span to keep value in cache, in seconds</param>
-        /// <param name="global">This flag indicates if cache entry should be set in Global cache (available for all containers)</param>
+        /// <param name="useGlobalCache">This flag indicates if cache entry should be set in Global cache (available for all containers)</param>
         /// <returns>Object from cache</returns>
-        public T GetOrSetCachedObject<T>(string key, Func<T> objectReceiver, long storageDuration, bool global)
+        public T GetOrSetCachedObject<T>(string key, Func<T> objectReceiver, long storageDuration, bool useGlobalCache)
         {
             if (objectReceiver == null)
             {
                 throw new ArgumentNullException(nameof(objectReceiver));
             }
 
-            return GetOrSetBase(key, objectReceiver, storageDuration, global);
+            return GetOrSetBase(key, objectReceiver, storageDuration, useGlobalCache);
         }
 
         /// <summary>
@@ -268,16 +290,16 @@ namespace RKSoftware.Packages.Caching.Implementation
         /// <typeparam name="T">Resulting object type</typeparam>
         /// <param name="key">Cache key</param>
         /// <param name="objectReceiver">Delegate that allows us to obtain object to be cached</param>
-        /// <param name="global">This flag indicates if cache entry should be set in Global cache (available for all containers)</param>
+        /// <param name="useGlobalCache">This flag indicates if cache entry should be set in Global cache (available for all containers)</param>
         /// <returns>Object from cache</returns>
-        public Task<T> GetOrSetCachedObjectAsync<T>(string key, Func<T> objectReceiver, bool global)
+        public Task<T> GetOrSetCachedObjectAsync<T>(string key, Func<T> objectReceiver, bool useGlobalCache)
         {
             if (objectReceiver == null)
             {
                 throw new ArgumentNullException(nameof(objectReceiver));
             }
 
-            return GetOrSetAsyncBase(key, objectReceiver, null, global);
+            return GetOrSetAsyncBase(key, objectReceiver, null, useGlobalCache);
         }
 
         /// <summary>
@@ -302,16 +324,16 @@ namespace RKSoftware.Packages.Caching.Implementation
         /// <param name="key">Cache key</param>
         /// <param name="objectReceiver">Delegate that allows us to obtain object to be cached</param>
         /// <param name="storageDuration">Time span to keep value in cache, in seconds</param>
-        /// <param name="global">This flag indicates if cache entry should be set in Global cache (available for all containers)</param>
+        /// <param name="useGlobalCache">This flag indicates if cache entry should be set in Global cache (available for all containers)</param>
         /// <returns>Object from cache</returns>
-        public Task<T> GetOrSetCachedObjectAsync<T>(string key, Func<T> objectReceiver, long storageDuration, bool global)
+        public Task<T> GetOrSetCachedObjectAsync<T>(string key, Func<T> objectReceiver, long storageDuration, bool useGlobalCache)
         {
             if (objectReceiver == null)
             {
                 throw new ArgumentNullException(nameof(objectReceiver));
             }
 
-            return GetOrSetAsyncBase(key, objectReceiver, storageDuration, global);
+            return GetOrSetAsyncBase(key, objectReceiver, storageDuration, useGlobalCache);
         }
 
         /// <summary>
@@ -334,16 +356,16 @@ namespace RKSoftware.Packages.Caching.Implementation
         /// <typeparam name="T">Resulting object type</typeparam>
         /// <param name="key">Cache key</param>
         /// <param name="objectReceiver">Async Delegate that allows us to obtain object to be cached</param>
-        /// <param name="global">This flag indicates if cache entry should be set in Global cache (available for all containers)</param>
+        /// <param name="useGlobalCache">This flag indicates if cache entry should be set in Global cache (available for all containers)</param>
         /// <returns>Object from cache</returns>
-        public Task<T> GetOrSetCachedObjectAsync<T>(string key, Func<Task<T>> objectReceiver, bool global)
+        public Task<T> GetOrSetCachedObjectAsync<T>(string key, Func<Task<T>> objectReceiver, bool useGlobalCache)
         {
             if (objectReceiver == null)
             {
                 throw new ArgumentNullException(nameof(objectReceiver));
             }
 
-            return GetOrSetAsyncBase(key, objectReceiver, null, global);
+            return GetOrSetAsyncBase(key, objectReceiver, null, useGlobalCache);
         }
 
         /// <summary>
@@ -368,16 +390,16 @@ namespace RKSoftware.Packages.Caching.Implementation
         /// <param name="key">Cache key</param>
         /// <param name="objectReceiver">Async Delegate that allows us to obtain object to be cached</param>
         /// <param name="storageDuration">Time span to keep value in cache, in seconds</param>
-        /// <param name="global">This flag indicates if cache entry should be set in Global cache (available for all containers)</param>
+        /// <param name="useGlobalCache">This flag indicates if cache entry should be set in Global cache (available for all containers)</param>
         /// <returns>Object from cache</returns>
-        public Task<T> GetOrSetCachedObjectAsync<T>(string key, Func<Task<T>> objectReceiver, long storageDuration, bool global)
+        public Task<T> GetOrSetCachedObjectAsync<T>(string key, Func<Task<T>> objectReceiver, long storageDuration, bool useGlobalCache)
         {
             if (objectReceiver == null)
             {
                 throw new ArgumentNullException(nameof(objectReceiver));
             }
 
-            return GetOrSetAsyncBase(key, objectReceiver, storageDuration, global);
+            return GetOrSetAsyncBase(key, objectReceiver, storageDuration, useGlobalCache);
         }
 
         /// <summary>
@@ -393,10 +415,10 @@ namespace RKSoftware.Packages.Caching.Implementation
         /// Reset entry in cache
         /// </summary>
         /// <param name="key">Cache storage key</param>
-        /// <param name="global">This flag indicates if cache entry should be set in Global cache (available for all containers)</param>
-        public void Reset(string key, bool global)
+        /// <param name="useGlobalCache">This flag indicates if cache entry should be set in Global cache (available for all containers)</param>
+        public void Reset(string key, bool useGlobalCache)
         {
-            key = GetFullyQualifiedKey(key, global);
+            key = GetFullyQualifiedKey(key, useGlobalCache);
 
             try
             {
@@ -406,12 +428,18 @@ namespace RKSoftware.Packages.Caching.Implementation
             }
             catch (RedisConnectionException ex)
             {
-                _logger.LogError(ex, LogMessageResource.RedisConnectionError, key);
+                if (_redisCacheSettings.UseLogging)
+                {
+                    _logger.LogError(ex, LogMessageResource.RedisConnectionError, key);
+                }
                 throw;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, LogMessageResource.RedisRemoveObjectError, key);
+                if (_redisCacheSettings.UseLogging)
+                {
+                    _logger.LogError(ex, LogMessageResource.RedisRemoveObjectError, key);
+                }
                 throw;
             }
         }
@@ -430,11 +458,11 @@ namespace RKSoftware.Packages.Caching.Implementation
         /// Reset entry in cache
         /// </summary>
         /// <param name="key">Cache storage key</param>
-        /// <param name="global">This flag indicates if cache entry should be set in Global cache (available for all containers)</param>
+        /// <param name="useGlobalCache">This flag indicates if cache entry should be set in Global cache (available for all containers)</param>
         /// <returns>Task awaiter</returns>
-        public Task ResetAsync(string key, bool global)
+        public Task ResetAsync(string key, bool useGlobalCache)
         {
-            key = GetFullyQualifiedKey(key, global);
+            key = GetFullyQualifiedKey(key, useGlobalCache);
 
             try
             {
@@ -444,12 +472,18 @@ namespace RKSoftware.Packages.Caching.Implementation
             }
             catch (RedisConnectionException ex)
             {
-                _logger.LogError(ex, LogMessageResource.RedisRemoveObjectError, key);
+                if (_redisCacheSettings.UseLogging)
+                {
+                    _logger.LogError(ex, LogMessageResource.RedisRemoveObjectError, key);
+                }
                 throw;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, LogMessageResource.RedisRemoveObjectError, key);
+                if (_redisCacheSettings.UseLogging)
+                {
+                    _logger.LogError(ex, LogMessageResource.RedisRemoveObjectError, key);
+                }
                 throw;
             }
         }
@@ -468,12 +502,12 @@ namespace RKSoftware.Packages.Caching.Implementation
         /// Bulk reset entry in cache
         /// </summary>
         /// <param name="keys">list of cache storage key</param>
-        /// <param name="global">This flag indicates if cache entry should be set in Global cache (available for all containers)</param>
+        /// <param name="useGlobalCache">This flag indicates if cache entry should be set in Global cache (available for all containers)</param>
         /// <param name="projectName">specific project system name</param>
-        public void ResetBulk(IEnumerable<string> keys, bool global, string projectName = null)
+        public void ResetBulk(IEnumerable<string> keys, bool useGlobalCache, string projectName = null)
         {
             var keyArr = new List<RedisKey>();
-            if (keys == null || (keys?.Count()).GetValueOrDefault() == 0)
+            if ((keys?.Count()).GetValueOrDefault() == 0)
             {
                 // no keys to delete, exit
                 return;
@@ -481,7 +515,7 @@ namespace RKSoftware.Packages.Caching.Implementation
 
             foreach (var key in keys)
             {
-                keyArr.Add(GetFullyQualifiedKey(key, global, projectName));
+                keyArr.Add(GetFullyQualifiedKey(key, useGlobalCache, projectName));
             }
 
             try
@@ -491,7 +525,10 @@ namespace RKSoftware.Packages.Caching.Implementation
             }
             catch (RedisConnectionException ex)
             {
-                _logger.LogError(ex, LogMessageResource.RedisBulkResetError, keyArr);
+                if (_redisCacheSettings.UseLogging)
+                {
+                    _logger.LogError(ex, LogMessageResource.RedisBulkResetError, keyArr);
+                }
                 throw;
             }
         }
@@ -510,11 +547,11 @@ namespace RKSoftware.Packages.Caching.Implementation
         /// Bulk reset entry in cache
         /// </summary>
         /// <param name="keys">Cache storage keys</param>
-        /// <param name="global">This flag indicates if cache entry should be set in Global cache (available for all containers)</param>
+        /// <param name="useGlobalCache">This flag indicates if cache entry should be set in Global cache (available for all containers)</param>
         /// <param name="projectName">specific project system name</param>
-        public Task ResetBulkAsync(IEnumerable<string> keys, bool global, string projectName = null)
+        public Task ResetBulkAsync(IEnumerable<string> keys, bool useGlobalCache, string projectName = null)
         {
-            if (keys == null || (keys?.Count()).GetValueOrDefault() == 0)
+            if ((keys?.Count()).GetValueOrDefault() == 0)
             {
                 throw new ArgumentException(LogMessageResource.RedisBulkResetNoKeys, nameof(keys));
             }
@@ -522,7 +559,7 @@ namespace RKSoftware.Packages.Caching.Implementation
             var keyArr = new List<RedisKey>();
             foreach (var key in keys)
             {
-                keyArr.Add(GetFullyQualifiedKey(key, global, projectName));
+                keyArr.Add(GetFullyQualifiedKey(key, useGlobalCache, projectName));
             }
 
             try
@@ -532,7 +569,10 @@ namespace RKSoftware.Packages.Caching.Implementation
             }
             catch (RedisConnectionException ex)
             {
-                _logger.LogError(ex, LogMessageResource.RedisBulkResetError, keyArr);
+                if (_redisCacheSettings.UseLogging)
+                {
+                    _logger.LogError(ex, LogMessageResource.RedisBulkResetError, keyArr);
+                }
                 throw;
             }
         }
@@ -564,7 +604,10 @@ namespace RKSoftware.Packages.Caching.Implementation
             }
             catch (RedisConnectionException ex)
             {
-                _logger.LogError(ex, LogMessageResource.RedisBulkPartialReset, partOfKey, projectName ?? "");
+                if (_redisCacheSettings.UseLogging)
+                {
+                    _logger.LogError(ex, LogMessageResource.RedisBulkPartialReset, partOfKey, projectName ?? "");
+                }
                 throw;
             }
         }
@@ -595,7 +638,10 @@ namespace RKSoftware.Packages.Caching.Implementation
             }
             catch (RedisConnectionException ex)
             {
-                _logger.LogError(ex, LogMessageResource.RedisBulkPartialReset, partOfKey, projectName ?? "");
+                if (_redisCacheSettings.UseLogging)
+                {
+                    _logger.LogError(ex, LogMessageResource.RedisBulkPartialReset, partOfKey, projectName ?? "");
+                }
                 throw;
             }
         }
@@ -605,10 +651,10 @@ namespace RKSoftware.Packages.Caching.Implementation
         /// </summary>
         /// <typeparam name="T">Type of the object to be set</typeparam>
         /// <param name="key">Object cache storage key</param>
-        /// <param name="obj">Object to be stored</param>
-        public void SetCachedObject<T>(string key, T obj)
+        /// <param name="objectToCache">Object to be stored</param>
+        public void SetCachedObject<T>(string key, T objectToCache)
         {
-            SetCachedObject(key, obj, false);
+            SetCachedObject(key, objectToCache, false);
         }
 
         /// <summary>
@@ -616,12 +662,12 @@ namespace RKSoftware.Packages.Caching.Implementation
         /// </summary>
         /// <typeparam name="T">Type of the object to be set</typeparam>
         /// <param name="key">Object cache storage key</param>
-        /// <param name="obj">Object to be stored</param>
-        /// <param name="global">This flag indicates if cache entry should be set in Global cache (available for all containers)</param>
-        public void SetCachedObject<T>(string key, T obj, bool global)
+        /// <param name="objectToCache">Object to be stored</param>
+        /// <param name="useGlobalCache">This flag indicates if cache entry should be set in Global cache (available for all containers)</param>
+        public void SetCachedObject<T>(string key, T objectToCache, bool useGlobalCache)
         {
             SetCachedObject(key,
-                obj,
+                objectToCache,
                 _redisCacheSettings.DefaultCacheDuration,
                 false);
         }
@@ -631,11 +677,11 @@ namespace RKSoftware.Packages.Caching.Implementation
         /// </summary>
         /// <typeparam name="T">Type of the object to be set</typeparam>
         /// <param name="key">Object cache storage key</param>
-        /// <param name="obj">Object to be stored</param>
+        /// <param name="objectToCache">Object to be stored</param>
         /// <param name="storageDuration">Time span to keep value in cache, in seconds</param>
-        public void SetCachedObject<T>(string key, T obj, long storageDuration)
+        public void SetCachedObject<T>(string key, T objectToCache, long storageDuration)
         {
-            SetCachedObject(key, obj, storageDuration, false);
+            SetCachedObject(key, objectToCache, storageDuration, false);
         }
 
         /// <summary>
@@ -643,31 +689,40 @@ namespace RKSoftware.Packages.Caching.Implementation
         /// </summary>
         /// <typeparam name="T">Type of the object to be set</typeparam>
         /// <param name="key">Object cache storage key</param>
-        /// <param name="obj">Object to be stored</param>
+        /// <param name="objectToCache">Object to be stored</param>
         /// <param name="storageDuration">Time span to keep value in cache, in seconds</param>
-        /// <param name="global">This flag indicates if cache entry should be set in Global cache (available for all containers)</param>
-        public void SetCachedObject<T>(string key, T obj, long storageDuration, bool global)
+        /// <param name="useGlobalCache">This flag indicates if cache entry should be set in Global cache (available for all containers)</param>
+        public void SetCachedObject<T>(string key, T objectToCache, long storageDuration, bool useGlobalCache)
         {
-            key = GetFullyQualifiedKey(key, global);
+            key = GetFullyQualifiedKey(key, useGlobalCache);
 
             try
             {
                 var db = GetDatabase();
-                _logger.LogInformation("Setting object from redis. Key: {key}", key);
+                if (_redisCacheSettings.UseLogging)
+                {
+                    _logger.LogInformation("Setting object from redis. Key: {key}", key);
+                }
                 db.StringSet(
                     key,
-                    _objectConverter.ToString(obj),
+                    _objectConverter.ToString(objectToCache),
                     TimeSpan.FromSeconds(storageDuration),
                     flags: CommandFlags.FireAndForget | CommandFlags.DemandMaster);
             }
             catch (RedisConnectionException ex)
             {
-                _logger.LogError(ex, LogMessageResource.RedisSetObjectError, key);
+                if (_redisCacheSettings.UseLogging)
+                {
+                    _logger.LogError(ex, LogMessageResource.RedisSetObjectError, key);
+                }
                 throw;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, LogMessageResource.RedisSetObjectError, key);
+                if (_redisCacheSettings.UseLogging)
+                {
+                    _logger.LogError(ex, LogMessageResource.RedisSetObjectError, key);
+                }
                 throw;
             }
         }
@@ -677,11 +732,11 @@ namespace RKSoftware.Packages.Caching.Implementation
         /// </summary>
         /// <typeparam name="T">Type of the object to be set</typeparam>
         /// <param name="key">Object cache storage key</param>
-        /// <param name="obj">Object to be stored</param>
+        /// <param name="objectToCache">Object to be stored</param>
         /// <returns>Task awaiter</returns>
-        public Task SetCachedObjectAsync<T>(string key, T obj)
+        public Task SetCachedObjectAsync<T>(string key, T objectToCache)
         {
-            return SetCachedObjectAsync(key, obj, false);
+            return SetCachedObjectAsync(key, objectToCache, false);
         }
 
         /// <summary>
@@ -689,13 +744,13 @@ namespace RKSoftware.Packages.Caching.Implementation
         /// </summary>
         /// <typeparam name="T">Type of the object to be set</typeparam>
         /// <param name="key">Object cache storage key</param>
-        /// <param name="obj">Object to be stored</param>
-        /// <param name="global">This flag indicates if cache entry should be set in Global cache (available for all containers)</param>
+        /// <param name="objectToCache">Object to be stored</param>
+        /// <param name="useGlobalCache">This flag indicates if cache entry should be set in Global cache (available for all containers)</param>
         /// <returns>Task awaiter</returns>
-        public Task SetCachedObjectAsync<T>(string key, T obj, bool global)
+        public Task SetCachedObjectAsync<T>(string key, T objectToCache, bool useGlobalCache)
         {
             return SetCachedObjectAsync(key,
-                obj,
+                objectToCache,
                 _redisCacheSettings.DefaultCacheDuration,
                 false);
         }
@@ -707,17 +762,20 @@ namespace RKSoftware.Packages.Caching.Implementation
         /// <param name="key">Object cache storage key</param>
         /// <param name="obj">Object to be stored</param>
         /// <param name="storageDuration">Time span to keep value in cache, in seconds</param>
-        /// <param name="global">This flag indicates if cache entry should be set in Global cache (available for all containers)</param>
+        /// <param name="useGlobalCache">This flag indicates if cache entry should be set in Global cache (available for all containers)</param>
         /// <returns>Task awaiter</returns>
-        public Task SetCachedObjectAsync<T>(string key, T obj, long storageDuration, bool global)
+        public Task SetCachedObjectAsync<T>(string key, T obj, long storageDuration, bool useGlobalCache)
         {
-            key = GetFullyQualifiedKey(key, global);
+            key = GetFullyQualifiedKey(key, useGlobalCache);
 
             try
             {
                 var db = GetDatabase();
-                _logger.LogInformation("Setting object from redis. Key: {key}", key);
-                
+                if (_redisCacheSettings.UseLogging)
+                {
+                    _logger.LogInformation("Setting object from redis. Key: {key}", key);
+                }
+
                 return db.StringSetAsync(
                     key,
                     _objectConverter.ToString(obj),
@@ -726,12 +784,18 @@ namespace RKSoftware.Packages.Caching.Implementation
             }
             catch (RedisConnectionException ex)
             {
-                _logger.LogError(ex, LogMessageResource.RedisSetObjectError, key);
+                if (_redisCacheSettings.UseLogging)
+                {
+                    _logger.LogError(ex, LogMessageResource.RedisSetObjectError, key);
+                }
                 throw;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, LogMessageResource.RedisSetObjectError, key);
+                if (_redisCacheSettings.UseLogging)
+                {
+                    _logger.LogError(ex, LogMessageResource.RedisSetObjectError, key);
+                }
                 throw;
             }
         }
@@ -837,15 +901,24 @@ namespace RKSoftware.Packages.Caching.Implementation
             }
             catch (CacheMissException ex)
             {
-                _logger.LogWarning(ex, LogMessageResource.RedisObjectNotFound, key);
+                if (_redisCacheSettings.UseLogging)
+                {
+                    _logger.LogWarning(ex, LogMessageResource.RedisObjectNotFound, key);
+                }
             }
             catch (RedisConnectionException ex)
             {
-                _logger.LogError(ex, LogMessageResource.RedisGetObjectRedisConnectionError, key);
+                if (_redisCacheSettings.UseLogging)
+                {
+                    _logger.LogError(ex, LogMessageResource.RedisGetObjectRedisConnectionError, key);
+                }
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, LogMessageResource.RedisGetObjectError, key);
+                if (_redisCacheSettings.UseLogging)
+                {
+                    _logger.LogError(ex, LogMessageResource.RedisGetObjectError, key);
+                }
             }
 
 
@@ -866,11 +939,17 @@ namespace RKSoftware.Packages.Caching.Implementation
                 }
                 catch (RedisConnectionException ex)
                 {
-                    _logger.LogError(ex, LogMessageResource.RedisSetObjectRedisConnectionError, key);
+                    if (_redisCacheSettings.UseLogging)
+                    {
+                        _logger.LogError(ex, LogMessageResource.RedisSetObjectRedisConnectionError, key);
+                    }
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogError(ex, LogMessageResource.RedisSetObjectError, key);
+                    if (_redisCacheSettings.UseLogging)
+                    {
+                        _logger.LogError(ex, LogMessageResource.RedisSetObjectError, key);
+                    }
                 }
             }
 
@@ -933,15 +1012,24 @@ namespace RKSoftware.Packages.Caching.Implementation
             }
             catch (CacheMissException ex)
             {
-                _logger.LogWarning(ex, LogMessageResource.RedisObjectNotFound, key);
+                if (_redisCacheSettings.UseLogging)
+                {
+                    _logger.LogWarning(ex, LogMessageResource.RedisObjectNotFound, key);
+                }
             }
             catch (RedisConnectionException ex)
             {
-                _logger.LogError(ex, LogMessageResource.RedisGetObjectRedisConnectionError, key);
+                if (_redisCacheSettings.UseLogging)
+                {
+                    _logger.LogError(ex, LogMessageResource.RedisGetObjectRedisConnectionError, key);
+                }
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, LogMessageResource.RedisGetObjectError, key);
+                if (_redisCacheSettings.UseLogging)
+                {
+                    _logger.LogError(ex, LogMessageResource.RedisGetObjectError, key);
+                }
             }
 
 
@@ -965,12 +1053,18 @@ namespace RKSoftware.Packages.Caching.Implementation
                 }
                 catch (RedisConnectionException ex)
                 {
-                    _logger.LogError(ex, LogMessageResource.RedisSetObjectRedisConnectionError, key);
+                    if (_redisCacheSettings.UseLogging)
+                    {
+                        _logger.LogError(ex, LogMessageResource.RedisSetObjectRedisConnectionError, key);
+                    }
                     throw;
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogError(ex, LogMessageResource.RedisSetObjectError, key);
+                    if (_redisCacheSettings.UseLogging)
+                    {
+                        _logger.LogError(ex, LogMessageResource.RedisSetObjectError, key);
+                    }
                 }
             }
 

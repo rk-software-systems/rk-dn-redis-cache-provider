@@ -5,6 +5,7 @@ using RKSoftware.Packages.Caching.Infrastructure;
 using StackExchange.Redis;
 using System;
 using System.Text;
+using System.Linq;
 
 namespace RKSoftware.Packages.Caching.Implementation
 {
@@ -85,13 +86,12 @@ namespace RKSoftware.Packages.Caching.Implementation
                 return _connectionMultiplexers[0];
             }
 
-            var rnd = new Random();
-            return _connectionMultiplexers[rnd.Next(0, _connectionMultiplexers.Length - 1)];
+            return _connectionMultiplexers.OrderBy(x => x.OperationCount).FirstOrDefault();
         }
 
         private static string GetOptionsString(RedisCacheSettings settings)
         {
-            var optionsStringBuilder = new StringBuilder($"{settings.RedisUrl},abortConnect=False");
+            var optionsStringBuilder = new StringBuilder($"{settings.RedisUrl},abortConnect=False,allowAdmin=true");
             if (settings.SyncTimeout.HasValue)
             {
                 optionsStringBuilder.Append($",syncTimeout=" + settings.SyncTimeout);

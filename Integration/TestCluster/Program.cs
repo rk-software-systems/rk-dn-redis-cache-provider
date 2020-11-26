@@ -1,9 +1,11 @@
 ﻿using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moq;
+using RKSoftware.Packages.Caching.ErrorHandling;
 using RKSoftware.Packages.Caching.Implementation;
 using RKSoftware.Packages.Caching.Infrastructure;
 using RKSoftware.Packages.Caching.Newtonsoft.Json.Converter;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 
@@ -40,7 +42,19 @@ namespace TestCluster
             var str = LoadFile();
             string key = "test";
             await service.SetCachedObjectAsync(key, str);
-            var result = await service.GetCachedObjectAsync<string>(key);
+
+            for (var i = 0; i < 10000; i++)
+            {
+                var tasks = new List<Task>();
+                await service.SetCachedObjectAsync(key + i, str);
+                try
+                {
+                    await service.GetCachedObjectAsync<object>(key + (i - 1));
+                }
+                catch (CacheMissException)
+                {
+                }
+            }
         }
 
         private static string LoadFile()

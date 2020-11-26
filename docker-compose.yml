@@ -12,7 +12,7 @@ services:
     restart: always
 
   redis.master:
-    image: redis:6.0.8
+    image: redis:6.0.9
     restart: always
 
   sentinel.master:
@@ -24,8 +24,8 @@ services:
     command: redis-server /etc/redis/sentinel.conf --sentinel
 
   redis.slave:
-    image: redis:6.0.8
-    scale: 2
+    image: redis:6.0.9
+    scale: 4
     restart: always
     command: redis-server --slaveof redis.master 6379
 

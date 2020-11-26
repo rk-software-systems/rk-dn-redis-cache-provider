@@ -37,5 +37,10 @@ namespace RKSoftware.Packages.Caching.Infrastructure
         /// Size of connection multiplexer pool
         /// </summary>
         public int? ConnectionMultiplexerPoolSize { get; set; }
+
+        /// <summary>
+        /// This flag indicates if logs need to be enabled
+        /// </summary>
+        public bool UseLogging { get; set; }
     }
 }
