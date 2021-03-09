@@ -49,7 +49,8 @@ namespace TestCluster
                 await service.SetCachedObjectAsync(key + i, str);
                 try
                 {
-                    await service.GetCachedObjectAsync<object>(key + (i - 1));
+                    service.GetOrSetCachedObject<object>(key + (i - 1), () => str, true);
+                    await Task.Delay(500);
                 }
                 catch (CacheMissException)
                 {

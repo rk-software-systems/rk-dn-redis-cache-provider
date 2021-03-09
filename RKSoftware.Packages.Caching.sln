@@ -21,6 +21,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestCluster", "Integration\
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{967ADBF9-56D6-4D92-8B49-31C2CD44C8FE}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{ACAE57DA-B3AD-49C5-9B88-9C38152E2684}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RKSoftware.Packages.Caching.Tests", "Tests\RKSoftware.Packages.Caching.Tests\RKSoftware.Packages.Caching.Tests.csproj", "{F6A69D6A-91D4-45A7-B2CC-B55C1112E915}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -47,12 +51,17 @@ Global
 		{967ADBF9-56D6-4D92-8B49-31C2CD44C8FE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{967ADBF9-56D6-4D92-8B49-31C2CD44C8FE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{967ADBF9-56D6-4D92-8B49-31C2CD44C8FE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F6A69D6A-91D4-45A7-B2CC-B55C1112E915}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F6A69D6A-91D4-45A7-B2CC-B55C1112E915}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F6A69D6A-91D4-45A7-B2CC-B55C1112E915}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F6A69D6A-91D4-45A7-B2CC-B55C1112E915}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{54FBDEBF-F565-4537-87ED-D9AFBD92F49D} = {820EB69F-BDD4-4A40-A102-65634081D3EF}
+		{F6A69D6A-91D4-45A7-B2CC-B55C1112E915} = {ACAE57DA-B3AD-49C5-9B88-9C38152E2684}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {DD31C5E7-FEC4-4043-AF17-165F00AD852C}
