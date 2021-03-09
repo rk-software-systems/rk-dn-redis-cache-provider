@@ -669,7 +669,7 @@ namespace RKSoftware.Packages.Caching.Implementation
             SetCachedObject(key,
                 objectToCache,
                 _redisCacheSettings.DefaultCacheDuration,
-                false);
+                useGlobalCache);
         }
 
         /// <summary>
@@ -752,7 +752,7 @@ namespace RKSoftware.Packages.Caching.Implementation
             return SetCachedObjectAsync(key,
                 objectToCache,
                 _redisCacheSettings.DefaultCacheDuration,
-                false);
+                useGlobalCache);
         }
 
         /// <summary>
