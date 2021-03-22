@@ -17,7 +17,7 @@ namespace RKSoftware.Packages.Caching.Implementation
     {
         private bool isDisposed;
         private static IConnectionMultiplexer[] _connectionMultiplexers;
-        private static object _multiplexerInitLock = new object();
+        private static readonly object _multiplexerInitLock = new object();
         private readonly RedisCacheSettings _redisCacheSettings;
         private readonly ILogger _logger;
 

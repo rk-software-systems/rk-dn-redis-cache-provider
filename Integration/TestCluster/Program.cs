@@ -31,31 +31,31 @@ namespace TestCluster
                 RedisUrl = "sentinel.master:26379,serviceName=rk_redis_master"
                 //RedisUrl = "redis.standalone:6379"
             });
-            //var converter = new NewtonsoftJsonTextConverter();
-            //var provider = new RedisConnectionProvider(settingsMock.Object,
-            //    loggerMockProvider.Object);
-            //var service = new CacheService(settingsMock.Object,
-            //    loggerMockService.Object,
-            //    provider,
-            //    converter,
-            //    "RK.Test");
-            //var str = LoadFile();
-            //string key = "test";
-            //await service.SetCachedObjectAsync(key, str);
+            var converter = new NewtonsoftJsonTextConverter();
+            var provider = new RedisConnectionProvider(settingsMock.Object,
+                loggerMockProvider.Object);
+            var service = new CacheService(settingsMock.Object,
+                loggerMockService.Object,
+                provider,
+                converter,
+                "RK.Test");
+            var str = LoadFile();
+            string key = "test";
+            await service.SetCachedObjectAsync(key, str);
 
-            //for (var i = 0; i < 10000; i++)
-            //{
-            //    var tasks = new List<Task>();
-            //    await service.SetCachedObjectAsync(key + i, str);
-            //    try
-            //    {
-            //        service.GetOrSetCachedObject<object>(key + (i - 1), () => str, true);
-            //        await Task.Delay(500);
-            //    }
-            //    catch (CacheMissException)
-            //    {
-            //    }
-            //}
+            for (var i = 0; i < 10000; i++)
+            {
+                var tasks = new List<Task>();
+                await service.SetCachedObjectAsync(key + i, str);
+                try
+                {
+                    service.GetOrSetCachedObject<object>(key + (i - 1), () => str, true);
+                    await Task.Delay(500);
+                }
+                catch (CacheMissException)
+                {
+                }
+            }
         }
 
         private static string LoadFile()
