@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.1</TargetFramework>
+    <TargetFramework>net5.0</TargetFramework>
     <Authors>Konstantin Koryakov</Authors>
     <Company>RK Software Systems</Company>
     <Product>Objecet to string and vise versa converter for RKSoftware.Packages.Caching</Product>
@@ -15,13 +15,19 @@
     <Version>1.0.1</Version>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <EnableNETAnalyzers>true</EnableNETAnalyzers>
+    <AnalysisMode>AllEnabledByDefault</AnalysisMode>
+    <AnalysisLevel>latest</AnalysisLevel>
+  </PropertyGroup>
+
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <DocumentationFile>bin\Release\netstandard2.1\RKSoftware.Packages.Caching.System.Text.Json.Converter\RKSoftware.Packages.Caching.System.Text.Json.Converter.xml</DocumentationFile>
+    <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="RKSoftware.Packages.Caching" Version="1.0.9" />
-    <PackageReference Include="System.Text.Json" Version="4.7.2" />
+    <PackageReference Include="RKSoftware.Packages.Caching" Version="1.2.1" />
+    <PackageReference Include="System.Text.Json" Version="5.0.1" />
   </ItemGroup>
 
 </Project>
