@@ -75,73 +75,7 @@ namespace RKSoftware.Packages.Caching.Implementation
 
             return GetOrSetBase(key, objectReceiver, storageDuration, useGlobalCache);
         }
-
-        /// <summary>
-        /// Get object from cache asynchronously
-        /// In case object not found in cache, obtain its value and set it to cache
-        /// </summary>
-        /// <typeparam name="T">Resulting object type</typeparam>
-        /// <param name="key">Cache key</param>
-        /// <param name="objectReceiver">Delegate that allows us to obtain object to be cached</param>
-        /// <returns>Object from cache</returns>
-        public Task<T> GetOrSetCachedObjectAsync<T>(string key, Func<T> objectReceiver)
-        {
-            return GetOrSetCachedObjectAsync(key, objectReceiver, false);
-        }
-
-        /// <summary>
-        /// Get object from cache asynchronously
-        /// In case object not found in cache, obtain its value and set it to cache
-        /// </summary>
-        /// <typeparam name="T">Resulting object type</typeparam>
-        /// <param name="key">Cache key</param>
-        /// <param name="objectReceiver">Delegate that allows us to obtain object to be cached</param>
-        /// <param name="useGlobalCache">This flag indicates if cache entry should be set in Global cache (available for all containers)</param>
-        /// <returns>Object from cache</returns>
-        public Task<T> GetOrSetCachedObjectAsync<T>(string key, Func<T> objectReceiver, bool useGlobalCache)
-        {
-            if (objectReceiver == null)
-            {
-                throw new ArgumentNullException(nameof(objectReceiver));
-            }
-
-            return GetOrSetAsyncBase(key, objectReceiver, null, useGlobalCache);
-        }
-
-        /// <summary>
-        /// Get object from cache asynchronously
-        /// In case object not found in cache, obtain its value and set it to cache
-        /// </summary>
-        /// <typeparam name="T">Resulting object type</typeparam>
-        /// <param name="key">Cache key</param>
-        /// <param name="objectReceiver">Delegate that allows us to obtain object to be cached</param>
-        /// <param name="storageDuration">Time span to keep value in cache, in seconds</param>
-        /// <returns>Object from cache</returns>
-        public Task<T> GetOrSetCachedObjectAsync<T>(string key, Func<T> objectReceiver, long storageDuration)
-        {
-            return GetOrSetCachedObjectAsync(key, objectReceiver, storageDuration, false);
-        }
-
-        /// <summary>
-        /// Get object from cache asynchronously
-        /// In case object not found in cache, obtain its value and set it to cache
-        /// </summary>
-        /// <typeparam name="T">Resulting object type</typeparam>
-        /// <param name="key">Cache key</param>
-        /// <param name="objectReceiver">Delegate that allows us to obtain object to be cached</param>
-        /// <param name="storageDuration">Time span to keep value in cache, in seconds</param>
-        /// <param name="useGlobalCache">This flag indicates if cache entry should be set in Global cache (available for all containers)</param>
-        /// <returns>Object from cache</returns>
-        public Task<T> GetOrSetCachedObjectAsync<T>(string key, Func<T> objectReceiver, long storageDuration, bool useGlobalCache)
-        {
-            if (objectReceiver == null)
-            {
-                throw new ArgumentNullException(nameof(objectReceiver));
-            }
-
-            return GetOrSetAsyncBase(key, objectReceiver, storageDuration, useGlobalCache);
-        }
-
+        
         /// <summary>
         /// Get object from cache asynchronously using asynchronous obtainer
         /// In case object not found in cache, obtain its value and set it to cache
@@ -286,27 +220,7 @@ namespace RKSoftware.Packages.Caching.Implementation
             }
 
             return val;
-        }
-
-        /// <summary>
-        /// Base method for getting object from cache asynchronously
-        /// In case object not found in cache, obtain its value and set it to cache
-        /// </summary>
-        /// <typeparam name="T">Resulting object type</typeparam>
-        /// <param name="key">Cache key</param>
-        /// <param name="objectReceiver">Delegate that allows us to obtain object to be cached</param>
-        /// <param name="storageDuration">Time span to keep value in cache, in seconds, nullable</param>
-        /// <param name="global">This flag indicates if cache entry should be set in Global cache (available for all containers)</param>
-        /// <returns>Object from cache</returns>
-        private Task<T> GetOrSetAsyncBase<T>(string key, Func<T> objectReceiver, long? storageDuration, bool global)
-        {
-            return GetOrSetAsyncBase(key, async () =>
-            {
-                return await Task.FromResult(objectReceiver())
-                .ConfigureAwait(false);
-            }, storageDuration, global);
-        }
-
+        }                
 
         /// <summary>
         /// Base method for getting object from cache asynchronously using asynchronous obtainer

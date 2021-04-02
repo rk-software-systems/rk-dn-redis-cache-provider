@@ -118,7 +118,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="RedisBulkPartialReset" xml:space="preserve">
-    <value>Redis connection exception during removing. PartOfKey: {0}, ProjectName: {1}</value>
+    <value>Redis connection exception during removing. PartOfKey: {0}</value>
   </data>
   <data name="RedisBulkResetError" xml:space="preserve">
     <value>Redis connection exception during removing. Keys: {0}</value>

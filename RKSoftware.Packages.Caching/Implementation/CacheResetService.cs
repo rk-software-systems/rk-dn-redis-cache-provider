@@ -101,10 +101,9 @@ namespace RKSoftware.Packages.Caching.Implementation
         /// Bulk reset entry in cache
         /// </summary>
         /// <param name="keys">list of cache storage key</param>
-        /// <param name="projectName">specific project system name</param>
-        public void ResetBulk(IEnumerable<string> keys, string projectName = null)
+        public void ResetBulk(IEnumerable<string> keys)
         {
-            ResetBulk(keys, false, projectName);
+            ResetBulk(keys, false);
         }
 
         /// <summary>
@@ -112,8 +111,7 @@ namespace RKSoftware.Packages.Caching.Implementation
         /// </summary>
         /// <param name="keys">list of cache storage key</param>
         /// <param name="useGlobalCache">This flag indicates if cache entry should be set in Global cache (available for all containers)</param>
-        /// <param name="projectName">specific project system name</param>
-        public void ResetBulk(IEnumerable<string> keys, bool useGlobalCache, string projectName = null)
+        public void ResetBulk(IEnumerable<string> keys, bool useGlobalCache)
         {
             var keyArr = new List<RedisKey>();
             if ((keys?.Count()).GetValueOrDefault() == 0)
@@ -124,7 +122,7 @@ namespace RKSoftware.Packages.Caching.Implementation
 
             foreach (var key in keys)
             {
-                keyArr.Add(GetFullyQualifiedKey(key, useGlobalCache, projectName));
+                keyArr.Add(GetFullyQualifiedKey(key, useGlobalCache));
             }
 
             try
@@ -146,10 +144,9 @@ namespace RKSoftware.Packages.Caching.Implementation
         /// Bulk reset entry in cache
         /// </summary>
         /// <param name="keys">Cache storage keys</param>
-        /// <param name="projectName">specific project system name</param>
-        public Task ResetBulkAsync(IEnumerable<string> keys, string projectName = null)
+        public Task ResetBulkAsync(IEnumerable<string> keys)
         {
-            return ResetBulkAsync(keys, false, projectName);
+            return ResetBulkAsync(keys, false);
         }
 
         /// <summary>
@@ -157,8 +154,7 @@ namespace RKSoftware.Packages.Caching.Implementation
         /// </summary>
         /// <param name="keys">Cache storage keys</param>
         /// <param name="useGlobalCache">This flag indicates if cache entry should be set in Global cache (available for all containers)</param>
-        /// <param name="projectName">specific project system name</param>
-        public Task ResetBulkAsync(IEnumerable<string> keys, bool useGlobalCache, string projectName = null)
+        public Task ResetBulkAsync(IEnumerable<string> keys, bool useGlobalCache)
         {
             if ((keys?.Count()).GetValueOrDefault() == 0)
             {
@@ -168,7 +164,7 @@ namespace RKSoftware.Packages.Caching.Implementation
             var keyArr = new List<RedisKey>();
             foreach (var key in keys)
             {
-                keyArr.Add(GetFullyQualifiedKey(key, useGlobalCache, projectName));
+                keyArr.Add(GetFullyQualifiedKey(key, useGlobalCache));
             }
 
             try
@@ -190,10 +186,9 @@ namespace RKSoftware.Packages.Caching.Implementation
         /// Reset items which have a specific part of key
         /// </summary>
         /// <param name="partOfKey">substring of key between project system name and text resource key, for example "TextResource.en."</param>
-        /// <param name="projectName">project system name</param>
-        public void ResetBulk(string partOfKey, string projectName = null)
+        public void ResetBulk(string partOfKey)
         {
-            ResetBulk(partOfKey, false, projectName);
+            ResetBulk(partOfKey, false);
         }
 
         /// <summary>
@@ -202,12 +197,11 @@ namespace RKSoftware.Packages.Caching.Implementation
         /// <param name="partOfKey">substring of key between project system name and text resource key, 
         /// for example "TextResource.en."</param>
         /// <param name="globalCache">Reset in global cache</param>
-        /// <param name="projectName">project system name</param>
-        public void ResetBulk(string partOfKey, bool globalCache, string projectName = null)
+        public void ResetBulk(string partOfKey, bool globalCache)
         {
             try
             {
-                var keyArr = GetKeys(partOfKey, projectName, globalCache);
+                var keyArr = GetKeys(partOfKey, globalCache);
                 var db = GetDatabase();
                 db.KeyDelete(keyArr, flags: CommandFlags.FireAndForget | CommandFlags.DemandMaster);
             }
@@ -215,7 +209,7 @@ namespace RKSoftware.Packages.Caching.Implementation
             {
                 if (_redisCacheSettings.UseLogging)
                 {
-                    _logger.LogError(ex, LogMessageResource.RedisBulkPartialReset, partOfKey, projectName ?? "");
+                    _logger.LogError(ex, LogMessageResource.RedisBulkPartialReset, partOfKey);
                 }
                 throw;
             }
@@ -225,10 +219,9 @@ namespace RKSoftware.Packages.Caching.Implementation
         /// Reset items which have a specific part of key
         /// </summary>
         /// <param name="partOfKey">substring of key between project system name and text resource key, for example "TextResource.en."</param>
-        /// <param name="projectName">project system name</param>
-        public Task ResetBulkAsync(string partOfKey, string projectName = null)
+        public Task ResetBulkAsync(string partOfKey)
         {
-            return ResetBulkAsync(partOfKey, false, projectName);
+            return ResetBulkAsync(partOfKey, false);
         }
 
         /// <summary>
@@ -236,12 +229,11 @@ namespace RKSoftware.Packages.Caching.Implementation
         /// </summary>
         /// <param name="partOfKey">substring of key between project system name and text resource key, for example "TextResource.en."</param>
         /// <param name="globalCache">Reset in global cache</param>
-        /// <param name="projectName">project system name</param>
-        public Task ResetBulkAsync(string partOfKey, bool globalCache, string projectName = null)
+        public Task ResetBulkAsync(string partOfKey, bool globalCache)
         {
             try
             {
-                var keyArr = GetKeys(partOfKey, projectName, globalCache);
+                var keyArr = GetKeys(partOfKey, globalCache);
                 var db = GetDatabase();
                 return db.KeyDeleteAsync(keyArr, flags: CommandFlags.FireAndForget | CommandFlags.DemandMaster);
             }
@@ -249,7 +241,7 @@ namespace RKSoftware.Packages.Caching.Implementation
             {
                 if (_redisCacheSettings.UseLogging)
                 {
-                    _logger.LogError(ex, LogMessageResource.RedisBulkPartialReset, partOfKey, projectName ?? "");
+                    _logger.LogError(ex, LogMessageResource.RedisBulkPartialReset, partOfKey);
                 }
                 throw;
             }

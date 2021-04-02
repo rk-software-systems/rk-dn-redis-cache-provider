@@ -91,12 +91,10 @@ namespace RKSoftware.Packages.Caching.Implementation
         /// Get key that were used to store object
         /// </summary>
         /// <param name="key">Key that is used inside project</param>
-        /// <param name="global">This flag indicates if key should be project unspecific</param>
-        /// <param name="projectName">specific project system name</param>
+        /// <param name="global">This flag indicates if key should be project unspecific</param>        
         /// <returns>Inter project independent cache key</returns>
         private string GetFullyQualifiedKey(string key,
-            bool global,
-            string projectName = null)
+            bool global)
         {
             if (string.IsNullOrEmpty(key))
             {
@@ -108,7 +106,7 @@ namespace RKSoftware.Packages.Caching.Implementation
             }
             else
             {
-                return $"{(string.IsNullOrEmpty(projectName) ? _projectName : projectName)}.{key}";
+                return $"{_projectName}.{key}";
             }
         }
 
@@ -116,26 +114,22 @@ namespace RKSoftware.Packages.Caching.Implementation
         /// Get Fully qualified partial key based on global and project name
         /// </summary>
         /// <param name="keyPart">Key part</param>
-        /// <param name="global">Create Global Key</param>
-        /// <param name="projectName">Project name</param>
+        /// <param name="global">Create Global Key</param>        
         /// <returns></returns>
-        private string GetFullyQualifiedPartialKey(string keyPart,
-            bool global,
-            string projectName = null)
+        private string GetFullyQualifiedPartialKey(string keyPart, bool global)
         {            
-            return GetFullyQualifiedKey($"*{keyPart}*", global, projectName);
+            return GetFullyQualifiedKey($"*{keyPart}*", global);
         }                
 
         /// <summary>
         /// Get all keys for specific part of key
         /// </summary>
-        /// <param name="partOfKey">substring of key between project system name and text resource key, for example "TextResource.en."</param>
-        /// <param name="projectName">project system name</param>
+        /// <param name="partOfKey">substring of key between project system name and text resource key, for example "TextResource.en."</param>        
         /// <param name="global">This flag indicates if cache entry should be set in Global cache (available for all containers)</param>
         /// <returns>list of keys</returns>
-        private RedisKey[] GetKeys(string partOfKey, string projectName, bool global)
+        private RedisKey[] GetKeys(string partOfKey, bool global)
         {
-            var keyPattern = GetFullyQualifiedPartialKey(partOfKey, global, projectName);
+            var keyPattern = GetFullyQualifiedPartialKey(partOfKey, global);
             var connection = _connectionProvider.GetConnection();
             var endPoint = connection.GetEndPoints().First();
             var keyArr = connection.GetServer(endPoint).Keys(pattern: $"{keyPattern}").ToArray();

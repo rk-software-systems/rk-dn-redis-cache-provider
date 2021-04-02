@@ -87,6 +87,98 @@ namespace RKSoftware.Packages.Caching.Tests
                 var result = await  _cacheService.GetCachedObjectAsync<CacheTestModel>(key, true);
             });
         }
+
+        [TestMethod]
+        public void TestResetCacheBulk()
+        {
+            var source = CacheTestModel.TestModel;
+            var key1 = CacheTestModel.TestKey;
+            var key2 = CacheTestModel.TestKey + "_2";
+
+            _cacheService.SetCachedObject<CacheTestModel>(key1, source);
+            _cacheService.SetCachedObject<CacheTestModel>(key2, source);
+
+            _cacheService.ResetBulk(new string[] { key1, key2 });
+
+            Assert.ThrowsException<CacheMissException>(() =>
+            {
+                var result = _cacheService.GetCachedObject<CacheTestModel>(key1);
+            });
+
+            Assert.ThrowsException<CacheMissException>(() =>
+            {
+                var result = _cacheService.GetCachedObject<CacheTestModel>(key2);
+            });
+        }
+
+        [TestMethod]
+        public void TestResetCacheBulkGlobal()
+        {
+            var source = CacheTestModel.TestModel;
+            var key1 = CacheTestModel.TestKey;
+            var key2 = CacheTestModel.TestKey + "_2";
+
+            _cacheService.SetCachedObject<CacheTestModel>(key1, source, true);
+            _cacheService.SetCachedObject<CacheTestModel>(key2, source, true);
+
+            _cacheService.ResetBulk(new string[] { key1, key2 }, true);
+
+            Assert.ThrowsException<CacheMissException>(() =>
+            {
+                var result = _cacheService.GetCachedObject<CacheTestModel>(key1, true);
+            });
+
+            Assert.ThrowsException<CacheMissException>(() =>
+            {
+                var result = _cacheService.GetCachedObject<CacheTestModel>(key2, true);
+            });
+        }
+
+        [TestMethod]
+        public async Task TestResetCacheBulkAsync()
+        {
+            var source = CacheTestModel.TestModel;
+            var key1 = CacheTestModel.TestKey;
+            var key2 = CacheTestModel.TestKey + "_2";
+
+            await _cacheService.SetCachedObjectAsync<CacheTestModel>(key1, source);
+            await _cacheService.SetCachedObjectAsync<CacheTestModel>(key2, source);
+
+            await _cacheService.ResetBulkAsync(new string[] { key1, key2 });
+
+            await Assert.ThrowsExceptionAsync<CacheMissException>(async () =>
+            {
+                var result = await _cacheService.GetCachedObjectAsync<CacheTestModel>(key1);
+            });
+
+            await Assert.ThrowsExceptionAsync<CacheMissException>(async () =>
+            {
+                var result = await _cacheService.GetCachedObjectAsync<CacheTestModel>(key2);
+            });
+        }
+
+        [TestMethod]
+        public async Task TestResetCacheBulkGlobalAsync()
+        {
+            var source = CacheTestModel.TestModel;
+            var key1 = CacheTestModel.TestKey;
+            var key2 = CacheTestModel.TestKey + "_2";
+
+            await _cacheService.SetCachedObjectAsync<CacheTestModel>(key1, source, true);
+            await _cacheService.SetCachedObjectAsync<CacheTestModel>(key2, source, true);
+
+            await _cacheService.ResetBulkAsync(new string[] { key1, key2 }, true);
+
+            await Assert.ThrowsExceptionAsync<CacheMissException>(async () =>
+            {
+                var result = await _cacheService.GetCachedObjectAsync<CacheTestModel>(key1, true);
+            });
+
+            await Assert.ThrowsExceptionAsync<CacheMissException>(async () =>
+            {
+                var result = await _cacheService.GetCachedObjectAsync<CacheTestModel>(key2, true);
+            });
+        }
         #endregion
     }
 }

@@ -116,6 +116,26 @@ namespace RKSoftware.Packages.Caching.Tests
                    _cache.Remove(key);
                    return Task.FromResult(true);
                });
+            databaseMoq
+               .Setup(x => x.KeyDelete(It.IsAny<RedisKey[]>(), It.IsAny<CommandFlags>()))
+               .Returns((RedisKey[] keys, CommandFlags flags) =>
+               {
+                   foreach(var key in keys)
+                   {
+                       _cache.Remove(key);
+                   }                  
+                   return keys.Length;
+               });
+            databaseMoq
+               .Setup(x => x.KeyDeleteAsync(It.IsAny<RedisKey[]>(), It.IsAny<CommandFlags>()))
+               .Returns((RedisKey[] keys, CommandFlags flags) =>
+               {
+                   foreach (var key in keys)
+                   {
+                       _cache.Remove(key);
+                   }
+                   return Task.FromResult((long)keys.Length);
+               });
 
             var connectionMultiplexerMoq = new Mock<IConnectionMultiplexer>();
             connectionMultiplexerMoq
