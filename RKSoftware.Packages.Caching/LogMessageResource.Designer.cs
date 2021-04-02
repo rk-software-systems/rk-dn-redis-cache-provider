@@ -61,7 +61,7 @@ namespace RKSoftware.Packages.Caching {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Redis connection exception during removing. PartOfKey: {0}, ProjectName: {1}.
+        ///   Looks up a localized string similar to Redis connection exception during removing. PartOfKey: {0}.
         /// </summary>
         internal static string RedisBulkPartialReset {
             get {

@@ -91,51 +91,7 @@ namespace RKSoftware.Packages.Caching.Contract
         /// <param name="useGlobalCache">This flag indicates if cache entry should be set in Global cache (available for all containers)</param>
         /// <returns>Object from cache</returns>
         T GetOrSetCachedObject<T>(string key, Func<T> objectReceiver, long storageDuration, bool useGlobalCache);
-
-        /// <summary>
-        /// Get object from cache asynchronously
-        /// In case object not found in cache, obtain its value and set it to cache
-        /// </summary>
-        /// <typeparam name="T">Resulting object type</typeparam>
-        /// <param name="key">Cache key</param>
-        /// <param name="objectReceiver">Delegate that allows us to obtain object to be cached</param>
-        /// <returns>Object from cache</returns>
-        Task<T> GetOrSetCachedObjectAsync<T>(string key, Func<T> objectReceiver);
-
-        /// <summary>
-        /// Get object from cache asynchronously
-        /// In case object not found in cache, obtain its value and set it to cache
-        /// </summary>
-        /// <typeparam name="T">Resulting object type</typeparam>
-        /// <param name="key">Cache key</param>
-        /// <param name="objectReceiver">Delegate that allows us to obtain object to be cached</param>
-        /// <param name="useGlobalCache">This flag indicates if cache entry should be set in Global cache (available for all containers)</param>
-        /// <returns>Object from cache</returns>
-        Task<T> GetOrSetCachedObjectAsync<T>(string key, Func<T> objectReceiver, bool useGlobalCache);
-
-        /// <summary>
-        /// Get object from cache asynchronously
-        /// In case object not found in cache, obtain its value and set it to cache
-        /// </summary>
-        /// <typeparam name="T">Resulting object type</typeparam>
-        /// <param name="key">Cache key</param>
-        /// <param name="objectReceiver">Delegate that allows us to obtain object to be cached</param>
-        /// <param name="storageDuration">Time span to keep value in cache, in seconds</param>
-        /// <returns>Object from cache</returns>
-        Task<T> GetOrSetCachedObjectAsync<T>(string key, Func<T> objectReceiver, long storageDuration);
-
-        /// <summary>
-        /// Get object from cache asynchronously
-        /// In case object not found in cache, obtain its value and set it to cache
-        /// </summary>
-        /// <typeparam name="T">Resulting object type</typeparam>
-        /// <param name="key">Cache key</param>
-        /// <param name="objectReceiver">Delegate that allows us to obtain object to be cached</param>
-        /// <param name="storageDuration">Time span to keep value in cache, in seconds</param>
-        /// <param name="useGlobalCache">This flag indicates if cache entry should be set in Global cache (available for all containers)</param>
-        /// <returns>Object from cache</returns>
-        Task<T> GetOrSetCachedObjectAsync<T>(string key, Func<T> objectReceiver, long storageDuration, bool useGlobalCache);
-
+                
         /// <summary>
         /// Get object from cache asynchronously using asynchronous obtainer
         /// In case object not found in cache, obtain its value and set it to cache
@@ -278,40 +234,34 @@ namespace RKSoftware.Packages.Caching.Contract
         /// Bulk reset entry in cache
         /// </summary>
         /// <param name="keys">list of cache storage key</param>
-        /// <param name="projectName">Reset keys in terms of specified project name</param>
-        void ResetBulk(IEnumerable<string> keys, string projectName = null);
+        void ResetBulk(IEnumerable<string> keys);
 
         /// <summary>
         /// Bulk reset entry in cache
         /// </summary>
         /// <param name="keys">list of cache storage key</param>
         /// <param name="useGlobalCache">This flag indicates if cache entry should be set in Global cache (available for all containers)</param>
-        /// <param name="projectName">specific project system name</param>
-        void ResetBulk(IEnumerable<string> keys, bool useGlobalCache, string projectName = null);
+        void ResetBulk(IEnumerable<string> keys, bool useGlobalCache);
 
         /// <summary>
         /// Bulk reset entry in cache
         /// </summary>
         /// <param name="keys">Cache storage key</param>
-        /// <param name="projectName">This parameter provides Project name to be appended to key</param>
-        Task ResetBulkAsync(IEnumerable<string> keys, string projectName = null);
+        Task ResetBulkAsync(IEnumerable<string> keys);
 
         /// <summary>
         /// Bulk reset entry in cache
         /// </summary>
         /// <param name="keys">Cache storage keys</param>
         /// <param name="useGlobalCache">This flag indicates if cache entry should be set in Global cache (available for all containers)</param>
-        /// <param name="projectName">specific project system name</param>
-        Task ResetBulkAsync(IEnumerable<string> keys, bool useGlobalCache, string projectName = null);
-
+        Task ResetBulkAsync(IEnumerable<string> keys, bool useGlobalCache);
 
         /// <summary>
         /// Reset items which have a specific part of key
         /// </summary>
         /// <param name="partOfKey">substring of key between project system name and text resource key, 
         /// for example "TextResource.en."</param>
-        /// <param name="projectName">project system name</param>
-        void ResetBulk(string partOfKey, string projectName = null);
+        void ResetBulk(string partOfKey);
 
         /// <summary>
         /// Reset items which have a specific part of key
@@ -319,22 +269,19 @@ namespace RKSoftware.Packages.Caching.Contract
         /// <param name="partOfKey">substring of key between project system name and text resource key, 
         /// for example "TextResource.en."</param>
         /// <param name="globalCache">Reset in global cache</param>
-        /// <param name="projectName">project system name</param>
-        void ResetBulk(string partOfKey, bool globalCache, string projectName = null);
+        void ResetBulk(string partOfKey, bool globalCache);
 
         /// <summary>
         /// Reset items which have a specific part of key
         /// </summary>
         /// <param name="partOfKey">substring of key between project system name and text resource key, for example "TextResource.en."</param>
-        /// <param name="projectName">project system name</param>
-        Task ResetBulkAsync(string partOfKey, string projectName = null);
+        Task ResetBulkAsync(string partOfKey);
 
         /// <summary>
         /// Reset items which have a specific part of key
         /// </summary>
         /// <param name="partOfKey">substring of key between project system name and text resource key, for example "TextResource.en."</param>
         /// <param name="globalCache">Reset in global cache</param>
-        /// <param name="projectName">project system name</param>
-        Task ResetBulkAsync(string partOfKey, bool globalCache, string projectName = null);
+        Task ResetBulkAsync(string partOfKey, bool globalCache);
     }
 }
