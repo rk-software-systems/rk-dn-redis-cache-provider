@@ -26,6 +26,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{ACAE57DA
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RKSoftware.Packages.Caching.Tests", "Tests\RKSoftware.Packages.Caching.Tests\RKSoftware.Packages.Caching.Tests.csproj", "{F6A69D6A-91D4-45A7-B2CC-B55C1112E915}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RKSoftware.Packages.Caching.Converter.Mock", "RKSoftware.Packages.Caching.Converter.Mock\RKSoftware.Packages.Caching.Converter.Mock.csproj", "{C18D2112-216E-4722-934B-6626270BFF68}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -56,6 +58,10 @@ Global
 		{F6A69D6A-91D4-45A7-B2CC-B55C1112E915}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F6A69D6A-91D4-45A7-B2CC-B55C1112E915}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F6A69D6A-91D4-45A7-B2CC-B55C1112E915}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C18D2112-216E-4722-934B-6626270BFF68}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C18D2112-216E-4722-934B-6626270BFF68}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C18D2112-216E-4722-934B-6626270BFF68}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C18D2112-216E-4722-934B-6626270BFF68}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

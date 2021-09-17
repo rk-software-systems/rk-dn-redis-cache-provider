@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace RKSoftware.Packages.Caching.Infrastructure
+﻿namespace RKSoftware.Packages.Caching.Infrastructure
 {
     /// <summary>
     /// This class contains Redis cache settings
@@ -42,5 +40,10 @@ namespace RKSoftware.Packages.Caching.Infrastructure
         /// This flag indicates if logs need to be enabled
         /// </summary>
         public bool UseLogging { get; set; }
+
+        /// <summary>
+        /// Redis password that can be used to access 
+        /// </summary>
+        public string Password { get; set; }
     }
 }

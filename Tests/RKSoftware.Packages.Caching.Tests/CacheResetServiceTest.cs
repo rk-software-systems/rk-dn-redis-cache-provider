@@ -10,7 +10,7 @@ namespace RKSoftware.Packages.Caching.Tests
     [TestClass]
     public class CacheResetServiceTest
     {
-        #region fields  
+        #region fields
 
         private ICacheService _cacheService;
         #endregion

@@ -1,21 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RKSoftware.Packages.Caching.Contract;
 using RKSoftware.Packages.Caching.ErrorHandling;
 using RKSoftware.Packages.Caching.Tests.Models;
+using System;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace RKSoftware.Packages.Caching.Tests
 {
     [TestClass]
     public class CacheGetOrSetServiceTest
     {
-        #region fields  
+        #region fields
 
         private ICacheService _cacheService;
         #endregion

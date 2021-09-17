@@ -1,7 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
 using RKSoftware.Packages.Caching.Infrastructure;
-using RKSoftware.Packages.Caching.System.Text.Json.Converter;
 using System.IO;
 using RKSoftware.Packages.Caching.Implementation;
 using Microsoft.Extensions.Logging;
@@ -11,6 +10,7 @@ using StackExchange.Redis;
 using System;
 using Microsoft.Extensions.Caching.Memory;
 using System.Threading.Tasks;
+using RKSoftware.Packages.Caching.Converter.Mock;
 
 namespace RKSoftware.Packages.Caching.Tests
 {
@@ -29,9 +29,9 @@ namespace RKSoftware.Packages.Caching.Tests
 
             var configuration = LoadConfiguration();
             services.UseRKSoftwareCache(configuration, _projectName)
-                .UseSystemTextJsonTextConverter();
+                .UseMockJsonTextConverter();
 
-            AddConnectionProvider(services);            
+            AddConnectionProvider(services);
 
             var serviceProvider = services.BuildServiceProvider();
             var scope = serviceProvider.CreateScope();
@@ -60,7 +60,7 @@ namespace RKSoftware.Packages.Caching.Tests
         private static void AddConnectionProvider(ServiceCollection services)
         {
             _cache = new MemoryCache(new MemoryCacheOptions
-            {                
+            {
                 SizeLimit = 1024
             });
 
@@ -120,10 +120,10 @@ namespace RKSoftware.Packages.Caching.Tests
                .Setup(x => x.KeyDelete(It.IsAny<RedisKey[]>(), It.IsAny<CommandFlags>()))
                .Returns((RedisKey[] keys, CommandFlags flags) =>
                {
-                   foreach(var key in keys)
+                   foreach (var key in keys)
                    {
                        _cache.Remove(key);
-                   }                  
+                   }
                    return keys.Length;
                });
             databaseMoq

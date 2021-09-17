@@ -19,7 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\RKSoftware.Packages.Caching.Newtonsoft.Json.Converter\RKSoftware.Packages.Caching.Newtonsoft.Json.Converter.csproj" />
+    <ProjectReference Include="..\..\RKSoftware.Packages.Caching.Converter.Mock\RKSoftware.Packages.Caching.Converter.Mock.csproj" />
     <ProjectReference Include="..\..\RKSoftware.Packages.Caching\RKSoftware.Packages.Caching.csproj" />
   </ItemGroup>
 
@@ -28,5 +28,5 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
-
+  
 </Project>

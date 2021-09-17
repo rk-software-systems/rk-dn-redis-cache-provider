@@ -75,7 +75,7 @@ namespace RKSoftware.Packages.Caching.Implementation
 
             return GetOrSetBase(key, objectReceiver, storageDuration, useGlobalCache);
         }
-        
+
         /// <summary>
         /// Get object from cache asynchronously using asynchronous obtainer
         /// In case object not found in cache, obtain its value and set it to cache
@@ -220,7 +220,7 @@ namespace RKSoftware.Packages.Caching.Implementation
             }
 
             return val;
-        }                
+        }
 
         /// <summary>
         /// Base method for getting object from cache asynchronously using asynchronous obtainer

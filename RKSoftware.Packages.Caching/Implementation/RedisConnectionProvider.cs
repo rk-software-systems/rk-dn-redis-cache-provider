@@ -91,10 +91,15 @@ namespace RKSoftware.Packages.Caching.Implementation
 
         private static string GetOptionsString(RedisCacheSettings settings)
         {
-            var optionsStringBuilder = new StringBuilder($"{settings.RedisUrl},abortConnect=False,allowAdmin=true");
+            var optionsStringBuilder = new StringBuilder($"{settings.RedisUrl},abortConnect=false,allowAdmin=true");
             if (settings.SyncTimeout.HasValue)
             {
                 optionsStringBuilder.Append($",syncTimeout=" + settings.SyncTimeout);
+            }
+
+            if (!string.IsNullOrEmpty(settings.Password))
+            {
+                optionsStringBuilder.Append($",password=" + settings.Password);
             }
 
             return optionsStringBuilder.ToString();

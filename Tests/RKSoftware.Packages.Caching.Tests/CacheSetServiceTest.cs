@@ -12,7 +12,7 @@ namespace RKSoftware.Packages.Caching.Tests
     [TestClass]
     public class CacheSetServiceTest
     {
-        #region fields  
+        #region fields
 
         private ICacheService _cacheService;
         #endregion
@@ -38,7 +38,7 @@ namespace RKSoftware.Packages.Caching.Tests
 
             Assert.IsTrue(source.Equals(result));
         }
-                
+
         [TestMethod]
         public void TestSetCacheGlobal()
         {

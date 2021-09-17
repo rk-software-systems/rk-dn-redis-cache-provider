@@ -3,6 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
     <IsPackable>false</IsPackable>
+    <TargetsForTfmSpecificBuildOutput>$(TargetsForTfmSpecificBuildOutput);CopyProjectReferencesToPackage</TargetsForTfmSpecificBuildOutput>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -24,7 +25,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\RKSoftware.Packages.Caching.System.Text.Json.Converter\RKSoftware.Packages.Caching.System.Text.Json.Converter.csproj" />
+    <ProjectReference Include="..\..\RKSoftware.Packages.Caching.Converter.Mock\RKSoftware.Packages.Caching.Converter.Mock.csproj" />
     <ProjectReference Include="..\..\RKSoftware.Packages.Caching\RKSoftware.Packages.Caching.csproj" />
   </ItemGroup>
 
@@ -33,5 +34,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
-
+  <Target DependsOnTargets="ResolveReferences" Name="CopyProjectReferencesToPackage">
+    <ItemGroup>
+      <BuildOutputInPackage Include="@(ReferenceCopyLocalPaths-&gt;WithMetadataValue('ReferenceSourceTarget', 'ProjectReference'))" />
+    </ItemGroup>
+  </Target>
 </Project>

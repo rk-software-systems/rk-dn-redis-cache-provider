@@ -1,10 +1,10 @@
 ﻿using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moq;
+using RKSoftware.Packages.Caching.Converter.Mock;
 using RKSoftware.Packages.Caching.ErrorHandling;
 using RKSoftware.Packages.Caching.Implementation;
 using RKSoftware.Packages.Caching.Infrastructure;
-using RKSoftware.Packages.Caching.Newtonsoft.Json.Converter;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
@@ -28,17 +28,20 @@ namespace TestCluster
                 ConnectionMultiplexerPoolSize = 3,
                 DefaultCacheDuration = 3600,
                 GlobalCacheKey = "RK.Redis",
-                RedisUrl = "sentinel.master:26379,serviceName=rk_redis_master"
+                RedisUrl = "sentinel.master:26379,serviceName=rk_redis_master",
+                Password = "1234567"
                 //RedisUrl = "redis.standalone:6379"
             });
-            var converter = new NewtonsoftJsonTextConverter();
-            var provider = new RedisConnectionProvider(settingsMock.Object,
+
+            var converter = new MockJsonTextConverter();
+            using var provider = new RedisConnectionProvider(settingsMock.Object,
                 loggerMockProvider.Object);
             var service = new CacheService(settingsMock.Object,
                 loggerMockService.Object,
                 provider,
                 converter,
                 "RK.Test");
+
             var str = LoadFile();
             string key = "test";
             await service.SetCachedObjectAsync(key, str);

@@ -1,12 +1,12 @@
 ﻿using RKSoftware.Packages.Caching.Contract;
 using System.Text.Json;
 
-namespace RKSoftware.Packages.Caching.System.Text.Json.Converter
+namespace RKSoftware.Packages.Caching.Converter.Mock
 {
     /// <summary>
     /// Object converted realization using JSON Serialization with System.Text.Json
     /// </summary>
-    public class SystemTextJsonTextConverter : IObjectToTextConverter
+    public class MockJsonTextConverter : IObjectToTextConverter
     {
         /// <summary>
         /// Convert object from string

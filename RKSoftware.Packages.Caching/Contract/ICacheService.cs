@@ -91,7 +91,7 @@ namespace RKSoftware.Packages.Caching.Contract
         /// <param name="useGlobalCache">This flag indicates if cache entry should be set in Global cache (available for all containers)</param>
         /// <returns>Object from cache</returns>
         T GetOrSetCachedObject<T>(string key, Func<T> objectReceiver, long storageDuration, bool useGlobalCache);
-                
+
         /// <summary>
         /// Get object from cache asynchronously using asynchronous obtainer
         /// In case object not found in cache, obtain its value and set it to cache
@@ -201,7 +201,7 @@ namespace RKSoftware.Packages.Caching.Contract
         /// <param name="useGlobalCache">This flag indicates if cache entry should be set in Global cache (available for all containers)</param>
         /// <returns>Task awaiter</returns>
         Task SetCachedObjectAsync<T>(string key, T obj, long storageDuration, bool useGlobalCache);
-                
+
         /// <summary>
         /// Reset entry in cache
         /// </summary>

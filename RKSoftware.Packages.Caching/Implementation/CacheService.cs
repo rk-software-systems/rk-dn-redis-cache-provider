@@ -114,17 +114,17 @@ namespace RKSoftware.Packages.Caching.Implementation
         /// Get Fully qualified partial key based on global and project name
         /// </summary>
         /// <param name="keyPart">Key part</param>
-        /// <param name="global">Create Global Key</param>        
+        /// <param name="global">Create Global Key</param>
         /// <returns></returns>
         private string GetFullyQualifiedPartialKey(string keyPart, bool global)
-        {            
+        {
             return GetFullyQualifiedKey($"*{keyPart}*", global);
-        }                
+        }
 
         /// <summary>
         /// Get all keys for specific part of key
         /// </summary>
-        /// <param name="partOfKey">substring of key between project system name and text resource key, for example "TextResource.en."</param>        
+        /// <param name="partOfKey">substring of key between project system name and text resource key, for example "TextResource.en."</param>
         /// <param name="global">This flag indicates if cache entry should be set in Global cache (available for all containers)</param>
         /// <returns>list of keys</returns>
         private RedisKey[] GetKeys(string partOfKey, bool global)

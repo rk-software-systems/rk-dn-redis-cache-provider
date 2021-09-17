@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using RKSoftware.Packages.Caching.Contract;
 
-namespace RKSoftware.Packages.Caching.System.Text.Json.Converter
+namespace RKSoftware.Packages.Caching.Converter.Mock
 {
     /// <summary>
     /// This class contains registration extension that is used to register SystemJson.TextConverter to be used in Redis Service
@@ -9,13 +9,13 @@ namespace RKSoftware.Packages.Caching.System.Text.Json.Converter
     public static class RegistrationExtensions
     {
         /// <summary>
-        /// This method is used to register Object to Text converter that uses System.Text.Json serialization <see cref="SystemTextJsonTextConverter"/>.
+        /// This method is used to register Object to Text converter that uses System.Text.Json serialization <see cref="MockJsonTextConverter"/>.
         /// </summary>
         /// <param name="services">Service collection to register <see cref="IObjectToTextConverter"/></param>
         /// <returns>Services collection with registered service</returns>
-        public static IServiceCollection UseSystemTextJsonTextConverter(this IServiceCollection services)
+        public static IServiceCollection UseMockJsonTextConverter(this IServiceCollection services)
         {
-            services.AddSingleton<IObjectToTextConverter, SystemTextJsonTextConverter>();
+            services.AddSingleton<IObjectToTextConverter, MockJsonTextConverter>();
             return services;
         }
     }

@@ -13,7 +13,6 @@ namespace RKSoftware.Packages.Caching.ErrorHandling
         public CacheMissException()
             : base()
         {
-
         }
 
         /// <summary>
@@ -23,7 +22,6 @@ namespace RKSoftware.Packages.Caching.ErrorHandling
         public CacheMissException(string message)
             : base(message)
         {
-
         }
 
         /// <summary>
@@ -34,7 +32,6 @@ namespace RKSoftware.Packages.Caching.ErrorHandling
         public CacheMissException(string message, Exception innerException)
             : base(message, innerException)
         {
-
         }
     }
 }
