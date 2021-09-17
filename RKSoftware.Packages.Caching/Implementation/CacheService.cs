@@ -16,6 +16,7 @@ namespace RKSoftware.Packages.Caching.Implementation
         #region consts
 
         private const string GLOBAL_CACHE_KEY = "RKSoftware.Global";
+
         #endregion
 
         #region fields
