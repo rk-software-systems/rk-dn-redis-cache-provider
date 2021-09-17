@@ -8,6 +8,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{6A3B9754-8B60-4E72-8E66-8957AD60C2B1}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
+		company-logo.png = company-logo.png
 		.github\workflows\dotnet-package-publish.yml = .github\workflows\dotnet-package-publish.yml
 		README.md = README.md
 	EndProjectSection
