@@ -23,7 +23,7 @@ services:
     build: 
       context: ./Integration/TestCluster/sentinel
       dockerfile: Dockerfile
-    command: redis-server /etc/redis/sentinel.conf --sentinel
+    command: redis-server /etc/redis/sentinel.conf --sentinel --requirepass 1234567
 
   redis.slave:
     image: redis:6.0.9
@@ -38,4 +38,4 @@ services:
       context: ./Integration/TestCluster/sentinel
       dockerfile: Dockerfile
     restart: always
-    command: redis-server /etc/redis/sentinel.conf --sentinel
+    command: redis-server /etc/redis/sentinel.conf --sentinel --requirepass 1234567

@@ -126,12 +126,17 @@ namespace RKSoftware.Packages.Caching.Implementation
                 return;
             }
 
-            if (disposing)
+            if (disposing && _connectionMultiplexers != null)
             {
-                foreach (var multiplexer in _connectionMultiplexers)
+                lock (_multiplexerInitLock)
                 {
-                    multiplexer.Close(true);
-                    multiplexer.Dispose();
+                    foreach (var multiplexer in _connectionMultiplexers)
+                    {
+                        multiplexer.Close(true);
+                        multiplexer.Dispose();
+                    }
+
+                    _connectionMultiplexers = null;
                 }
             }
 
