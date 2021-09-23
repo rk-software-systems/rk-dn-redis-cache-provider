@@ -129,8 +129,14 @@
   <data name="RedisConnectionError" xml:space="preserve">
     <value>Redis connection exception during getting. Key: {key}</value>
   </data>
+  <data name="RedisConnectionOpened" xml:space="preserve">
+    <value>Redis connections has been opened</value>
+  </data>
   <data name="RedisConnectionOpenening" xml:space="preserve">
     <value>Opening Redis connection</value>
+  </data>
+  <data name="RedisConnectionOpenError" xml:space="preserve">
+    <value>Error while opening Redis connection</value>
   </data>
   <data name="RedisGetObjectError" xml:space="preserve">
     <value>Failed to get object from Redis. Key: {key}</value>

@@ -66,13 +66,25 @@ namespace RKSoftware.Packages.Caching.Implementation
                     return GetConnectionMultiplexer();
                 }
 
-                var multiplexerCount = _redisCacheSettings.ConnectionMultiplexerPoolSize ?? 1;
-                _connectionMultiplexers = new IConnectionMultiplexer[multiplexerCount];
+                _logger.LogInformation(LogMessageResource.RedisConnectionOpenening);
 
-                for (var i = 0; i < multiplexerCount; i++)
+                try
                 {
-                    _connectionMultiplexers[i] = ConnectionMultiplexer.Connect(GetOptionsString(_redisCacheSettings));
+                    var multiplexerCount = _redisCacheSettings.ConnectionMultiplexerPoolSize ?? 1;
+                    _connectionMultiplexers = new IConnectionMultiplexer[multiplexerCount];
+
+                    for (var i = 0; i < multiplexerCount; i++)
+                    {
+                        _connectionMultiplexers[i] = ConnectionMultiplexer.Connect(GetOptionsString(_redisCacheSettings));
+                    }
                 }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, LogMessageResource.RedisConnectionOpenError);
+                    _connectionMultiplexers = null;
+                    throw;
+                }
+
                 _logger.LogInformation(LogMessageResource.RedisConnectionOpenening);
             }
 
@@ -91,7 +103,7 @@ namespace RKSoftware.Packages.Caching.Implementation
 
         private static string GetOptionsString(RedisCacheSettings settings)
         {
-            var optionsStringBuilder = new StringBuilder($"{settings.RedisUrl},abortConnect=false,allowAdmin=true");
+            var optionsStringBuilder = new StringBuilder($"{settings.RedisUrl.Trim()},abortConnect=false,allowAdmin=true");
             if (settings.SyncTimeout.HasValue)
             {
                 optionsStringBuilder.Append($",syncTimeout=" + settings.SyncTimeout);

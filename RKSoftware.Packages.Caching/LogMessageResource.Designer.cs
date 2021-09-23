@@ -97,11 +97,29 @@ namespace RKSoftware.Packages.Caching {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Redis connections has been opened.
+        /// </summary>
+        internal static string RedisConnectionOpened {
+            get {
+                return ResourceManager.GetString("RedisConnectionOpened", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Opening Redis connection.
         /// </summary>
         internal static string RedisConnectionOpenening {
             get {
                 return ResourceManager.GetString("RedisConnectionOpenening", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error while opening Redis connection.
+        /// </summary>
+        internal static string RedisConnectionOpenError {
+            get {
+                return ResourceManager.GetString("RedisConnectionOpenError", resourceCulture);
             }
         }
         
