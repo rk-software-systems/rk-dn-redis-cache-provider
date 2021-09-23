@@ -109,9 +109,9 @@ namespace RKSoftware.Packages.Caching.Implementation
                 optionsStringBuilder.Append($",syncTimeout=" + settings.SyncTimeout);
             }
 
-            if (!string.IsNullOrEmpty(settings.Password))
+            if (!string.IsNullOrEmpty(settings.Password?.Trim()))
             {
-                optionsStringBuilder.Append($",password=" + settings.Password);
+                optionsStringBuilder.Append($",password=" + settings.Password.Trim());
             }
 
             return optionsStringBuilder.ToString();
