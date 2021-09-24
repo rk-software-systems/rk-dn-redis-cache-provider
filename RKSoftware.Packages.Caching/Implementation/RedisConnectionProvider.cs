@@ -13,11 +13,11 @@ namespace RKSoftware.Packages.Caching.Implementation
     /// Implementation of <see cref="IConnectionProvider"/>
     /// This class is used to manage Redis connections
     /// </summary>
-    public class RedisConnectionProvider : IConnectionProvider, IDisposable
+    public class RedisConnectionProvider : IConnectionProvider
     {
         private bool isDisposed;
-        private static IConnectionMultiplexer[] _connectionMultiplexers;
-        private static readonly object _multiplexerInitLock = new object();
+        private IConnectionMultiplexer[] _connectionMultiplexers;
+        private readonly object _multiplexerInitLock = new object();
         private readonly RedisCacheSettings _redisCacheSettings;
         private readonly ILogger _logger;
 
@@ -91,7 +91,7 @@ namespace RKSoftware.Packages.Caching.Implementation
             return GetConnectionMultiplexer();
         }
 
-        private static IConnectionMultiplexer GetConnectionMultiplexer()
+        private IConnectionMultiplexer GetConnectionMultiplexer()
         {
             if (_connectionMultiplexers.Length == 1)
             {

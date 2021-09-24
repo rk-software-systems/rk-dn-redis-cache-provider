@@ -14,8 +14,13 @@ This packages contains abstractions that could be used to add Redis caching to .
 # Getting Started
 To use caching do the following:
 - Add RedisCacheSettings section to your application settings this section should contain the following fields:
-  - RedisUrl - url to Redis instance
-  - DefaultCacheDuration - Default cache storage duration. (could be overriden when you store value in cache)
+  - *RedisUrl* - path to the Redis instanse
+  - *GlobalCacheKey* -  This key prefix is going to be used as a prefix for Global cache entries
+  - *SyncTimeout* - Specifies the time in milliseconds that the system should allow for synchronous operations (defaults to 5 seconds)
+  - *ConnectionMultiplexerPoolSize* - Size of connection multiplexer pool
+  - *UseLogging* - This flag indicates if logs need to be enabled
+  - *Password* - Redis password that can be used to access redis instancess (requirepass redis settings) ACL is not used in this case
+  - *DefaultCacheDuration* - Default cache storage duration. (could be overriden when you store value in cache)
 - Register cache services using 'RegisterGameOnCache' Extension method on 'IServiceCollection''
 
 # Build and Test

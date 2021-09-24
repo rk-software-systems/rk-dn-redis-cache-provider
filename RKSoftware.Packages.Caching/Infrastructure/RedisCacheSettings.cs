@@ -6,7 +6,7 @@
     public class RedisCacheSettings
     {
         /// <summary>
-        /// Path to the Redis container
+        /// Path to the Redis instanse
         /// Single Redis connection: localhost:6379
         /// Redis Sentinel: localhost:23679,serviceName=redis_master
         /// Follow StackExchange.Redis endpoint URL convention
@@ -42,7 +42,7 @@
         public bool UseLogging { get; set; }
 
         /// <summary>
-        /// Redis password that can be used to access 
+        /// Redis password that can be used to access redis instancess (requirepass redis settings) ACL is not used in this case
         /// </summary>
         public string Password { get; set; }
     }

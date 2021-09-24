@@ -12,9 +12,9 @@
     <RepositoryType>git</RepositoryType>
     <PackageTags>Redis, .NET core</PackageTags>
     <NeutralLanguage>en</NeutralLanguage>
-    <Version>1.0.5</Version>
-    <AssemblyVersion>1.0.5.0</AssemblyVersion>
-    <FileVersion>1.0.5.0</FileVersion>
+    <Version>1.0.6</Version>
+    <AssemblyVersion>1.0.6.0</AssemblyVersion>
+    <FileVersion>1.0.6.0</FileVersion>
     <PackageIcon>company-logo.png</PackageIcon>
   </PropertyGroup>
 
@@ -30,7 +30,7 @@
 
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-    <PackageReference Include="RKSoftware.Packages.Caching" Version="1.2.5" />
+    <PackageReference Include="RKSoftware.Packages.Caching" Version="1.2.9" />
   </ItemGroup>
   
   <ItemGroup>

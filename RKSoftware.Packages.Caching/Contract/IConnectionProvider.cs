@@ -1,11 +1,12 @@
 ﻿using StackExchange.Redis;
+using System;
 
 namespace RKSoftware.Packages.Caching.Contract
 {
     /// <summary>
     /// This interface is used to obtain connection Multiplexer to Redis Database
     /// </summary>
-    public interface IConnectionProvider
+    public interface IConnectionProvider : IDisposable
     {
         /// <summary>
         /// Get redis database connection multiplexer

@@ -8,6 +8,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{6A3B9754-8B60-4E72-8E66-8957AD60C2B1}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
+		.env = .env
 		company-logo.png = company-logo.png
 		.github\workflows\dotnet-package-publish.yml = .github\workflows\dotnet-package-publish.yml
 		README.md = README.md
@@ -27,7 +28,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{ACAE57DA
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RKSoftware.Packages.Caching.Tests", "Tests\RKSoftware.Packages.Caching.Tests\RKSoftware.Packages.Caching.Tests.csproj", "{F6A69D6A-91D4-45A7-B2CC-B55C1112E915}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RKSoftware.Packages.Caching.Converter.Mock", "RKSoftware.Packages.Caching.Converter.Mock\RKSoftware.Packages.Caching.Converter.Mock.csproj", "{C18D2112-216E-4722-934B-6626270BFF68}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RKSoftware.Packages.Caching.Converter.Mock", "RKSoftware.Packages.Caching.Converter.Mock\RKSoftware.Packages.Caching.Converter.Mock.csproj", "{C18D2112-216E-4722-934B-6626270BFF68}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
