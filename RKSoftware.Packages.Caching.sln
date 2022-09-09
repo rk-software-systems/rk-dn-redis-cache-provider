@@ -1,0 +1,100 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.3.32825.248
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RKSoftware.Packages.Caching", "RKSoftware.Packages.Caching\RKSoftware.Packages.Caching.csproj", "{3DD5C26D-9F16-42FA-8927-CC79A665CB36}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{6A3B9754-8B60-4E72-8E66-8957AD60C2B1}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+		.env = .env
+		company-logo.png = company-logo.png
+		.github\workflows\dotnet-package-publish.yml = .github\workflows\dotnet-package-publish.yml
+		README.md = README.md
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RKSoftware.Packages.Caching.System.Text.Json.Converter", "RKSoftware.Packages.Caching.System.Text.Json.Converter\RKSoftware.Packages.Caching.System.Text.Json.Converter.csproj", "{C2765E2B-9BB9-44CC-819D-F488E7E788C7}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RKSoftware.Packages.Caching.Newtonsoft.Json.Converter", "RKSoftware.Packages.Caching.Newtonsoft.Json.Converter\RKSoftware.Packages.Caching.Newtonsoft.Json.Converter.csproj", "{313F145E-FA3B-4904-8732-BA87769F9FCF}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Intergration", "Intergration", "{820EB69F-BDD4-4A40-A102-65634081D3EF}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestCluster", "Integration\TestCluster\TestCluster.csproj", "{54FBDEBF-F565-4537-87ED-D9AFBD92F49D}"
+EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{967ADBF9-56D6-4D92-8B49-31C2CD44C8FE}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{ACAE57DA-B3AD-49C5-9B88-9C38152E2684}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RKSoftware.Packages.Caching.Tests", "Tests\RKSoftware.Packages.Caching.Tests\RKSoftware.Packages.Caching.Tests.csproj", "{F6A69D6A-91D4-45A7-B2CC-B55C1112E915}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RKSoftware.Packages.Caching.Converter.Mock", "RKSoftware.Packages.Caching.Converter.Mock\RKSoftware.Packages.Caching.Converter.Mock.csproj", "{C18D2112-216E-4722-934B-6626270BFF68}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RKSoftware.Packages.Caching.Benchmark", "Tests\RKSoftware.Packages.Caching.Benchmark\RKSoftware.Packages.Caching.Benchmark.csproj", "{B15C274E-AD93-4827-B8C8-160E062F9533}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Benchmark|Any CPU = Benchmark|Any CPU
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3DD5C26D-9F16-42FA-8927-CC79A665CB36}.Benchmark|Any CPU.ActiveCfg = Release|Any CPU
+		{3DD5C26D-9F16-42FA-8927-CC79A665CB36}.Benchmark|Any CPU.Build.0 = Release|Any CPU
+		{3DD5C26D-9F16-42FA-8927-CC79A665CB36}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3DD5C26D-9F16-42FA-8927-CC79A665CB36}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3DD5C26D-9F16-42FA-8927-CC79A665CB36}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3DD5C26D-9F16-42FA-8927-CC79A665CB36}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C2765E2B-9BB9-44CC-819D-F488E7E788C7}.Benchmark|Any CPU.ActiveCfg = Release|Any CPU
+		{C2765E2B-9BB9-44CC-819D-F488E7E788C7}.Benchmark|Any CPU.Build.0 = Release|Any CPU
+		{C2765E2B-9BB9-44CC-819D-F488E7E788C7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C2765E2B-9BB9-44CC-819D-F488E7E788C7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C2765E2B-9BB9-44CC-819D-F488E7E788C7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C2765E2B-9BB9-44CC-819D-F488E7E788C7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{313F145E-FA3B-4904-8732-BA87769F9FCF}.Benchmark|Any CPU.ActiveCfg = Release|Any CPU
+		{313F145E-FA3B-4904-8732-BA87769F9FCF}.Benchmark|Any CPU.Build.0 = Release|Any CPU
+		{313F145E-FA3B-4904-8732-BA87769F9FCF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{313F145E-FA3B-4904-8732-BA87769F9FCF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{313F145E-FA3B-4904-8732-BA87769F9FCF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{313F145E-FA3B-4904-8732-BA87769F9FCF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{54FBDEBF-F565-4537-87ED-D9AFBD92F49D}.Benchmark|Any CPU.ActiveCfg = Debug|Any CPU
+		{54FBDEBF-F565-4537-87ED-D9AFBD92F49D}.Benchmark|Any CPU.Build.0 = Debug|Any CPU
+		{54FBDEBF-F565-4537-87ED-D9AFBD92F49D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{54FBDEBF-F565-4537-87ED-D9AFBD92F49D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{54FBDEBF-F565-4537-87ED-D9AFBD92F49D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{54FBDEBF-F565-4537-87ED-D9AFBD92F49D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{967ADBF9-56D6-4D92-8B49-31C2CD44C8FE}.Benchmark|Any CPU.ActiveCfg = Benchmark|Any CPU
+		{967ADBF9-56D6-4D92-8B49-31C2CD44C8FE}.Benchmark|Any CPU.Build.0 = Benchmark|Any CPU
+		{967ADBF9-56D6-4D92-8B49-31C2CD44C8FE}.Debug|Any CPU.ActiveCfg = Benchmark|Any CPU
+		{967ADBF9-56D6-4D92-8B49-31C2CD44C8FE}.Release|Any CPU.ActiveCfg = Benchmark|Any CPU
+		{F6A69D6A-91D4-45A7-B2CC-B55C1112E915}.Benchmark|Any CPU.ActiveCfg = Debug|Any CPU
+		{F6A69D6A-91D4-45A7-B2CC-B55C1112E915}.Benchmark|Any CPU.Build.0 = Debug|Any CPU
+		{F6A69D6A-91D4-45A7-B2CC-B55C1112E915}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F6A69D6A-91D4-45A7-B2CC-B55C1112E915}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F6A69D6A-91D4-45A7-B2CC-B55C1112E915}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F6A69D6A-91D4-45A7-B2CC-B55C1112E915}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C18D2112-216E-4722-934B-6626270BFF68}.Benchmark|Any CPU.ActiveCfg = Release|Any CPU
+		{C18D2112-216E-4722-934B-6626270BFF68}.Benchmark|Any CPU.Build.0 = Release|Any CPU
+		{C18D2112-216E-4722-934B-6626270BFF68}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C18D2112-216E-4722-934B-6626270BFF68}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C18D2112-216E-4722-934B-6626270BFF68}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C18D2112-216E-4722-934B-6626270BFF68}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B15C274E-AD93-4827-B8C8-160E062F9533}.Benchmark|Any CPU.ActiveCfg = Release|Any CPU
+		{B15C274E-AD93-4827-B8C8-160E062F9533}.Benchmark|Any CPU.Build.0 = Release|Any CPU
+		{B15C274E-AD93-4827-B8C8-160E062F9533}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B15C274E-AD93-4827-B8C8-160E062F9533}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B15C274E-AD93-4827-B8C8-160E062F9533}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B15C274E-AD93-4827-B8C8-160E062F9533}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{54FBDEBF-F565-4537-87ED-D9AFBD92F49D} = {820EB69F-BDD4-4A40-A102-65634081D3EF}
+		{F6A69D6A-91D4-45A7-B2CC-B55C1112E915} = {ACAE57DA-B3AD-49C5-9B88-9C38152E2684}
+		{B15C274E-AD93-4827-B8C8-160E062F9533} = {ACAE57DA-B3AD-49C5-9B88-9C38152E2684}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {DD31C5E7-FEC4-4043-AF17-165F00AD852C}
+	EndGlobalSection
+EndGlobal

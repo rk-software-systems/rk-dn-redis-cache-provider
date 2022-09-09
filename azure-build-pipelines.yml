@@ -1,0 +1,44 @@
+# Build, Lint, create NuGet publish script
+
+trigger:
+- master
+
+name: $(major.version).$(minor.version)$(rev:.r)
+
+pool:
+  name: Hosted VS2017
+
+variables:
+- group: packages-common
+
+steps:
+- task: UseDotNet@2
+  displayName: 'Use .Net Core sdk 3.0.x'
+  inputs:
+    version: 3.0.x
+
+- task: DotNetCoreCLI@2
+  displayName: Restore
+  inputs:
+    command: 'restore'
+    projects: '$(Parameters.RestoreBuildProjects)'
+    feedsToUse: 'select'
+    vstsFeed: '563da17d-600b-4611-b931-16d06b4c39a9'
+
+- task: DotNetCoreCLI@2
+  displayName: Build
+  inputs:
+    projects: '$(Parameters.RestoreBuildProjects)'
+    arguments: '--configuration $(BuildConfiguration) /warnaserror /p:Version=$(Build.BuildNumber)'
+
+- task: CopyFiles@2
+  displayName: 'Copy Files to: $(build.artifactstagingdirectory)'
+  inputs:
+    SourceFolder: '$(agent.builddirectory)'
+    Contents: '**/bin/Release/**'
+    TargetFolder: '$(build.artifactstagingdirectory)'
+
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish Artifact'
+  inputs:
+    PathtoPublish: '$(build.artifactstagingdirectory)'

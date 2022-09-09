@@ -1,0 +1,41 @@
+version: '3.4'
+
+services:
+  testcluster:
+    image: ${DOCKER_REGISTRY-}testcluster
+    build:
+      context: .
+      dockerfile: Integration/TestCluster/Dockerfile
+
+  redis.standalone:
+    image: redis:6.0.8
+    restart: always
+    command: redis-server --requirepass ${Redis_Password:-koresh1234567}
+
+  redis.master:
+    image: redis:6.0.9
+    restart: always
+    command: redis-server --requirepass ${Redis_Password:-koresh1234567}
+
+  sentinel.master:
+    image: rk.sentinel
+    restart: always
+    build: 
+      context: ./Integration/TestCluster/sentinel
+      dockerfile: Dockerfile
+    command: redis-server /etc/redis/sentinel.conf --sentinel --requirepass ${Redis_Password:-koresh1234567}
+
+  redis.slave:
+    image: redis:6.0.9
+    scale: 4
+    restart: always
+    command: redis-server --slaveof redis.master 6379 --requirepass ${Redis_Password:-koresh1234567} --masterauth ${Redis_Password:-koresh1234567}
+
+  sentinel:
+    image: rk.sentinel
+    scale: 2
+    build: 
+      context: ./Integration/TestCluster/sentinel
+      dockerfile: Dockerfile
+    restart: always
+    command: redis-server /etc/redis/sentinel.conf --sentinel --requirepass ${Redis_Password:-koresh1234567}

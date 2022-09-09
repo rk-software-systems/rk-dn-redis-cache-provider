@@ -1,0 +1,45 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+    <Authors>Konstantin Koryakov</Authors>
+    <Company>RK Software Systems</Company>
+    <Product>Objecet to string and vise versa converter for RKSoftware.Packages.Caching</Product>
+    <Description>This package contains converter together with registration extensions to utilize System.Text.Json serializer to convert objects to string and vise versa.</Description>
+    <PackageProjectUrl>https://github.com/rk-software-systems/rk-dn-redis-cache-provider</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/rk-software-systems/rk-dn-redis-cache-provider</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>Redis, .NET core</PackageTags>
+    <NeutralLanguage>en</NeutralLanguage>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Version>1.0.6</Version>
+    <PackageIcon>company-logo.png</PackageIcon>
+    <Configurations>Debug;Release;Benchmark</Configurations>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <EnableNETAnalyzers>true</EnableNETAnalyzers>
+    <AnalysisMode>AllEnabledByDefault</AnalysisMode>
+    <AnalysisLevel>latest</AnalysisLevel>
+    <AssemblyVersion>1.0.6.0</AssemblyVersion>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Benchmark|AnyCPU'">
+    <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="RKSoftware.Packages.Caching" Version="1.2.10" />
+    <PackageReference Include="System.Text.Json" Version="6.0.5" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\company-logo.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+  </ItemGroup>
+</Project>

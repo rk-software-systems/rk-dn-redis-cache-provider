@@ -1,0 +1,43 @@
+name: NuGet Generation
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    types: [closed]
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    name: Update or Create NuGet package
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 5.0.*
+      - name: Install dependencies RKSoftware.Packages.Caching
+        run: dotnet restore RKSoftware.Packages.Caching
+      - name: Install dependencies RKSoftware.Packages.Caching.Newtonsoft.Json.Converter
+        run: dotnet restore RKSoftware.Packages.Caching.Newtonsoft.Json.Converter
+      - name: Install dependencies RKSoftware.Packages.Caching.System.Text.Json.Converter
+        run: dotnet restore RKSoftware.Packages.Caching.System.Text.Json.Converter
+
+      - name: Build Cache Service
+        run: dotnet build RKSoftware.Packages.Caching --configuration Release --no-restore
+      - name: Build Newtonsoft Provider
+        run: dotnet build RKSoftware.Packages.Caching.Newtonsoft.Json.Converter --configuration Release --no-restore
+      - name: Build System Text Json Provider
+        run: dotnet build RKSoftware.Packages.Caching.System.Text.Json.Converter --configuration Release --no-restore
+
+      - name: Push generated Caching package to NuGet repository
+        run: dotnet nuget push ./RKSoftware.Packages.Caching/bin/Release/*.nupkg --skip-duplicate --no-symbols true --api-key ${{secrets.NUGET_API_KEY}} --source https://api.nuget.org/v3/index.json
+
+      - name: Push generated System.Text.Json Converter package to NuGet repository
+        run: dotnet nuget push ./RKSoftware.Packages.Caching.System.Text.Json.Converter/bin/Release/*.nupkg --skip-duplicate --no-symbols true --api-key ${{secrets.NUGET_API_KEY}} --source https://api.nuget.org/v3/index.json
+
+      - name: Push generated Newtonsoft Converter package to NuGet repository
+        run: dotnet nuget push ./RKSoftware.Packages.Caching.Newtonsoft.Json.Converter/bin/Release/*.nupkg --skip-duplicate --no-symbols true --api-key ${{secrets.NUGET_API_KEY}} --source https://api.nuget.org/v3/index.json
