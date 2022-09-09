@@ -5,10 +5,8 @@ using RKSoftware.Packages.Caching.Infrastructure;
 using StackExchange.Redis;
 using System;
 using System.Linq;
-using System.Text.Json;
-using System.Text;
-using System.Text.Json.Serialization;
 using System.IO;
+using System.Runtime.Serialization;
 
 namespace RKSoftware.Packages.Caching.Implementation
 {
@@ -145,7 +143,7 @@ namespace RKSoftware.Packages.Caching.Implementation
 		{
 			IDatabase redDb = GetDatabase();
 
-			byte[] byteArray = Encoding.UTF8.GetBytes(value);
+			byte[] byteArray = SerializeToByteArray(value);
 			MemoryStream stream = new MemoryStream(byteArray);
 
 			var redisValue = RedisValue.CreateFrom(stream);
@@ -158,43 +156,43 @@ namespace RKSoftware.Packages.Caching.Implementation
 		{
 			IDatabase redDb = GetDatabase();
 
-			//RedisValue redisResult = redDb.StringGet(key, flags);
 			Lease<byte> lease = redDb.StringGetLease(key, flags);
 			var byteArray = lease.Memory.ToArray();
 
-			T objResult = FromByteArray<T>(byteArray);
-			return objResult;
-		}
-
-		private byte[] ToByteArray<T>(T obj)
-		{
-			if (obj == null)
-			{
-				return null;
-			}
-
-			return Encoding.UTF8.GetBytes(JsonSerializer.Serialize(obj, GetJsonSerializerOptions()));
-		}
-
-		private T FromByteArray<T>(byte[] byteArray)
-		{
-			if (byteArray == null || !byteArray.Any())
+			if (byteArray == null)
 			{
 				return default;
 			}
 
-			return JsonSerializer.Deserialize<T>(byteArray, GetJsonSerializerOptions());
+			return DeserializeByteArray<T>(byteArray);
 		}
 
-		private static JsonSerializerOptions GetJsonSerializerOptions()
+		private static byte[] SerializeToByteArray<T>(T obj) where T : class
 		{
-			return new JsonSerializerOptions()
+			if (obj == null)
 			{
-				PropertyNamingPolicy = null,
-				WriteIndented = true,
-				AllowTrailingCommas = true,
-				DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
-			};
+				return default;
+			}
+
+			using var memoryStream = new MemoryStream();
+
+			var serializer = new DataContractSerializer(typeof(T));
+			serializer.WriteObject(memoryStream, obj);
+			return memoryStream.ToArray();
+		}
+
+		private static T DeserializeByteArray<T>(byte[] byteArray)
+		{
+			if (byteArray == null)
+			{
+				return default;
+			}
+
+			using var memoryStream = new MemoryStream(byteArray);
+
+			var serializer = new DataContractSerializer(typeof(T));
+			var obj = (T)serializer.ReadObject(memoryStream);
+			return obj;
 		}
 
 		#endregion
