@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.29418.71
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33205.214
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RKSoftware.Packages.Caching", "RKSoftware.Packages.Caching\RKSoftware.Packages.Caching.csproj", "{3DD5C26D-9F16-42FA-8927-CC79A665CB36}"
 EndProject
