@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Immutable;
-using System.IO;
+﻿using System.IO;
 using System.Linq;
-using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
@@ -72,10 +69,7 @@ namespace RKSoftware.Packages.Caching.Tests
             var testObj = await GetObject();
 
             var key = new RedisKey("test_key_str");
-            var strValue = JsonSerializer.Serialize(testObj, new JsonSerializerOptions
-            {
-                Encoder = JavaScriptEncoder.
-            });
+            var strValue = JsonSerializer.Serialize(testObj);
             await _db.StringSetAsync(key, strValue);
         }
 
@@ -156,7 +150,7 @@ namespace RKSoftware.Packages.Caching.Tests
                 PropertyNamingPolicy = JsonNamingPolicy.CamelCase
             });
 
-            obj.Data = obj.Data.Take(10).ToList();
+            obj.Data = obj.Data.ToList();
 
             return obj;
         }
