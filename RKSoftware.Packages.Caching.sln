@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.29418.71
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33205.214
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RKSoftware.Packages.Caching", "RKSoftware.Packages.Caching\RKSoftware.Packages.Caching.csproj", "{3DD5C26D-9F16-42FA-8927-CC79A665CB36}"
 EndProject
@@ -9,6 +9,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
 		.env = .env
+		.gitignore = .gitignore
 		company-logo.png = company-logo.png
 		.github\workflows\dotnet-package-publish.yml = .github\workflows\dotnet-package-publish.yml
 		README.md = README.md
@@ -29,6 +30,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RKSoftware.Packages.Caching.Tests", "Tests\RKSoftware.Packages.Caching.Tests\RKSoftware.Packages.Caching.Tests.csproj", "{F6A69D6A-91D4-45A7-B2CC-B55C1112E915}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RKSoftware.Packages.Caching.Converter.Mock", "RKSoftware.Packages.Caching.Converter.Mock\RKSoftware.Packages.Caching.Converter.Mock.csproj", "{C18D2112-216E-4722-934B-6626270BFF68}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RKSoftware.Packages.Caching.Stream.Converter", "RKSoftware.Packages.Caching.Stream.Converter\RKSoftware.Packages.Caching.Stream.Converter.csproj", "{613BE7C3-C553-41E4-9849-28A506E0F7A9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -64,6 +67,10 @@ Global
 		{C18D2112-216E-4722-934B-6626270BFF68}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C18D2112-216E-4722-934B-6626270BFF68}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C18D2112-216E-4722-934B-6626270BFF68}.Release|Any CPU.Build.0 = Release|Any CPU
+		{613BE7C3-C553-41E4-9849-28A506E0F7A9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{613BE7C3-C553-41E4-9849-28A506E0F7A9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{613BE7C3-C553-41E4-9849-28A506E0F7A9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{613BE7C3-C553-41E4-9849-28A506E0F7A9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

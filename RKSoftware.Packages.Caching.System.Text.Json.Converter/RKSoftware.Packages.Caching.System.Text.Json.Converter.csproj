@@ -1,7 +1,7 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net7.0</TargetFramework>
     <Authors>Konstantin Koryakov</Authors>
     <Company>RK Software Systems</Company>
     <Product>Objecet to string and vise versa converter for RKSoftware.Packages.Caching</Product>
@@ -12,7 +12,7 @@
     <PackageTags>Redis, .NET core</PackageTags>
     <NeutralLanguage>en</NeutralLanguage>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>1.0.6</Version>
+    <Version>1.1.0</Version>
     <PackageIcon>company-logo.png</PackageIcon>
   </PropertyGroup>
 
@@ -20,7 +20,7 @@
     <EnableNETAnalyzers>true</EnableNETAnalyzers>
     <AnalysisMode>AllEnabledByDefault</AnalysisMode>
     <AnalysisLevel>latest</AnalysisLevel>
-    <AssemblyVersion>1.0.6.0</AssemblyVersion>
+    <AssemblyVersion>1.1.0.0</AssemblyVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
@@ -28,8 +28,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="RKSoftware.Packages.Caching" Version="1.2.9" />
-    <PackageReference Include="System.Text.Json" Version="5.0.2" />
+    <PackageReference Include="RKSoftware.Packages.Caching" Version="1.2.10" />
+    <PackageReference Include="System.Text.Json" Version="7.0.1" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\company-logo.png">

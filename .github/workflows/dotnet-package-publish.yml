@@ -18,7 +18,7 @@ jobs:
       - name: Setup .NET Core
         uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: 5.0.*
+          dotnet-version: 7.0.*
       - name: Install dependencies RKSoftware.Packages.Caching
         run: dotnet restore RKSoftware.Packages.Caching
       - name: Install dependencies RKSoftware.Packages.Caching.Newtonsoft.Json.Converter
