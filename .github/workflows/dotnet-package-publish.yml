@@ -34,10 +34,10 @@ jobs:
         run: dotnet build RKSoftware.Packages.Caching.System.Text.Json.Converter --configuration Release --no-restore
 
       - name: Push generated Caching package to NuGet repository
-        run: dotnet nuget push ./RKSoftware.Packages.Caching/bin/Release/*.nupkg --skip-duplicate --no-symbols true --api-key ${{secrets.NUGET_API_KEY}} --source https://api.nuget.org/v3/index.json
+        run: dotnet nuget push ./RKSoftware.Packages.Caching/bin/Release/*.nupkg --skip-duplicate -n --api-key ${{secrets.NUGET_API_KEY}} --source https://api.nuget.org/v3/index.json
 
       - name: Push generated System.Text.Json Converter package to NuGet repository
-        run: dotnet nuget push ./RKSoftware.Packages.Caching.System.Text.Json.Converter/bin/Release/*.nupkg --skip-duplicate --no-symbols true --api-key ${{secrets.NUGET_API_KEY}} --source https://api.nuget.org/v3/index.json
+        run: dotnet nuget push ./RKSoftware.Packages.Caching.System.Text.Json.Converter/bin/Release/*.nupkg --skip-duplicate -n --api-key ${{secrets.NUGET_API_KEY}} --source https://api.nuget.org/v3/index.json
 
       - name: Push generated Newtonsoft Converter package to NuGet repository
-        run: dotnet nuget push ./RKSoftware.Packages.Caching.Newtonsoft.Json.Converter/bin/Release/*.nupkg --skip-duplicate --no-symbols true --api-key ${{secrets.NUGET_API_KEY}} --source https://api.nuget.org/v3/index.json
+        run: dotnet nuget push ./RKSoftware.Packages.Caching.Newtonsoft.Json.Converter/bin/Release/*.nupkg --skip-duplicate -n --api-key ${{secrets.NUGET_API_KEY}} --source https://api.nuget.org/v3/index.json
