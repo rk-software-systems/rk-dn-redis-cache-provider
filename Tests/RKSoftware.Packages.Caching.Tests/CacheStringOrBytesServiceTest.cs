@@ -2,6 +2,7 @@
 using System.Collections.Immutable;
 using System.IO;
 using System.Linq;
+using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
@@ -16,7 +17,7 @@ using StackExchange.Redis;
 namespace RKSoftware.Packages.Caching.Tests
 {
     [TestClass]
-    public class CacheGetOrSetBytesServiceTest
+    public class CacheStringOrBytesServiceTest
     {
         private IDatabase _db;        
 
@@ -71,7 +72,10 @@ namespace RKSoftware.Packages.Caching.Tests
             var testObj = await GetObject();
 
             var key = new RedisKey("test_key_str");
-            var strValue = JsonSerializer.Serialize(testObj);
+            var strValue = JsonSerializer.Serialize(testObj, new JsonSerializerOptions
+            {
+                Encoder = JavaScriptEncoder.
+            });
             await _db.StringSetAsync(key, strValue);
         }
 
