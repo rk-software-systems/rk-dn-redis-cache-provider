@@ -16,7 +16,7 @@ using StackExchange.Redis;
 namespace RKSoftware.Packages.Caching.Tests
 {
     [TestClass]
-    public class CacheGetOrSetBytesServiceTest
+    public class CacheStringOrBytesServiceTest
     {
         private IDatabase _db;        
 
