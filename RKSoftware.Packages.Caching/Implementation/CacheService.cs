@@ -16,7 +16,6 @@ namespace RKSoftware.Packages.Caching.Implementation
         #region consts
 
         private const string GLOBAL_CACHE_KEY = "RKSoftware.Global";
-
         #endregion
 
         #region fields
@@ -25,7 +24,7 @@ namespace RKSoftware.Packages.Caching.Implementation
         private readonly string _projectName;
         private readonly ILogger _logger;
         private readonly IConnectionProvider _connectionProvider;
-        private readonly IObjectToTextConverter _objectConverter;
+        private readonly ICacheRepository _cacheRepository;
         #endregion
 
         #region ctor
@@ -36,12 +35,12 @@ namespace RKSoftware.Packages.Caching.Implementation
         /// <param name="redisCacheProvider">Redis connectivity settings</param>
         /// <param name="logger"><see cref="ILogger"/></param>
         /// <param name="connectionProvider">This class is used to obtain Connection Multiplexer <see cref="IConnectionProvider"/></param>
-        /// <param name="objectConverter">This service is used to serialize objects from / to strings</param>
+        /// <param name="cacheRepository"></param>
         /// <param name="scopedKeyPrefix">This prefix is used as a starting part of Redis DB keys</param>
         public CacheService(IOptions<RedisCacheSettings> redisCacheProvider,
             ILogger<CacheService> logger,
             IConnectionProvider connectionProvider,
-            IObjectToTextConverter objectConverter,
+            ICacheRepository cacheRepository,
             string scopedKeyPrefix)
         {
             if (redisCacheProvider == null)
@@ -57,8 +56,8 @@ namespace RKSoftware.Packages.Caching.Implementation
             _redisCacheSettings = redisCacheProvider.Value;
             _logger = logger;
             _connectionProvider = connectionProvider;
-            _objectConverter = objectConverter;
             _projectName = scopedKeyPrefix;
+            _cacheRepository = cacheRepository;
         }
 
         #endregion
@@ -74,12 +73,6 @@ namespace RKSoftware.Packages.Caching.Implementation
             var redis = _connectionProvider.GetConnection();
 
             return redis.GetDatabase();
-        }
-
-        private CommandFlags GetReadFlags()
-        {
-            return _connectionProvider.IsSentinel ?
-                CommandFlags.DemandReplica : CommandFlags.None;
         }
 
         private string GetGlobalKey()

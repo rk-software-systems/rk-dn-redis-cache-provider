@@ -14,7 +14,7 @@ using RKSoftware.Packages.Caching.Converter.Mock;
 
 namespace RKSoftware.Packages.Caching.Tests
 {
-    internal class Initialization
+    internal sealed class Initialization
     {
         private static string _projectName => typeof(Initialization).Namespace;
         private static MemoryCache _cache;

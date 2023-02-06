@@ -15,17 +15,40 @@ namespace RKSoftware.Packages.Caching.Implementation
     /// </summary>
     public class RedisConnectionProvider : IConnectionProvider
     {
+        #region fields  
+
         private bool isDisposed;
         private IConnectionMultiplexer[] _connectionMultiplexers;
         private readonly object _multiplexerInitLock = new object();
         private readonly RedisCacheSettings _redisCacheSettings;
         private readonly ILogger _logger;
+        #endregion
+
+        #region props  
 
         /// <summary>
         /// This flag indicates if particular connection is Sentinel one
         /// it is used to determine if it is possible to use Redis replica fore read
         /// </summary>
         public bool IsSentinel { get; }
+
+        /// <summary>
+        /// Get read flags based on connection is Sentinel or not
+        /// </summary>
+        public CommandFlags ReadFlags => IsSentinel ? CommandFlags.DemandReplica : CommandFlags.None;
+
+        /// <summary>
+        /// Get write flags
+        /// </summary>
+        public CommandFlags WriteFlags => CommandFlags.FireAndForget | CommandFlags.DemandMaster;
+
+        /// <summary>
+        /// Get remove flags
+        /// </summary>
+        public CommandFlags RemoveFlags => CommandFlags.FireAndForget | CommandFlags.DemandMaster;
+        #endregion
+
+        #region ctors
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RedisConnectionProvider"/> class.
@@ -46,8 +69,10 @@ namespace RKSoftware.Packages.Caching.Implementation
             IsSentinel = _redisCacheSettings.RedisUrl
                 .Contains("serviceName=", StringComparison.InvariantCultureIgnoreCase);
         }
+        #endregion
 
-
+        #region methods
+        
         /// <summary>
         /// Get redis database connection multiplexer
         /// </summary>
@@ -90,6 +115,10 @@ namespace RKSoftware.Packages.Caching.Implementation
 
             return GetConnectionMultiplexer();
         }
+                
+        #endregion
+
+        #region helpers
 
         private IConnectionMultiplexer GetConnectionMultiplexer()
         {
@@ -116,8 +145,10 @@ namespace RKSoftware.Packages.Caching.Implementation
 
             return optionsStringBuilder.ToString();
         }
+        #endregion
 
         #region IDisposable
+
         /// <summary>
         /// <see cref="IDisposable"/> Dispose method implementation
         /// </summary>

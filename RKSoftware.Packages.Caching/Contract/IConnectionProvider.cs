@@ -19,5 +19,20 @@ namespace RKSoftware.Packages.Caching.Contract
         /// it is used to determine if it is possible to use Redis replica fore read
         /// </summary>
         bool IsSentinel { get; }
+
+        /// <summary>
+        ///  Get read flags based on connection is Sentinel or not
+        /// </summary>
+        CommandFlags ReadFlags { get; }
+
+        /// <summary>
+        /// Get write flags
+        /// </summary>
+        CommandFlags WriteFlags { get; }
+
+        /// <summary>
+        /// Get remove flags
+        /// </summary>
+        CommandFlags RemoveFlags { get; }
     }
 }

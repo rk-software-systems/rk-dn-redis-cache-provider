@@ -4,18 +4,13 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using RKSoftware.Packages.Caching.Implementation;
 using RKSoftware.Packages.Caching.Infrastructure;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RKSoftware.Packages.Caching.Tests
 {
     [TestClass]
     public class ConnectionProviderTest
     {
-        private RedisConnectionProvider GetConnectionProvider()
+        private static RedisConnectionProvider GetConnectionProvider()
         {
             var loggerMockProvider = new Mock<ILogger<RedisConnectionProvider>>();
 

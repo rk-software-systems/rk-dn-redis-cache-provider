@@ -47,10 +47,10 @@ namespace RKSoftware.Packages.Caching.Infrastructure
 
             services.AddScoped<ICacheService>(x =>
             new CacheService(x.GetService<IOptions<RedisCacheSettings>>(),
-            x.GetService<ILogger<CacheService>>(),
-            x.GetService<IConnectionProvider>(),
-            x.GetService<IObjectToTextConverter>(),
-            scopedKeyPrefix));
+                             x.GetService<ILogger<CacheService>>(),
+                             x.GetService<IConnectionProvider>(),
+                             x.GetService<ICacheRepository>(),
+                             scopedKeyPrefix));
 
             return services;
         }
