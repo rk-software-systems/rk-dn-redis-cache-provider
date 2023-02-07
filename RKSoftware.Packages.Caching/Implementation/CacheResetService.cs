@@ -168,7 +168,8 @@ namespace RKSoftware.Packages.Caching.Implementation
         {
             if ((keys?.Count()).GetValueOrDefault() == 0)
             {
-                throw new ArgumentException(LogMessageResource.RedisBulkResetNoKeys, nameof(keys));
+                // no keys to delete, exit
+                return Task.CompletedTask;
             }
 
             var keyArr = new List<RedisKey>();

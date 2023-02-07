@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using RKSoftware.Packages.Caching.Contract;
+using RKSoftware.Packages.Caching.Repositories;
 
 namespace RKSoftware.Packages.Caching.Newtonsoft.Json.Converter
 {
@@ -16,7 +17,8 @@ namespace RKSoftware.Packages.Caching.Newtonsoft.Json.Converter
         /// <returns>Services collection with registered service</returns>
         public static IServiceCollection UseNewtonsoftJsonTextConverter(this IServiceCollection services)
         {
-            services.AddSingleton<IObjectToTextConverter, NewtonsoftJsonTextConverter>();
+            services.AddScoped<ICacheRepository, StringCacheRepository>();
+            services.AddScoped<IObjectToTextConverter, NewtonsoftJsonTextConverter>();
             return services;
         }
     }

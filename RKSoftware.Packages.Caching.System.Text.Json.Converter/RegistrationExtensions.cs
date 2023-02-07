@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using RKSoftware.Packages.Caching.Contract;
+using RKSoftware.Packages.Caching.Repositories;
 
 namespace RKSoftware.Packages.Caching.System.Text.Json.Converter
 {
@@ -15,7 +16,8 @@ namespace RKSoftware.Packages.Caching.System.Text.Json.Converter
         /// <returns>Services collection with registered service</returns>
         public static IServiceCollection UseSystemTextJsonTextConverter(this IServiceCollection services)
         {
-            services.AddSingleton<IObjectToTextConverter, SystemTextJsonTextConverter>();
+            services.AddScoped<ICacheRepository, StringCacheRepository>();
+            services.AddScoped<IObjectToTextConverter, SystemTextJsonTextConverter>();
             return services;
         }
     }

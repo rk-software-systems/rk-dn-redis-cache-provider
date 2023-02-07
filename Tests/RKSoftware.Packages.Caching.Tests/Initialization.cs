@@ -66,6 +66,17 @@ namespace RKSoftware.Packages.Caching.Tests
 
             var databaseMoq = new Mock<IDatabase>();
             databaseMoq
+                .Setup(x => x.StringSet(It.IsAny<RedisKey>(), It.IsAny<RedisValue>(), It.IsAny<TimeSpan?>(), It.IsAny<bool>(), It.IsAny<When>(), It.IsAny<CommandFlags>()))
+                .Returns((RedisKey key, RedisValue value, TimeSpan sec, bool keepTtl, When when, CommandFlags flags) =>
+                {
+                    var cacheEntryOptions = new MemoryCacheEntryOptions()
+                        .SetSize(1)
+                        .SetSlidingExpiration(sec);
+
+                    _cache.Set<string>(key, value, cacheEntryOptions);
+                    return true;
+                });
+            databaseMoq
                 .Setup(x => x.StringSet(It.IsAny<RedisKey>(), It.IsAny<RedisValue>(), It.IsAny<TimeSpan?>(), It.IsAny<When>(), It.IsAny<CommandFlags>()))
                 .Returns((RedisKey key, RedisValue value, TimeSpan sec, When when, CommandFlags flags) =>
                 {
@@ -83,6 +94,17 @@ namespace RKSoftware.Packages.Caching.Tests
                    _cache.TryGetValue<string>(key, out string value);
                    return value;
                });
+            databaseMoq
+                .Setup(x => x.StringSetAsync(It.IsAny<RedisKey>(), It.IsAny<RedisValue>(), It.IsAny<TimeSpan?>(), It.IsAny<bool>(), It.IsAny<When>(), It.IsAny<CommandFlags>()))
+                .Returns((RedisKey key, RedisValue value, TimeSpan sec, bool keepTtl, When when, CommandFlags flags) =>
+                {
+                    var cacheEntryOptions = new MemoryCacheEntryOptions()
+                        .SetSize(1)
+                        .SetSlidingExpiration(sec);
+
+                    _cache.Set<string>(key, value, cacheEntryOptions);
+                    return Task.FromResult(true);
+                });
             databaseMoq
                 .Setup(x => x.StringSetAsync(It.IsAny<RedisKey>(), It.IsAny<RedisValue>(), It.IsAny<TimeSpan?>(), It.IsAny<When>(), It.IsAny<CommandFlags>()))
                 .Returns((RedisKey key, RedisValue value, TimeSpan sec, When when, CommandFlags flags) =>

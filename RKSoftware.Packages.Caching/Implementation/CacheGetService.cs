@@ -66,11 +66,6 @@ namespace RKSoftware.Packages.Caching.Implementation
         {
             key = GetFullyQualifiedKey(key, useGlobalCache);
 
-            if (string.IsNullOrEmpty(key))
-            {
-                throw new ArgumentNullException(nameof(key));
-            }
-
             try
             {
                 var db = GetDatabase();
@@ -105,11 +100,6 @@ namespace RKSoftware.Packages.Caching.Implementation
         private Task<T> GetCachedObjectAsync<T>(string key, bool useGlobalCache, Func<IDatabase, string,  Task<T>> resultExecutor)
         {
             key = GetFullyQualifiedKey(key, useGlobalCache);
-
-            if (string.IsNullOrEmpty(key))
-            {
-                throw new CacheMissException();
-            }
 
             try
             {
