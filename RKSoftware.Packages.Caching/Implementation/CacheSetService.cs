@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
 using StackExchange.Redis;
 
 namespace RKSoftware.Packages.Caching.Implementation
@@ -114,7 +113,7 @@ namespace RKSoftware.Packages.Caching.Implementation
                 var db = GetDatabase();
                 if (_redisCacheSettings.UseLogging)
                 {
-                    _logger.LogInformation("Setting object from redis. Key: {key}", key);
+                    _logRedisSetObjectInformation(_logger, key, null);
                 }
 
                 resultExecutor(db, key, objectToCache, storageDuration);
@@ -123,7 +122,7 @@ namespace RKSoftware.Packages.Caching.Implementation
             {
                 if (_redisCacheSettings.UseLogging)
                 {
-                    _logger.LogError(ex, LogMessageResource.RedisSetObjectError, key);
+                    _logRedisSetObjectConnectionError(_logger, key, ex);
                 }
                 throw;
             }
@@ -131,7 +130,7 @@ namespace RKSoftware.Packages.Caching.Implementation
             {
                 if (_redisCacheSettings.UseLogging)
                 {
-                    _logger.LogError(ex, LogMessageResource.RedisSetObjectError, key);
+                    _logRedisSetObjectError(_logger, key, ex);
                 }
                 throw;
             }
@@ -146,7 +145,7 @@ namespace RKSoftware.Packages.Caching.Implementation
                 var db = GetDatabase();
                 if (_redisCacheSettings.UseLogging)
                 {
-                    _logger.LogInformation("Setting object from redis. Key: {key}", key);
+                    _logRedisSetObjectInformation(_logger, key, null);
                 }
 
                 return resultExecutor(db, key, obj, storageDuration);
@@ -155,7 +154,7 @@ namespace RKSoftware.Packages.Caching.Implementation
             {
                 if (_redisCacheSettings.UseLogging)
                 {
-                    _logger.LogError(ex, LogMessageResource.RedisSetObjectError, key);
+                    _logRedisSetObjectConnectionError(_logger, key, ex);
                 }
                 throw;
             }
@@ -163,7 +162,7 @@ namespace RKSoftware.Packages.Caching.Implementation
             {
                 if (_redisCacheSettings.UseLogging)
                 {
-                    _logger.LogError(ex, LogMessageResource.RedisSetObjectError, key);
+                    _logRedisSetObjectError(_logger, key, ex);
                 }
                 throw;
             }

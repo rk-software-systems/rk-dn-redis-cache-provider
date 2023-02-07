@@ -138,11 +138,14 @@
   <data name="RedisConnectionOpenError" xml:space="preserve">
     <value>Error while opening Redis connection</value>
   </data>
+  <data name="RedisGetObject" xml:space="preserve">
+    <value>Getting object from redis. Key: {key}</value>
+  </data>
+  <data name="RedisGetObjectConnectionError" xml:space="preserve">
+    <value>Error while connecting to Redis during GET operation</value>
+  </data>
   <data name="RedisGetObjectError" xml:space="preserve">
     <value>Failed to get object from Redis. Key: {key}</value>
-  </data>
-  <data name="RedisGetObjectRedisConnectionError" xml:space="preserve">
-    <value>Error while connecting to Redis during GET operation</value>
   </data>
   <data name="RedisObjectNotFound" xml:space="preserve">
     <value>Object not found in cache. Key: {key}</value>
@@ -150,10 +153,13 @@
   <data name="RedisRemoveObjectError" xml:space="preserve">
     <value>Failed to reset value from Redis. Redis key: {RedisKey}</value>
   </data>
+  <data name="RedisSetObject" xml:space="preserve">
+    <value>Setting object from redis. Key: {key}</value>
+  </data>
+  <data name="RedisSetObjectConnectionError" xml:space="preserve">
+    <value>Error while connecting to Redis during SET operation</value>
+  </data>
   <data name="RedisSetObjectError" xml:space="preserve">
     <value>Failed to set value in Redis. Key: {key}</value>
-  </data>
-  <data name="RedisSetObjectRedisConnectionError" xml:space="preserve">
-    <value>Error while connecting to Redis during SET operation</value>
   </data>
 </root>

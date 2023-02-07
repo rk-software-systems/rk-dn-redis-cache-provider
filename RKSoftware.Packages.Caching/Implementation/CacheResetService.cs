@@ -39,7 +39,7 @@ namespace RKSoftware.Packages.Caching.Implementation
             {
                 if (_redisCacheSettings.UseLogging)
                 {
-                    _logger.LogError(ex, LogMessageResource.RedisConnectionError, key);
+                    _logRedisResetConnectionError(_logger, key, ex);
                 }
                 throw;
             }
@@ -47,7 +47,7 @@ namespace RKSoftware.Packages.Caching.Implementation
             {
                 if (_redisCacheSettings.UseLogging)
                 {
-                    _logger.LogError(ex, LogMessageResource.RedisRemoveObjectError, key);
+                    _logRedisRemoveObjectError(_logger, key, ex);
                 }
                 throw;
             }
@@ -83,7 +83,7 @@ namespace RKSoftware.Packages.Caching.Implementation
             {
                 if (_redisCacheSettings.UseLogging)
                 {
-                    _logger.LogError(ex, LogMessageResource.RedisRemoveObjectError, key);
+                    _logRedisResetConnectionError(_logger, key, ex);
                 }
                 throw;
             }
@@ -91,7 +91,7 @@ namespace RKSoftware.Packages.Caching.Implementation
             {
                 if (_redisCacheSettings.UseLogging)
                 {
-                    _logger.LogError(ex, LogMessageResource.RedisRemoveObjectError, key);
+                    _logRedisRemoveObjectError(_logger, key, ex);
                 }
                 throw;
             }
@@ -134,7 +134,17 @@ namespace RKSoftware.Packages.Caching.Implementation
             {
                 if (_redisCacheSettings.UseLogging)
                 {
-                    _logger.LogError(ex, LogMessageResource.RedisBulkResetError, keyArr);
+                    var keyStr = string.Join(", ", keyArr);
+                    _logRedisBulkResetConnectionError(_logger, keyStr, ex);
+                }
+                throw;
+            }
+            catch (Exception ex)
+            {
+                if (_redisCacheSettings.UseLogging)
+                {
+                    var keyStr = string.Join(", ", keyArr);
+                    _logRedisBulkResetError(_logger, keyStr, ex);
                 }
                 throw;
             }
@@ -176,7 +186,17 @@ namespace RKSoftware.Packages.Caching.Implementation
             {
                 if (_redisCacheSettings.UseLogging)
                 {
-                    _logger.LogError(ex, LogMessageResource.RedisBulkResetError, keyArr);
+                    var keyStr = string.Join(", ", keyArr);
+                    _logRedisBulkResetConnectionError(_logger, keyStr, ex);
+                }
+                throw;
+            }
+            catch (Exception ex)
+            {
+                if (_redisCacheSettings.UseLogging)
+                {
+                    var keyStr = string.Join(", ", keyArr);
+                    _logRedisBulkResetError(_logger, keyStr, ex);
                 }
                 throw;
             }
@@ -209,7 +229,15 @@ namespace RKSoftware.Packages.Caching.Implementation
             {
                 if (_redisCacheSettings.UseLogging)
                 {
-                    _logger.LogError(ex, LogMessageResource.RedisBulkPartialReset, partOfKey);
+                    _logRedisBulkPartialResetConnectionError(_logger, partOfKey, ex);
+                }
+                throw;
+            }
+            catch (Exception ex)
+            {
+                if (_redisCacheSettings.UseLogging)
+                {
+                    _logRedisBulkPartialReset(_logger, partOfKey, ex);
                 }
                 throw;
             }
@@ -241,7 +269,15 @@ namespace RKSoftware.Packages.Caching.Implementation
             {
                 if (_redisCacheSettings.UseLogging)
                 {
-                    _logger.LogError(ex, LogMessageResource.RedisBulkPartialReset, partOfKey);
+                    _logRedisBulkPartialResetConnectionError(_logger, partOfKey, ex);
+                }
+                throw;
+            }
+            catch (Exception ex)
+            {
+                if (_redisCacheSettings.UseLogging)
+                {
+                    _logRedisBulkPartialReset(_logger, partOfKey, ex);
                 }
                 throw;
             }

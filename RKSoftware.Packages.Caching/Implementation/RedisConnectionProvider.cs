@@ -91,7 +91,7 @@ namespace RKSoftware.Packages.Caching.Implementation
                     return GetConnectionMultiplexer();
                 }
 
-                _logger.LogInformation(LogMessageResource.RedisConnectionOpenening);
+                _logRedisConnectionOpeneningInformation(_logger, null);
 
                 try
                 {
@@ -105,12 +105,12 @@ namespace RKSoftware.Packages.Caching.Implementation
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogError(ex, LogMessageResource.RedisConnectionOpenError);
+                    _logRedisConnectionOpenError(_logger, ex);
                     _connectionMultiplexers = null;
                     throw;
                 }
 
-                _logger.LogInformation(LogMessageResource.RedisConnectionOpenening);
+                _logRedisConnectionOpeneningInformation(_logger, null);
             }
 
             return GetConnectionMultiplexer();
@@ -193,6 +193,19 @@ namespace RKSoftware.Packages.Caching.Implementation
         {
             Dispose(false);
         }
+        #endregion
+
+        #region logging
+
+        private static readonly Action<ILogger, Exception> _logRedisConnectionOpeneningInformation = LoggerMessage.Define(
+           LogLevel.Information,
+           LoggingConstants.RedisConnectionOpeneningInformation,
+           LogMessageResource.RedisConnectionOpenening);
+
+        private static readonly Action<ILogger, Exception> _logRedisConnectionOpenError = LoggerMessage.Define(
+            LogLevel.Error,
+            LoggingConstants.RedisConnectionOpenError,
+            LogMessageResource.RedisConnectionOpenError);
         #endregion
     }
 }

@@ -15,7 +15,7 @@ namespace TestCluster
     /// <summary>
     /// This console application is used to TEST Cache provider performance against Actual Redis cache storage
     /// </summary>
-    class Program
+    sealed class Program
     {
         static async Task Main(string[] args)
         {

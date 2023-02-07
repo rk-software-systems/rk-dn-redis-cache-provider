@@ -130,5 +130,79 @@ namespace RKSoftware.Packages.Caching.Implementation
             return keyArr;
         }
         #endregion
+
+        #region logging
+
+        private static readonly Action<ILogger, string, Exception> _logRedisObjectNotFoundWarning = LoggerMessage.Define<string>(
+            LogLevel.Warning,
+            LoggingConstants.RedisObjectNotFoundWarning,
+            LogMessageResource.RedisObjectNotFound);
+
+        private static readonly Action<ILogger, string, Exception> _logRedisGetObjectConnectionError = LoggerMessage.Define<string>(
+            LogLevel.Error,
+            LoggingConstants.RedisGetObjectConnectionError,
+            LogMessageResource.RedisGetObjectConnectionError);
+
+        private static readonly Action<ILogger, string, Exception> _logRedisSetObjectError = LoggerMessage.Define<string>(
+            LogLevel.Error,
+            LoggingConstants.RedisSetObjectError,
+            LogMessageResource.RedisSetObjectError);
+
+        private static readonly Action<ILogger, string, Exception> _logRedisConnectionError = LoggerMessage.Define<string>(
+            LogLevel.Error,
+            LoggingConstants.RedisConnectionError,
+            LogMessageResource.RedisConnectionError);
+
+        private static readonly Action<ILogger, string, Exception> _logRedisGetObjectError = LoggerMessage.Define<string>(
+            LogLevel.Error,
+            LoggingConstants.RedisGetObjectError,
+            LogMessageResource.RedisGetObjectError);
+
+        private static readonly Action<ILogger, string, Exception> _logRedisGetObjectInformation = LoggerMessage.Define<string>(
+            LogLevel.Information,
+            LoggingConstants.RedisGetObjectInformation,
+            LogMessageResource.RedisGetObject);
+
+        private static readonly Action<ILogger, string, Exception> _logRedisSetObjectConnectionError = LoggerMessage.Define<string>(
+            LogLevel.Error,
+            LoggingConstants.RedisSetObjectConnectionError,
+            LogMessageResource.RedisSetObjectError);
+
+        private static readonly Action<ILogger, string, Exception> _logRedisSetObjectInformation = LoggerMessage.Define<string>(
+            LogLevel.Information,
+            LoggingConstants.RedisSetObjectInformation,
+            LogMessageResource.RedisSetObject);
+
+        private static readonly Action<ILogger, string, Exception> _logRedisResetConnectionError = LoggerMessage.Define<string>(
+            LogLevel.Error,
+            LoggingConstants.RedisResetConnectionError,
+            LogMessageResource.RedisConnectionError);
+
+        private static readonly Action<ILogger, string, Exception> _logRedisRemoveObjectError = LoggerMessage.Define<string>(
+            LogLevel.Error,
+            LoggingConstants.RedisRemoveObjectError,
+            LogMessageResource.RedisRemoveObjectError);
+
+        private static readonly Action<ILogger, string, Exception> _logRedisBulkResetError = LoggerMessage.Define<string>(
+            LogLevel.Error,
+            LoggingConstants.RedisBulkResetError,
+            LogMessageResource.RedisBulkResetError);
+
+        private static readonly Action<ILogger, string, Exception> _logRedisBulkResetConnectionError = LoggerMessage.Define<string>(
+            LogLevel.Error,
+            LoggingConstants.RedisBulkResetConnectionError,
+            LogMessageResource.RedisBulkResetError);
+
+        private static readonly Action<ILogger, string, Exception> _logRedisBulkPartialResetConnectionError = LoggerMessage.Define<string>(
+            LogLevel.Error,
+            LoggingConstants.RedisBulkPartialResetConnectionError,
+            LogMessageResource.RedisBulkPartialReset);
+
+        private static readonly Action<ILogger, string, Exception> _logRedisBulkPartialReset = LoggerMessage.Define<string>(
+            LogLevel.Error,
+            LoggingConstants.RedisBulkPartialReset,
+            LogMessageResource.RedisBulkPartialReset);
+
+        #endregion
     }
 }
