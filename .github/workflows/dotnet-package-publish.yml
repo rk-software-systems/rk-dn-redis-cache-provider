@@ -25,6 +25,8 @@ jobs:
         run: dotnet restore RKSoftware.Packages.Caching.Newtonsoft.Json.Converter
       - name: Install dependencies RKSoftware.Packages.Caching.System.Text.Json.Converter
         run: dotnet restore RKSoftware.Packages.Caching.System.Text.Json.Converter
+      - name: Install dependencies RKSoftware.Packages.Caching.System.Text.Json.StreamConverter
+        run: dotnet restore RKSoftware.Packages.Caching.System.Text.Json.StreamConverter
 
       - name: Build Cache Service
         run: dotnet build RKSoftware.Packages.Caching --configuration Release --no-restore
@@ -32,6 +34,8 @@ jobs:
         run: dotnet build RKSoftware.Packages.Caching.Newtonsoft.Json.Converter --configuration Release --no-restore
       - name: Build System Text Json Provider
         run: dotnet build RKSoftware.Packages.Caching.System.Text.Json.Converter --configuration Release --no-restore
+      - name: Build System Text Stream Provider
+        run: dotnet build RKSoftware.Packages.Caching.System.Text.Json.StreamConverter --configuration Release --no-restore
 
       - name: Push generated Caching package to NuGet repository
         run: dotnet nuget push ./RKSoftware.Packages.Caching/bin/Release/*.nupkg --skip-duplicate -n --api-key ${{secrets.NUGET_API_KEY}} --source https://api.nuget.org/v3/index.json
@@ -41,3 +45,6 @@ jobs:
 
       - name: Push generated Newtonsoft Converter package to NuGet repository
         run: dotnet nuget push ./RKSoftware.Packages.Caching.Newtonsoft.Json.Converter/bin/Release/*.nupkg --skip-duplicate -n --api-key ${{secrets.NUGET_API_KEY}} --source https://api.nuget.org/v3/index.json
+
+      - name: Push generated System.Text.Json StreamConverter package to NuGet repository
+        run: dotnet nuget push ./RKSoftware.Packages.Caching.System.Text.Json.StreamConverter/bin/Release/*.nupkg --skip-duplicate -n --api-key ${{secrets.NUGET_API_KEY}} --source https://api.nuget.org/v3/index.json

@@ -11,6 +11,9 @@ This packages contains abstractions that could be used to add Redis caching to .
 **RKSoftware.Packages.Caching.System.Text.Json.Converter**
 [![NuGet Badge](https://buildstats.info/nuget/RKSoftware.Packages.Caching.System.Text.Json.Converter)](https://www.nuget.org/packages/RKSoftware.Packages.Caching.System.Text.Json.Converter/)
 
+**RKSoftware.Packages.Caching.System.Text.Json.StreamConverter**
+[![NuGet Badge](https://buildstats.info/nuget/RKSoftware.Packages.Caching.System.Text.Json.StreamConverter)](https://www.nuget.org/packages/RKSoftware.Packages.Caching.System.Text.Json.StreamConverter/)
+
 # Getting Started
 To use caching do the following:
 - Add RedisCacheSettings section to your application settings this section should contain the following fields:

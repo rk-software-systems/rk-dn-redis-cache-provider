@@ -5,7 +5,7 @@ using RKSoftware.Packages.Caching.Repositories;
 namespace RKSoftware.Packages.Caching.System.Text.Json.Converter
 {
     /// <summary>
-    /// This class contains registration extension that is used to register SystemJson.TextConverter to be used in Redis Service
+    /// This class contains registration extension that is used to register System.Json.Text text converter to be used in Redis Service
     /// </summary>
     public static class RegistrationExtensions
     {

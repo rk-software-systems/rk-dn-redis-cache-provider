@@ -2,19 +2,21 @@
 
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
-    <Authors>Konstantin Koryakov</Authors>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <Authors>Stsefchak Raman</Authors>
     <Company>RK Software Systems</Company>
-    <Product>Objecet to string and vise versa converter for RKSoftware.Packages.Caching</Product>
-    <Description>This package contains converter together with registration extensions to utilize System.Text.Json serializer to convert objects to string and vise versa.</Description>
+    <Product>Objecet to bytes and stream to object converter for RKSoftware.Packages.Caching</Product>
+    <Description>This package contains converter together with registration extensions to utilize System.Text.Json serializer to convert object to bytes and stream to object.</Description>
     <PackageProjectUrl>https://github.com/rk-software-systems/rk-dn-redis-cache-provider</PackageProjectUrl>
     <RepositoryUrl>https://github.com/rk-software-systems/rk-dn-redis-cache-provider</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageTags>Redis, .NET core</PackageTags>
     <NeutralLanguage>en</NeutralLanguage>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>2.0.1</Version>
-    <AssemblyVersion>2.0.1.0</AssemblyVersion>
-    <FileVersion>2.0.1.0</FileVersion>
+    <Version>2.0.0</Version>
+    <AssemblyVersion>2.0.0.0</AssemblyVersion>
+    <FileVersion>2.0.0.0</FileVersion>
     <PackageIcon>company-logo.png</PackageIcon>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
     <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
@@ -28,8 +30,8 @@
 
   <ItemGroup>
     <PackageReference Include="RKSoftware.Packages.Caching" Version="2.0.2" />
-    <PackageReference Include="System.Text.Json" Version="7.0.1" />
   </ItemGroup>
+
   <ItemGroup>
     <None Include="..\company-logo.png">
       <Pack>True</Pack>
