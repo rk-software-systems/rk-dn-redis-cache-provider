@@ -13,4 +13,14 @@
     </None>
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="RKSoftware.Packages.Caching" Version="2.0.0" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <EnableNETAnalyzers>true</EnableNETAnalyzers>
+    <AnalysisMode>AllEnabledByDefault</AnalysisMode>
+    <AnalysisLevel>latest</AnalysisLevel>
+  </PropertyGroup>
+
 </Project>

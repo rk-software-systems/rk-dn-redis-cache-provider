@@ -19,7 +19,7 @@ namespace RKSoftware.Packages.Caching {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class LogMessageResource {
@@ -124,20 +124,29 @@ namespace RKSoftware.Packages.Caching {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Failed to get object from Redis. Key: {key}.
+        ///   Looks up a localized string similar to Getting object from redis. Key: {key}.
         /// </summary>
-        internal static string RedisGetObjectError {
+        internal static string RedisGetObject {
             get {
-                return ResourceManager.GetString("RedisGetObjectError", resourceCulture);
+                return ResourceManager.GetString("RedisGetObject", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Error while connecting to Redis during GET operation.
         /// </summary>
-        internal static string RedisGetObjectRedisConnectionError {
+        internal static string RedisGetObjectConnectionError {
             get {
-                return ResourceManager.GetString("RedisGetObjectRedisConnectionError", resourceCulture);
+                return ResourceManager.GetString("RedisGetObjectConnectionError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to get object from Redis. Key: {key}.
+        /// </summary>
+        internal static string RedisGetObjectError {
+            get {
+                return ResourceManager.GetString("RedisGetObjectError", resourceCulture);
             }
         }
         
@@ -160,20 +169,29 @@ namespace RKSoftware.Packages.Caching {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Failed to set value in Redis. Key: {key}.
+        ///   Looks up a localized string similar to Setting object from redis. Key: {key}.
         /// </summary>
-        internal static string RedisSetObjectError {
+        internal static string RedisSetObject {
             get {
-                return ResourceManager.GetString("RedisSetObjectError", resourceCulture);
+                return ResourceManager.GetString("RedisSetObject", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Error while connecting to Redis during SET operation.
         /// </summary>
-        internal static string RedisSetObjectRedisConnectionError {
+        internal static string RedisSetObjectConnectionError {
             get {
-                return ResourceManager.GetString("RedisSetObjectRedisConnectionError", resourceCulture);
+                return ResourceManager.GetString("RedisSetObjectConnectionError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to set value in Redis. Key: {key}.
+        /// </summary>
+        internal static string RedisSetObjectError {
+            get {
+                return ResourceManager.GetString("RedisSetObjectError", resourceCulture);
             }
         }
     }

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
 using RKSoftware.Packages.Caching.ErrorHandling;
 using StackExchange.Redis;
 
@@ -169,24 +168,23 @@ namespace RKSoftware.Packages.Caching.Implementation
             {
                 if (_redisCacheSettings.UseLogging)
                 {
-                    _logger.LogWarning(ex, LogMessageResource.RedisObjectNotFound, key);
+                    _logRedisObjectNotFoundWarning(_logger, key, ex);
                 }
             }
             catch (RedisConnectionException ex)
             {
                 if (_redisCacheSettings.UseLogging)
                 {
-                    _logger.LogError(ex, LogMessageResource.RedisGetObjectRedisConnectionError, key);
+                    _logRedisGetObjectConnectionError(_logger, key, ex);
                 }
             }
             catch (Exception ex)
             {
                 if (_redisCacheSettings.UseLogging)
                 {
-                    _logger.LogError(ex, LogMessageResource.RedisGetObjectError, key);
+                    _logRedisSetObjectError(_logger, key, ex);
                 }
             }
-
 
             if (!isSet)
             {
@@ -207,14 +205,14 @@ namespace RKSoftware.Packages.Caching.Implementation
                 {
                     if (_redisCacheSettings.UseLogging)
                     {
-                        _logger.LogError(ex, LogMessageResource.RedisSetObjectRedisConnectionError, key);
+                        _logRedisGetObjectConnectionError(_logger, key, ex);
                     }
                 }
                 catch (Exception ex)
                 {
                     if (_redisCacheSettings.UseLogging)
                     {
-                        _logger.LogError(ex, LogMessageResource.RedisSetObjectError, key);
+                        _logRedisSetObjectError(_logger, key, ex);
                     }
                 }
             }
@@ -252,56 +250,52 @@ namespace RKSoftware.Packages.Caching.Implementation
             bool isSet = false;
             try
             {
-                val = await GetCachedObjectAsync<T>(key, global)
-                    .ConfigureAwait(false);
+                val = await GetCachedObjectAsync<T>(key, global);
                 isSet = true;
             }
             catch (CacheMissException ex)
             {
                 if (_redisCacheSettings.UseLogging)
                 {
-                    _logger.LogWarning(ex, LogMessageResource.RedisObjectNotFound, key);
+                    _logRedisObjectNotFoundWarning(_logger, key, ex);
                 }
             }
             catch (RedisConnectionException ex)
             {
                 if (_redisCacheSettings.UseLogging)
                 {
-                    _logger.LogError(ex, LogMessageResource.RedisGetObjectRedisConnectionError, key);
+                    _logRedisGetObjectConnectionError(_logger, key, ex);
                 }
             }
             catch (Exception ex)
             {
                 if (_redisCacheSettings.UseLogging)
                 {
-                    _logger.LogError(ex, LogMessageResource.RedisGetObjectError, key);
+                    _logRedisSetObjectError(_logger, key, ex);
                 }
             }
 
 
             if (!isSet)
             {
-                val = await objectReceiver()
-                    .ConfigureAwait(false);
+                val = await objectReceiver();
 
                 try
                 {
                     if (storageDuration.HasValue)
                     {
-                        await SetCachedObjectAsync(key, val, storageDuration.Value, global)
-                            .ConfigureAwait(false);
+                        await SetCachedObjectAsync(key, val, storageDuration.Value, global);
                     }
                     else
                     {
-                        await SetCachedObjectAsync(key, val, global)
-                            .ConfigureAwait(false);
+                        await SetCachedObjectAsync(key, val, global);
                     }
                 }
                 catch (RedisConnectionException ex)
                 {
                     if (_redisCacheSettings.UseLogging)
                     {
-                        _logger.LogError(ex, LogMessageResource.RedisSetObjectRedisConnectionError, key);
+                        _logRedisGetObjectConnectionError(_logger, key, ex);
                     }
                     throw;
                 }
@@ -309,7 +303,7 @@ namespace RKSoftware.Packages.Caching.Implementation
                 {
                     if (_redisCacheSettings.UseLogging)
                     {
-                        _logger.LogError(ex, LogMessageResource.RedisSetObjectError, key);
+                        _logRedisSetObjectError(_logger, key, ex);
                     }
                 }
             }
@@ -317,6 +311,6 @@ namespace RKSoftware.Packages.Caching.Implementation
 
             return val;
         }
-        #endregion
+        #endregion        
     }
 }
