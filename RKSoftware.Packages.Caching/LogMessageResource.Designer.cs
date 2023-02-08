@@ -61,7 +61,7 @@ namespace RKSoftware.Packages.Caching {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Redis connection exception during removing. PartOfKey: {0}.
+        ///   Looks up a localized string similar to Redis connection exception during removing. PartOfKey: {key}.
         /// </summary>
         internal static string RedisBulkPartialReset {
             get {
@@ -70,7 +70,7 @@ namespace RKSoftware.Packages.Caching {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Redis connection exception during removing. Keys: {0}.
+        ///   Looks up a localized string similar to Redis connection exception during removing. Keys: {key}.
         /// </summary>
         internal static string RedisBulkResetError {
             get {
@@ -133,7 +133,7 @@ namespace RKSoftware.Packages.Caching {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Error while connecting to Redis during GET operation.
+        ///   Looks up a localized string similar to Error while connecting to Redis during GET operation. Key: {key}.
         /// </summary>
         internal static string RedisGetObjectConnectionError {
             get {
@@ -160,7 +160,7 @@ namespace RKSoftware.Packages.Caching {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Failed to reset value from Redis. Redis key: {RedisKey}.
+        ///   Looks up a localized string similar to Failed to reset value from Redis. Key: {key}.
         /// </summary>
         internal static string RedisRemoveObjectError {
             get {
@@ -178,7 +178,7 @@ namespace RKSoftware.Packages.Caching {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Error while connecting to Redis during SET operation.
+        ///   Looks up a localized string similar to Error while connecting to Redis during SET operation. Key: {key}.
         /// </summary>
         internal static string RedisSetObjectConnectionError {
             get {

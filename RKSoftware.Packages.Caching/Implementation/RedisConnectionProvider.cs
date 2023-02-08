@@ -110,7 +110,7 @@ namespace RKSoftware.Packages.Caching.Implementation
                     throw;
                 }
 
-                _logRedisConnectionOpeneningInformation(_logger, null);
+                _logRedisConnectionOpenedInformation(_logger, null);
             }
 
             return GetConnectionMultiplexer();
@@ -206,6 +206,11 @@ namespace RKSoftware.Packages.Caching.Implementation
             LogLevel.Error,
             LoggingConstants.RedisConnectionOpenError,
             LogMessageResource.RedisConnectionOpenError);
+
+        private static readonly Action<ILogger, Exception> _logRedisConnectionOpenedInformation = LoggerMessage.Define(
+           LogLevel.Information,
+           LoggingConstants.RedisConnectionOpenedInformation,
+           LogMessageResource.RedisConnectionOpened);
         #endregion
     }
 }

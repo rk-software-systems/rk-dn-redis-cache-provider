@@ -118,10 +118,10 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="RedisBulkPartialReset" xml:space="preserve">
-    <value>Redis connection exception during removing. PartOfKey: {0}</value>
+    <value>Redis connection exception during removing. PartOfKey: {key}</value>
   </data>
   <data name="RedisBulkResetError" xml:space="preserve">
-    <value>Redis connection exception during removing. Keys: {0}</value>
+    <value>Redis connection exception during removing. Keys: {key}</value>
   </data>
   <data name="RedisBulkResetNoKeys" xml:space="preserve">
     <value>Provide at least one key to be deleted</value>
@@ -142,7 +142,7 @@
     <value>Getting object from redis. Key: {key}</value>
   </data>
   <data name="RedisGetObjectConnectionError" xml:space="preserve">
-    <value>Error while connecting to Redis during GET operation</value>
+    <value>Error while connecting to Redis during GET operation. Key: {key}</value>
   </data>
   <data name="RedisGetObjectError" xml:space="preserve">
     <value>Failed to get object from Redis. Key: {key}</value>
@@ -151,13 +151,13 @@
     <value>Object not found in cache. Key: {key}</value>
   </data>
   <data name="RedisRemoveObjectError" xml:space="preserve">
-    <value>Failed to reset value from Redis. Redis key: {RedisKey}</value>
+    <value>Failed to reset value from Redis. Key: {key}</value>
   </data>
   <data name="RedisSetObject" xml:space="preserve">
     <value>Setting object from redis. Key: {key}</value>
   </data>
   <data name="RedisSetObjectConnectionError" xml:space="preserve">
-    <value>Error while connecting to Redis during SET operation</value>
+    <value>Error while connecting to Redis during SET operation. Key: {key}</value>
   </data>
   <data name="RedisSetObjectError" xml:space="preserve">
     <value>Failed to set value in Redis. Key: {key}</value>

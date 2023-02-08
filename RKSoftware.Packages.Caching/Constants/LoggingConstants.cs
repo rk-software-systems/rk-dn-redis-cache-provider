@@ -19,6 +19,7 @@ namespace RKSoftware.Packages.Caching
         internal const int RedisBulkPartialReset                = 600013;
         internal const int RedisConnectionOpeneningInformation  = 600014;
         internal const int RedisConnectionOpenError             = 600015;
+        internal const int RedisConnectionOpenedInformation     = 600014;
 
     }
 }
