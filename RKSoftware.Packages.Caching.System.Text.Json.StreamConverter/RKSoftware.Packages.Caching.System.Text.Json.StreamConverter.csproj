@@ -29,7 +29,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="RKSoftware.Packages.Caching" Version="2.0.2" />
+    <PackageReference Include="RKSoftware.Packages.Caching" Version="2.0.3" />
   </ItemGroup>
 
   <ItemGroup>
