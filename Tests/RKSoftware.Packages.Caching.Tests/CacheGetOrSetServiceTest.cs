@@ -105,7 +105,22 @@ namespace RKSoftware.Packages.Caching.Tests
         }
 
         [TestMethod]
-        public async Task TestGetOrSetCacheGlobalDurationAsync()
+        public async Task TestGetOrSetCacheGlobalDurationPositiveAsync()
+        {
+            var source = CacheTestModel.TestModel;
+            var key = CacheTestModel.TestKey;
+
+            var result1 = await _cacheService.GetOrSetCachedObjectAsync<CacheTestModel>(key, () => Task.FromResult(source), 400, true);
+
+            Assert.IsTrue(source.Equals(result1));
+
+            Thread.Sleep(TimeSpan.FromSeconds(2));
+
+            var result = await _cacheService.GetCachedObjectAsync<CacheTestModel>(key, true);
+        }
+
+        [TestMethod]
+        public async Task TestGetOrSetCacheGlobalDurationNegativeAsync()
         {
             var source = CacheTestModel.TestModel;
             var key = CacheTestModel.TestKey;

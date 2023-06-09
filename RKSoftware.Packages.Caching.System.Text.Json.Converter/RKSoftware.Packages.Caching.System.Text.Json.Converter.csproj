@@ -28,7 +28,7 @@
 
   <ItemGroup>
     <PackageReference Include="RKSoftware.Packages.Caching" Version="2.0.3" />
-    <PackageReference Include="System.Text.Json" Version="7.0.1" />
+    <PackageReference Include="System.Text.Json" Version="7.0.2" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\company-logo.png">

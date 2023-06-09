@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using RKSoftware.Packages.Caching.Contract;
+using RKSoftware.Packages.Caching.ErrorHandling;
 using StackExchange.Redis;
 
 namespace RKSoftware.Packages.Caching.Repositories
@@ -48,8 +49,8 @@ namespace RKSoftware.Packages.Caching.Repositories
                 throw new ArgumentNullException(nameof(db));
             }
 
-            var bytesValue = db.StringGetLease(key, _connectionProvider.ReadFlags);
-            var stream = bytesValue.AsStream();
+            var bytesValue = db.StringGetLease(key, _connectionProvider.ReadFlags) ?? throw new CacheMissException();
+            var stream = bytesValue.AsStream() ?? throw new CacheMissException();
             return _objectToStreamConverter.FromStream<T>(stream);
         }
 
@@ -67,8 +68,8 @@ namespace RKSoftware.Packages.Caching.Repositories
                 throw new ArgumentNullException(nameof(db));
             }
 
-            var bytesValue = await db.StringGetLeaseAsync(key, _connectionProvider.ReadFlags);
-            var stream = bytesValue.AsStream();
+            var bytesValue = (await db.StringGetLeaseAsync(key, _connectionProvider.ReadFlags)) ?? throw new CacheMissException();
+            var stream = bytesValue.AsStream() ?? throw new CacheMissException();
             return await _objectToStreamConverter.FromStreamAsync<T>(stream);
         }
 
