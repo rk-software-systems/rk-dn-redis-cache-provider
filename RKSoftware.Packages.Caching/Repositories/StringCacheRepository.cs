@@ -44,10 +44,7 @@ namespace RKSoftware.Packages.Caching.Repositories
         /// <returns></returns>
         public async Task<T> GetObjectAsync<T>(IDatabase db, string key)
         {
-            if (db == null)
-            {
-                throw new ArgumentNullException(nameof(db));
-            }
+            ArgumentNullException.ThrowIfNull(db);
 
             var result = await db.StringGetAsync(key, _connectionProvider.ReadFlags);
 
@@ -68,10 +65,7 @@ namespace RKSoftware.Packages.Caching.Repositories
         /// <returns></returns>
         public T GetObject<T>(IDatabase db, string key)
         {
-            if (db == null)
-            {
-                throw new ArgumentNullException(nameof(db));
-            }
+            ArgumentNullException.ThrowIfNull(db);
 
             var result = db.StringGet(key, _connectionProvider.ReadFlags);
 
@@ -93,16 +87,14 @@ namespace RKSoftware.Packages.Caching.Repositories
         /// <param name="storageDuration">Time span to keep value in cache storage, in seconds</param>
         public void SetObject<T>(IDatabase db, string key, T objectToCache, long storageDuration)
         {
-            if (db == null)
-            {
-                throw new ArgumentNullException(nameof(db));
-            }
+            ArgumentNullException.ThrowIfNull(db);
 
             var value = _objectConverter.ToString(objectToCache);
             db.StringSet(
                     key,
                     value,
                     TimeSpan.FromSeconds(storageDuration),
+                    keepTtl: false,
                     flags: _connectionProvider.WriteFlags);
         }
 
@@ -117,16 +109,14 @@ namespace RKSoftware.Packages.Caching.Repositories
         /// <returns></returns>
         public async Task SetObjectAsync<T>(IDatabase db, string key, T objectToCache, long storageDuration)
         {
-            if (db == null)
-            {
-                throw new ArgumentNullException(nameof(db));
-            }
+            ArgumentNullException.ThrowIfNull(db);
 
             var value = _objectConverter.ToString(objectToCache);
             await db.StringSetAsync(
                     key,
                     value,
                     TimeSpan.FromSeconds(storageDuration),
+                    keepTtl: false,
                     flags: _connectionProvider.WriteFlags);
         }
         #endregion

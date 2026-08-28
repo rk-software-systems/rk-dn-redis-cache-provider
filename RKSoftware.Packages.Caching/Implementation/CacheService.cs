@@ -43,10 +43,7 @@ namespace RKSoftware.Packages.Caching.Implementation
             ICacheRepository cacheRepository,
             string scopedKeyPrefix)
         {
-            if (redisCacheProvider == null)
-            {
-                throw new ArgumentNullException(nameof(redisCacheProvider));
-            }
+            ArgumentNullException.ThrowIfNull(redisCacheProvider);
 
             if (string.IsNullOrEmpty(scopedKeyPrefix))
             {

@@ -6,3 +6,31 @@ dotnet_diagnostic.CA2007.severity = none
 # CA1014: Mark assemblies with CLSCompliant
 dotnet_diagnostic.CA1014.severity = none
 
+
+# Test and integration projects: rules below target shipping library code and
+# do not apply to MSTest fixtures or the TestCluster demo host.
+[Tests/**/*.cs]
+
+# CA1515: MSTest requires test classes and their models to be public
+dotnet_diagnostic.CA1515.severity = none
+
+# CA1002/CA2227: test models are plain JSON deserialization targets
+dotnet_diagnostic.CA1002.severity = none
+dotnet_diagnostic.CA2227.severity = none
+
+# CA1869: options are built once per test, not on a hot path
+dotnet_diagnostic.CA1869.severity = none
+
+# CA2000: connection providers are owned by the test fixture
+dotnet_diagnostic.CA2000.severity = none
+
+[Integration/**/*.cs]
+
+# CA1515: sample host types are intentionally public
+dotnet_diagnostic.CA1515.severity = none
+
+# CA1849: the sample deliberately exercises the synchronous cache API
+dotnet_diagnostic.CA1849.severity = none
+
+# CA1859: sample code favours the abstraction over the concrete type
+dotnet_diagnostic.CA1859.severity = none

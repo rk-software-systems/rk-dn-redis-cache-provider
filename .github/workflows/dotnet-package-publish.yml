@@ -14,11 +14,11 @@ jobs:
     runs-on: ubuntu-latest
     name: Update or Create NuGet package
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - name: Setup .NET Core
-        uses: actions/setup-dotnet@v1
+        uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: 7.0.*
+          dotnet-version: 10.0.x
       - name: Install dependencies RKSoftware.Packages.Caching
         run: dotnet restore RKSoftware.Packages.Caching
       - name: Install dependencies RKSoftware.Packages.Caching.Newtonsoft.Json.Converter

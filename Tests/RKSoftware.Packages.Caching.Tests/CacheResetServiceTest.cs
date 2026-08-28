@@ -34,7 +34,7 @@ namespace RKSoftware.Packages.Caching.Tests
 
             _cacheService.Reset(key);
 
-            Assert.ThrowsException<CacheMissException>(() =>
+            Assert.ThrowsExactly<CacheMissException>(() =>
             {
                 var result = _cacheService.GetCachedObject<CacheTestModel>(key);
             });
@@ -50,7 +50,7 @@ namespace RKSoftware.Packages.Caching.Tests
 
             _cacheService.Reset(key, true);
 
-            Assert.ThrowsException<CacheMissException>(() =>
+            Assert.ThrowsExactly<CacheMissException>(() =>
             {
                 var result = _cacheService.GetCachedObject<CacheTestModel>(key, true);
             });
@@ -66,7 +66,7 @@ namespace RKSoftware.Packages.Caching.Tests
 
             await _cacheService.ResetAsync(key);
 
-            await Assert.ThrowsExceptionAsync<CacheMissException>(async () =>
+            await Assert.ThrowsExactlyAsync<CacheMissException>(async () =>
             {
                 var result = await _cacheService.GetCachedObjectAsync<CacheTestModel>(key);
             });
@@ -82,7 +82,7 @@ namespace RKSoftware.Packages.Caching.Tests
 
             await _cacheService.ResetAsync(key, true);
 
-            await Assert.ThrowsExceptionAsync<CacheMissException>(async () =>
+            await Assert.ThrowsExactlyAsync<CacheMissException>(async () =>
             {
                 var result = await  _cacheService.GetCachedObjectAsync<CacheTestModel>(key, true);
             });
@@ -100,12 +100,12 @@ namespace RKSoftware.Packages.Caching.Tests
 
             _cacheService.ResetBulk(new string[] { key1, key2 });
 
-            Assert.ThrowsException<CacheMissException>(() =>
+            Assert.ThrowsExactly<CacheMissException>(() =>
             {
                 var result = _cacheService.GetCachedObject<CacheTestModel>(key1);
             });
 
-            Assert.ThrowsException<CacheMissException>(() =>
+            Assert.ThrowsExactly<CacheMissException>(() =>
             {
                 var result = _cacheService.GetCachedObject<CacheTestModel>(key2);
             });
@@ -123,12 +123,12 @@ namespace RKSoftware.Packages.Caching.Tests
 
             _cacheService.ResetBulk(new string[] { key1, key2 }, true);
 
-            Assert.ThrowsException<CacheMissException>(() =>
+            Assert.ThrowsExactly<CacheMissException>(() =>
             {
                 var result = _cacheService.GetCachedObject<CacheTestModel>(key1, true);
             });
 
-            Assert.ThrowsException<CacheMissException>(() =>
+            Assert.ThrowsExactly<CacheMissException>(() =>
             {
                 var result = _cacheService.GetCachedObject<CacheTestModel>(key2, true);
             });
@@ -146,12 +146,12 @@ namespace RKSoftware.Packages.Caching.Tests
 
             await _cacheService.ResetBulkAsync(new string[] { key1, key2 });
 
-            await Assert.ThrowsExceptionAsync<CacheMissException>(async () =>
+            await Assert.ThrowsExactlyAsync<CacheMissException>(async () =>
             {
                 var result = await _cacheService.GetCachedObjectAsync<CacheTestModel>(key1);
             });
 
-            await Assert.ThrowsExceptionAsync<CacheMissException>(async () =>
+            await Assert.ThrowsExactlyAsync<CacheMissException>(async () =>
             {
                 var result = await _cacheService.GetCachedObjectAsync<CacheTestModel>(key2);
             });
@@ -169,12 +169,12 @@ namespace RKSoftware.Packages.Caching.Tests
 
             await _cacheService.ResetBulkAsync(new string[] { key1, key2 }, true);
 
-            await Assert.ThrowsExceptionAsync<CacheMissException>(async () =>
+            await Assert.ThrowsExactlyAsync<CacheMissException>(async () =>
             {
                 var result = await _cacheService.GetCachedObjectAsync<CacheTestModel>(key1, true);
             });
 
-            await Assert.ThrowsExceptionAsync<CacheMissException>(async () =>
+            await Assert.ThrowsExactlyAsync<CacheMissException>(async () =>
             {
                 var result = await _cacheService.GetCachedObjectAsync<CacheTestModel>(key2, true);
             });

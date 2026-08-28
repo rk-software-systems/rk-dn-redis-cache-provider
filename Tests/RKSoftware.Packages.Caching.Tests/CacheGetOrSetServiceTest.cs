@@ -68,7 +68,7 @@ namespace RKSoftware.Packages.Caching.Tests
 
             Thread.Sleep(TimeSpan.FromSeconds(2));
 
-            Assert.ThrowsException<CacheMissException>(() =>
+            Assert.ThrowsExactly<CacheMissException>(() =>
             {
                 var result = _cacheService.GetCachedObject<CacheTestModel>(key, true);
             });
@@ -131,7 +131,7 @@ namespace RKSoftware.Packages.Caching.Tests
 
             Thread.Sleep(TimeSpan.FromSeconds(2));
 
-            await Assert.ThrowsExceptionAsync<CacheMissException>(async () =>
+            await Assert.ThrowsExactlyAsync<CacheMissException>(async () =>
             {
                 var result = await _cacheService.GetCachedObjectAsync<CacheTestModel>(key, true);
             });

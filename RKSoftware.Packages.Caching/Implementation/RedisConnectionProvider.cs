@@ -59,10 +59,7 @@ namespace RKSoftware.Packages.Caching.Implementation
             ILogger<RedisConnectionProvider> logger)
         {
 
-            if (redisCacheSettingsAccessor == null)
-            {
-                throw new ArgumentNullException(nameof(redisCacheSettingsAccessor));
-            }
+            ArgumentNullException.ThrowIfNull(redisCacheSettingsAccessor);
 
             _redisCacheSettings = redisCacheSettingsAccessor.Value;
             _logger = logger;

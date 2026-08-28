@@ -106,7 +106,7 @@ namespace RKSoftware.Packages.Caching.Tests
         {
             var key = new RedisKey("test_key_str");
             var strValue = await _db.StringGetAsync(key);
-            var testObj = JsonSerializer.Deserialize<BigObjectTestModel>(strValue);
+            var testObj = JsonSerializer.Deserialize<BigObjectTestModel>((string)strValue);
             Assert.IsNotNull(testObj);
         }
 
@@ -115,7 +115,7 @@ namespace RKSoftware.Packages.Caching.Tests
         {
             var key = new RedisKey("test_key_int_to_string");
             var strValue = await _db.StringGetAsync(key);
-            var testObj = JsonSerializer.Deserialize<int?>(strValue);
+            var testObj = JsonSerializer.Deserialize<int?>((string)strValue);
             Assert.IsNotNull(testObj);
         }
 

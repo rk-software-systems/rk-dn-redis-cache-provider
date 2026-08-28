@@ -33,10 +33,7 @@ namespace RKSoftware.Packages.Caching.Implementation
         /// <returns>Object from cache</returns>
         public T GetOrSetCachedObject<T>(string key, Func<T> objectReceiver, bool useGlobalCache)
         {
-            if (objectReceiver == null)
-            {
-                throw new ArgumentNullException(nameof(objectReceiver));
-            }
+            ArgumentNullException.ThrowIfNull(objectReceiver);
 
             return GetOrSetBase(key, objectReceiver, null, useGlobalCache);
         }
@@ -67,10 +64,7 @@ namespace RKSoftware.Packages.Caching.Implementation
         /// <returns>Object from cache</returns>
         public T GetOrSetCachedObject<T>(string key, Func<T> objectReceiver, long storageDuration, bool useGlobalCache)
         {
-            if (objectReceiver == null)
-            {
-                throw new ArgumentNullException(nameof(objectReceiver));
-            }
+            ArgumentNullException.ThrowIfNull(objectReceiver);
 
             return GetOrSetBase(key, objectReceiver, storageDuration, useGlobalCache);
         }
@@ -99,10 +93,7 @@ namespace RKSoftware.Packages.Caching.Implementation
         /// <returns>Object from cache</returns>
         public Task<T> GetOrSetCachedObjectAsync<T>(string key, Func<Task<T>> objectReceiver, bool useGlobalCache)
         {
-            if (objectReceiver == null)
-            {
-                throw new ArgumentNullException(nameof(objectReceiver));
-            }
+            ArgumentNullException.ThrowIfNull(objectReceiver);
 
             return GetOrSetAsyncBase(key, objectReceiver, null, useGlobalCache);
         }
@@ -133,10 +124,7 @@ namespace RKSoftware.Packages.Caching.Implementation
         /// <returns>Object from cache</returns>
         public Task<T> GetOrSetCachedObjectAsync<T>(string key, Func<Task<T>> objectReceiver, long storageDuration, bool useGlobalCache)
         {
-            if (objectReceiver == null)
-            {
-                throw new ArgumentNullException(nameof(objectReceiver));
-            }
+            ArgumentNullException.ThrowIfNull(objectReceiver);
 
             return GetOrSetAsyncBase(key, objectReceiver, storageDuration, useGlobalCache);
         }
@@ -241,10 +229,7 @@ namespace RKSoftware.Packages.Caching.Implementation
                 throw new ArgumentNullException(nameof(key));
             }
 
-            if (objectReceiver == null)
-            {
-                throw new ArgumentNullException(nameof(objectReceiver));
-            }
+            ArgumentNullException.ThrowIfNull(objectReceiver);
 
             T val = default;
             bool isSet = false;
