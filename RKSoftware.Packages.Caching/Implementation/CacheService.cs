@@ -135,10 +135,6 @@ namespace RKSoftware.Packages.Caching.Implementation
             LoggingConstants.RedisObjectNotFoundWarning,
             LogMessageResource.RedisObjectNotFound);
 
-        private static readonly Action<ILogger, string, Exception?> _logRedisGetOrSetObjectError = LoggerMessage.Define<string>(
-            LogLevel.Error,
-            LoggingConstants.RedisGetOrSetObjectError,
-            LogMessageResource.RedisGetObjectError);
             
         private static readonly Action<ILogger, string, Exception?> _logRedisSetObjectError = LoggerMessage.Define<string>(
             LogLevel.Error,

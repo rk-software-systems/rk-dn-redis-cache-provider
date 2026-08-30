@@ -60,7 +60,8 @@ namespace RKSoftware.Packages.Caching.Tests
 
             var result = await _cacheService.GetCachedObjectAsync<CacheTestModel>(key, true);
             Assert.IsTrue(source.Equals(result!));
-
+            Thread.Sleep(TimeSpan.FromSeconds(2));
+            
             result = await _cacheService.GetCachedObjectAsync<CacheTestModel>(key, true);
             Assert.IsNull(result);
         }

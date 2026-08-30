@@ -29,8 +29,5 @@ dotnet_diagnostic.CA2000.severity = none
 # CA1515: sample host types are intentionally public
 dotnet_diagnostic.CA1515.severity = none
 
-# CA1849: the sample deliberately exercises the synchronous cache API
-dotnet_diagnostic.CA1849.severity = none
-
 # CA1859: sample code favours the abstraction over the concrete type
 dotnet_diagnostic.CA1859.severity = none

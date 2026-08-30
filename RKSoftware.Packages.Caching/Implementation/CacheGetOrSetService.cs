@@ -109,7 +109,7 @@ namespace RKSoftware.Packages.Caching.Implementation
             {
                 if (_redisCacheSettings.    UseLogging)
                 {
-                    _logRedisGetOrSetObjectError(_logger, key, ex);
+                    _logRedisGetObjectError(_logger, key, ex);
                 }
             }
             

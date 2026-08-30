@@ -60,13 +60,18 @@ namespace RKSoftware.Packages.Caching.Tests
             var source = CacheTestModel.TestModel;
             var key = CacheTestModel.TestKey;
 
-            var result1 = await _cacheService.GetOrSetCachedObjectAsync<CacheTestModel>(key, () => Task.FromResult(source)!, 400, true);
+            var result1 = await _cacheService.GetOrSetCachedObjectAsync<CacheTestModel>(key, () => Task.FromResult(source)!, 3, true);
 
             Assert.IsTrue(source.Equals(result1!));
 
-            Thread.Sleep(TimeSpan.FromSeconds(2));
+            await Task.Delay(TimeSpan.FromSeconds(2));
 
             var result = await _cacheService.GetCachedObjectAsync<CacheTestModel>(key, true);
+            Assert.IsNotNull(result);
+
+            await Task.Delay(TimeSpan.FromSeconds(4));
+
+            result = await _cacheService.GetCachedObjectAsync<CacheTestModel>(key, true);
             Assert.IsNull(result);
         }
 

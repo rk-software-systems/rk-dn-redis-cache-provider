@@ -25,8 +25,7 @@ namespace RKSoftware.Packages.Caching.Implementation
         /// <typeparam name="T">Object type</typeparam>
         /// <param name="key">Cache storage key</param>
         /// <param name="useGlobalCache">This flag indicates if cache entry should be set in Global cache (available for all containers)</param>
-        /// <exception cref="ArgumentNullException">This exception may appear in case object not found in cache</exception>
-        /// <returns>Object from cache</returns>
+        /// <returns>Object from cache.</returns>
         public async Task<T?> GetCachedObjectAsync<T>(string key, bool useGlobalCache) where T : class
         {
             return await GetCachedObjectAsync<T>(key, useGlobalCache, _cacheRepository.GetObjectAsync<T>);
