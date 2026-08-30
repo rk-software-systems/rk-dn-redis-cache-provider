@@ -4,9 +4,9 @@
     {
         public int MyIntProperty { get; set; }
 
-        public string MyStringProperty { get; set; }
+        public required string MyStringProperty { get; set; }
 
-        public CacheTestModel MyObjectProperty { get; set; }
+        public CacheTestModel? MyObjectProperty { get; set; }
 
 
 
@@ -17,7 +17,7 @@
                    this.MyIntProperty == obj.MyIntProperty &&
                    this.MyStringProperty == obj.MyStringProperty &&
                   ((this.MyObjectProperty == null && obj.MyObjectProperty == null) ||
-                  (this.MyObjectProperty.Equals(obj.MyObjectProperty)));
+                  (this!.MyObjectProperty!.Equals(obj.MyObjectProperty!)));
         }
 
         public static string TestKey => nameof(CacheTestModel);

@@ -3,7 +3,6 @@ using Microsoft.Extensions.Options;
 using Moq;
 using RKSoftware.Packages.Caching.Contract;
 using RKSoftware.Packages.Caching.Converter.Mock;
-using RKSoftware.Packages.Caching.ErrorHandling;
 using RKSoftware.Packages.Caching.Infrastructure;
 using System;
 using System.Collections.Generic;
@@ -33,14 +32,8 @@ namespace TestCluster
 
                 var tasks = new List<Task>();
                 await service.SetCachedObjectAsync(key + i, str, true);
-                try
-                {
-                    service.GetCachedObject<object>(key + (i - 1), true);
-                    await Task.Delay(500);
-                }
-                catch (CacheMissException)
-                {
-                }
+                await service.GetCachedObjectAsync<object>(key + (i - 1), true);
+                await Task.Delay(500);
             }
         }
 

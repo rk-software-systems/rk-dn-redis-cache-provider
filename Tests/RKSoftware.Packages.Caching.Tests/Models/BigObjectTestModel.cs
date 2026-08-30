@@ -5,16 +5,16 @@ namespace RKSoftware.Packages.Caching.Tests.Models
 {
     public class BigObjectTestModel
     {
-        public List<BigObjectTestItemModel> Data { get; set; }
+        public required List<BigObjectTestItemModel> Data { get; set; }
     }
 
     public class BigObjectTestItemModel
     {
         public int? ComingMatchesID { get; set; }
 
-        public string MatchTitle { get; set; }
+        public required string MatchTitle { get; set; }
 
-        public string Description { get; set; }
+        public required string Description { get; set; }
 
         public DateTime? MatchStartDate { get; set; }
 
@@ -26,33 +26,33 @@ namespace RKSoftware.Packages.Caching.Tests.Models
 
         public bool? Highlights { get; set; }
 
-        public string CustomImage { get; set; }
+        public required string CustomImage { get; set; }
 
         public bool? FireFan { get; set; }
 
-        public string MatchTags { get; set; }
+        public required string MatchTags { get; set; }
 
-        public string PromoLinkLandscape { get; set; }
+        public required string PromoLinkLandscape { get; set; }
 
-        public string PromoLinkPortrait { get; set; }
+        public required string PromoLinkPortrait { get; set; }
 
         public bool? MatchBG { get; set; }
 
-        public string TournamentId { get; set; }
+        public required string TournamentId { get; set; }
 
-        public string TournamentName { get; set; }
+        public required string TournamentName { get; set; }
 
-        public string FirstTeamID { get; set; }
+        public required string FirstTeamID { get; set; }
 
-        public string FirstTeamName { get; set; }
+        public required string FirstTeamName { get; set; }
 
-        public string SecondTeamID { get; set; }
+        public required string SecondTeamID { get; set; }
 
-        public string SecondTeamName { get; set; }
+        public required string SecondTeamName { get; set; }
 
-        public string MatchSFU { get; set; }
+        public required string MatchSFU { get; set; }
 
-        public string Id { get; set; }
+        public required string Id { get; set; }
 
         public DateTime? CreatedOnUTC { get; set; }
 

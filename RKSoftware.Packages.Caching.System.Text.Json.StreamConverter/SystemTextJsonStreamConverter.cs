@@ -9,23 +9,12 @@ namespace RKSoftware.Packages.Caching.System.Text.Json.StreamConverter
     public class SystemTextJsonStreamConverter : IObjectToStreamConverter
     {
         /// <summary>
-        /// Convert object from stream synchronously
-        /// </summary>
-        /// <typeparam name="T">Type of destination object</typeparam>
-        /// <param name="data">Object stream representation</param>
-        /// <returns>>Converted object value</returns>
-        public T? FromStream<T>(Stream data)
-        {
-            return JsonSerializer.Deserialize<T>(data);
-        }
-
-        /// <summary>
         /// Convert object from stream asynchronously
         /// </summary>
         /// <typeparam name="T">Type of destination object</typeparam>
         /// <param name="data">Object stream representation</param>
         /// <returns>>Converted object value</returns>
-        public async Task<T?> FromStreamAsync<T>(Stream data)
+        public async Task<T?> FromStreamAsync<T>(Stream data) where T : class
         {
             return await JsonSerializer.DeserializeAsync<T>(data);
         }

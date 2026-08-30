@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <Authors>Konstantin Koryakov</Authors>
     <Company>RK Software Systems</Company>
     <Product>Objecet to string and vise versa converter for RKSoftware.Packages.Caching</Product>
@@ -12,10 +12,11 @@
     <PackageTags>Redis, .NET core</PackageTags>
     <NeutralLanguage>en</NeutralLanguage>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>2.0.4</Version>
-    <AssemblyVersion>2.0.4.0</AssemblyVersion>
-    <FileVersion>2.0.4.0</FileVersion>
+    <Version>3.0.0</Version>
+    <AssemblyVersion>3.0.0.0</AssemblyVersion>
+    <FileVersion>3.0.0.0</FileVersion>
     <PackageIcon>company-logo.png</PackageIcon>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
     <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
   </PropertyGroup>
@@ -25,12 +26,17 @@
     <AnalysisMode>AllEnabledByDefault</AnalysisMode>
     <AnalysisLevel>latest</AnalysisLevel>
   </PropertyGroup>
-
+  <PropertyGroup>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="RKSoftware.Packages.Caching" Version="2.0.4" />
-    <PackageReference Include="System.Text.Json" Version="7.0.2" />
+    <ProjectReference Include="..\RKSoftware.Packages.Caching\RKSoftware.Packages.Caching.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="README.md">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
     <None Include="..\company-logo.png">
       <Pack>True</Pack>
       <PackagePath></PackagePath>

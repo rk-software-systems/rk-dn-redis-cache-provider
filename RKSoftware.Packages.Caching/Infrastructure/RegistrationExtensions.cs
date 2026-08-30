@@ -40,16 +40,13 @@ namespace RKSoftware.Packages.Caching.Infrastructure
             string scopedKeyPrefix)
         {
 
-            if (scopedKeyPrefix == null)
-            {
-                throw new ArgumentNullException(nameof(scopedKeyPrefix));
-            }
+            ArgumentNullException.ThrowIfNull(scopedKeyPrefix);
 
             services.AddScoped<ICacheService>(x =>
-            new CacheService(x.GetService<IOptions<RedisCacheSettings>>(),
-                             x.GetService<ILogger<CacheService>>(),
-                             x.GetService<IConnectionProvider>(),
-                             x.GetService<ICacheRepository>(),
+            new CacheService(x.GetRequiredService<IOptions<RedisCacheSettings>>(),
+                             x.GetRequiredService<ILogger<CacheService>>(),
+                             x.GetRequiredService<IConnectionProvider>(),
+                             x.GetRequiredService<ICacheRepository>(),
                              scopedKeyPrefix));
 
             return services;
@@ -64,10 +61,7 @@ namespace RKSoftware.Packages.Caching.Infrastructure
         public static IServiceCollection UseAppSettingsSettingsProvider(this IServiceCollection services,
             IConfigurationSection redisSettingsCondfigurationSection)
         {
-            if (redisSettingsCondfigurationSection == null)
-            {
-                throw new ArgumentNullException(nameof(redisSettingsCondfigurationSection));
-            }
+            ArgumentNullException.ThrowIfNull(redisSettingsCondfigurationSection);
 
             services.Configure<RedisCacheSettings>(redisSettingsCondfigurationSection);
 

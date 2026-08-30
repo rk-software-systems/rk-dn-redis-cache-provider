@@ -14,9 +14,15 @@ namespace RKSoftware.Packages.Caching.Newtonsoft.Json.Converter
         /// <typeparam name="T">Type of destination object</typeparam>
         /// <param name="data">Object string representation</param>
         /// <returns>Converted object value</returns>
-        public T FromString<T>(string data)
+        public T FromString<T>(string data) where T : class
         {
-            return JsonConvert.DeserializeObject<T>(data);
+            var result = JsonConvert.DeserializeObject<T>(data);
+            if (result == null)
+            {
+                throw new System.InvalidOperationException($"Deserialization of type {typeof(T).FullName} returned null.");
+            }
+
+            return result;
         }
 
         /// <summary>
@@ -25,7 +31,7 @@ namespace RKSoftware.Packages.Caching.Newtonsoft.Json.Converter
         /// <typeparam name="T">Type of target object</typeparam>
         /// <param name="obj">Target object value</param>
         /// <returns>String representation of the target object</returns>
-        public string ToString<T>(T obj)
+        public string ToString<T>(T obj) where T : class
         {
             return JsonConvert.SerializeObject(obj);
         }

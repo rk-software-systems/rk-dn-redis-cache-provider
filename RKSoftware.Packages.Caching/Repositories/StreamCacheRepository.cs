@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
 using RKSoftware.Packages.Caching.Contract;
-using RKSoftware.Packages.Caching.ErrorHandling;
 using StackExchange.Redis;
 
 namespace RKSoftware.Packages.Caching.Repositories
@@ -35,24 +34,6 @@ namespace RKSoftware.Packages.Caching.Repositories
 
         #region methods
 
-        /// <summary>
-        /// Get object from cache storage synchronously
-        /// </summary>
-        /// <typeparam name="T">object type to be stored</typeparam>
-        /// <param name="db">Cache storage handler</param>
-        /// <param name="key">Cache storage key</param>
-        /// <returns></returns>
-        public T GetObject<T>(IDatabase db, string key)
-        {
-            if (db == null)
-            {
-                throw new ArgumentNullException(nameof(db));
-            }
-
-            var bytesValue = db.StringGetLease(key, _connectionProvider.ReadFlags) ?? throw new CacheMissException();
-            var stream = bytesValue.AsStream() ?? throw new CacheMissException();
-            return _objectToStreamConverter.FromStream<T>(stream);
-        }
 
         /// <summary>
         /// Get object from cache storage asynchronously
@@ -61,36 +42,25 @@ namespace RKSoftware.Packages.Caching.Repositories
         /// <param name="db">Cache storage handler</param>
         /// <param name="key">Cache storage key</param>
         /// <returns></returns>
-        public async Task<T> GetObjectAsync<T>(IDatabase db, string key)
+        public async Task<T?> GetObjectAsync<T>(IDatabase db, string key) where T : class
         {
-            if (db == null)
+            ArgumentNullException.ThrowIfNull(db);
+
+            using var bytesValue = await db.StringGetLeaseAsync(key, _connectionProvider.ReadFlags);
+            if(bytesValue == null)
             {
-                throw new ArgumentNullException(nameof(db));
+                return default;
             }
 
-            var bytesValue = (await db.StringGetLeaseAsync(key, _connectionProvider.ReadFlags)) ?? throw new CacheMissException();
-            var stream = bytesValue.AsStream() ?? throw new CacheMissException();
+            using var stream = bytesValue.AsStream();
+            if(stream == null)
+            {
+                return default;
+            }
+
             return await _objectToStreamConverter.FromStreamAsync<T>(stream);
         }
 
-        /// <summary>
-        /// Set object to cache storage synchronously
-        /// </summary>
-        /// <typeparam name="T">object type to be stored</typeparam>
-        /// <param name="db">Cache storage handler</param>
-        /// <param name="key">Cache storage key</param>
-        /// <param name="objectToCache">Object value to be stored</param>
-        /// <param name="storageDuration">Time span to keep value in cache storage, in seconds</param>
-        public void SetObject<T>(IDatabase db, string key, T objectToCache, long storageDuration)
-        {
-            if (db == null)
-            {
-                throw new ArgumentNullException(nameof(db));
-            }
-
-            var bytesValue = _objectToStreamConverter.ToBytes(objectToCache);
-            db.StringSet(key, bytesValue, flags: _connectionProvider.WriteFlags);
-        }
 
         /// <summary>
         /// Set object to cache storage asynchronously
@@ -101,12 +71,9 @@ namespace RKSoftware.Packages.Caching.Repositories
         /// <param name="objectToCache">Object value to be stored</param>
         /// <param name="storageDuration">Time span to keep value in cache storage, in seconds</param>
         /// <returns></returns>
-        public async Task SetObjectAsync<T>(IDatabase db, string key, T objectToCache, long storageDuration)
+        public async Task SetObjectAsync<T>(IDatabase db, string key, T objectToCache, long storageDuration) where T : class
         {
-            if (db == null)
-            {
-                throw new ArgumentNullException(nameof(db));
-            }
+            ArgumentNullException.ThrowIfNull(db);
 
             var bytesValue = _objectToStreamConverter.ToBytes(objectToCache);
             await db.StringSetAsync(key, bytesValue, flags: _connectionProvider.WriteFlags);

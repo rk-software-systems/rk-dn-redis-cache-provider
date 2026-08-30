@@ -9,20 +9,12 @@ namespace RKSoftware.Packages.Caching.Contract
     public interface IObjectToStreamConverter
     {
         /// <summary>
-        /// Create object from stream synchronously
-        /// </summary>
-        /// <typeparam name="T">Type of target object</typeparam>
-        /// <param name="data">Target object value</param>
-        /// <returns></returns>
-        T FromStream<T>(Stream data);
-
-        /// <summary>
         /// Create object from stream asynchronously
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="data"></param>
         /// <returns></returns>
-        Task<T> FromStreamAsync<T>(Stream data);
+        Task<T?> FromStreamAsync<T>(Stream data) where T : class;
 
         /// <summary>
         /// Serialize object to bytes

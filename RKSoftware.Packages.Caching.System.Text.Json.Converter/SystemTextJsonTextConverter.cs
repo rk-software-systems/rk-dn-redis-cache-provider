@@ -1,4 +1,5 @@
 ﻿using RKSoftware.Packages.Caching.Contract;
+using System;
 using System.Text.Json;
 
 namespace RKSoftware.Packages.Caching.System.Text.Json.Converter
@@ -14,9 +15,15 @@ namespace RKSoftware.Packages.Caching.System.Text.Json.Converter
         /// <typeparam name="T">Type of destination object</typeparam>
         /// <param name="data">Object string representation</param>
         /// <returns>Converted object value</returns>
-        public T FromString<T>(string data)
+        public T FromString<T>(string data) where T : class
         {
-            return JsonSerializer.Deserialize<T>(data);
+            var result = JsonSerializer.Deserialize<T>(data);
+            if (result == null)
+            {
+                throw new InvalidOperationException($"Deserialization of type {typeof(T).FullName} returned null.");
+            }
+
+            return result;
         }
 
         /// <summary>
@@ -25,7 +32,7 @@ namespace RKSoftware.Packages.Caching.System.Text.Json.Converter
         /// <typeparam name="T">Type of target object</typeparam>
         /// <param name="obj">Target object value</param>
         /// <returns>String representation of the target object</returns>
-        public string ToString<T>(T obj)
+        public string ToString<T>(T obj) where T : class
         {
             return JsonSerializer.Serialize(obj);
         }
