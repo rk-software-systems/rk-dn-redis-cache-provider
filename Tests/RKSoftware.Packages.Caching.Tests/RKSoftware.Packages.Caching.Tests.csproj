@@ -28,7 +28,9 @@
     <ProjectReference Include="..\..\RKSoftware.Packages.Caching.Converter.Mock\RKSoftware.Packages.Caching.Converter.Mock.csproj" />
     <ProjectReference Include="..\..\RKSoftware.Packages.Caching\RKSoftware.Packages.Caching.csproj" />
   </ItemGroup>
-
+  <PropertyGroup>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
   <ItemGroup>
     <None Update="appsettings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

@@ -1,7 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RKSoftware.Packages.Caching.Contract;
-using RKSoftware.Packages.Caching.ErrorHandling;
 using RKSoftware.Packages.Caching.Tests.Models;
 using System;
 using System.Threading;
@@ -14,64 +13,15 @@ namespace RKSoftware.Packages.Caching.Tests
     {
         #region fields
 
-        private ICacheService _cacheService;
+        private readonly ICacheService _cacheService;
+
         #endregion
 
         #region methods
-
-        [TestInitialize]
-        public void Init()
+        public CacheGetOrSetServiceTest()
         {
             using var scope = Initialization.CreateScope();
-            _cacheService = scope.ServiceProvider.GetService<ICacheService>();
-        }
-
-        [TestMethod]
-        public void TestGetOrSetCache()
-        {
-            var source = CacheTestModel.TestModel;
-            var key = CacheTestModel.TestKey;
-
-            var result1 = _cacheService.GetOrSetCachedObject<CacheTestModel>(key, () => source);
-
-            Assert.IsTrue(source.Equals(result1));
-
-            var result2 = _cacheService.GetCachedObject<CacheTestModel>(key);
-
-            Assert.IsTrue(result1.Equals(result2));
-        }
-
-        [TestMethod]
-        public void TestGetOrSetCacheGlobal()
-        {
-            var source = CacheTestModel.TestModel;
-            var key = CacheTestModel.TestKey;
-
-            var result1 = _cacheService.GetOrSetCachedObject<CacheTestModel>(key, () => source, true);
-
-            Assert.IsTrue(source.Equals(result1));
-
-            var result2 = _cacheService.GetCachedObject<CacheTestModel>(key, true);
-
-            Assert.IsTrue(result1.Equals(result2));
-        }
-
-        [TestMethod]
-        public void TestGetOrSetCacheGlobalDuration()
-        {
-            var source = CacheTestModel.TestModel;
-            var key = CacheTestModel.TestKey;
-
-            var result1 = _cacheService.GetOrSetCachedObject<CacheTestModel>(key, () => source, 1, true);
-
-            Assert.IsTrue(source.Equals(result1));
-
-            Thread.Sleep(TimeSpan.FromSeconds(2));
-
-            Assert.ThrowsExactly<CacheMissException>(() =>
-            {
-                var result = _cacheService.GetCachedObject<CacheTestModel>(key, true);
-            });
+            _cacheService = scope.ServiceProvider.GetRequiredService<ICacheService>();
         }
 
         [TestMethod]
@@ -80,13 +30,13 @@ namespace RKSoftware.Packages.Caching.Tests
             var source = CacheTestModel.TestModel;
             var key = CacheTestModel.TestKey;
 
-            var result1 = await _cacheService.GetOrSetCachedObjectAsync<CacheTestModel>(key, () => Task.FromResult(source));
+            var result1 = await _cacheService.GetOrSetCachedObjectAsync<CacheTestModel>(key, () => Task.FromResult(source)!);
 
-            Assert.IsTrue(source.Equals(result1));
+            Assert.IsTrue(source.Equals(result1!));
 
             var result2 = await _cacheService.GetCachedObjectAsync<CacheTestModel>(key);
 
-            Assert.IsTrue(result1.Equals(result2));
+            Assert.IsTrue(result1!.Equals(result2!));
         }
 
         [TestMethod]
@@ -95,13 +45,13 @@ namespace RKSoftware.Packages.Caching.Tests
             var source = CacheTestModel.TestModel;
             var key = CacheTestModel.TestKey;
 
-            var result1 = await _cacheService.GetOrSetCachedObjectAsync<CacheTestModel>(key, () => Task.FromResult(source), true);
+            var result1 = await _cacheService.GetOrSetCachedObjectAsync<CacheTestModel>(key, () => Task.FromResult(source)!, true);
 
-            Assert.IsTrue(source.Equals(result1));
+            Assert.IsTrue(source.Equals(result1!));
 
             var result2 = await _cacheService.GetCachedObjectAsync<CacheTestModel>(key, true);
 
-            Assert.IsTrue(result1.Equals(result2));
+            Assert.IsTrue(result1!.Equals(result2!));
         }
 
         [TestMethod]
@@ -110,32 +60,16 @@ namespace RKSoftware.Packages.Caching.Tests
             var source = CacheTestModel.TestModel;
             var key = CacheTestModel.TestKey;
 
-            var result1 = await _cacheService.GetOrSetCachedObjectAsync<CacheTestModel>(key, () => Task.FromResult(source), 400, true);
+            var result1 = await _cacheService.GetOrSetCachedObjectAsync<CacheTestModel>(key, () => Task.FromResult(source)!, 400, true);
 
-            Assert.IsTrue(source.Equals(result1));
+            Assert.IsTrue(source.Equals(result1!));
 
             Thread.Sleep(TimeSpan.FromSeconds(2));
 
             var result = await _cacheService.GetCachedObjectAsync<CacheTestModel>(key, true);
+            Assert.IsNull(result);
         }
 
-        [TestMethod]
-        public async Task TestGetOrSetCacheGlobalDurationNegativeAsync()
-        {
-            var source = CacheTestModel.TestModel;
-            var key = CacheTestModel.TestKey;
-
-            var result1 = await _cacheService.GetOrSetCachedObjectAsync<CacheTestModel>(key, () => Task.FromResult(source), 1, true);
-
-            Assert.IsTrue(source.Equals(result1));
-
-            Thread.Sleep(TimeSpan.FromSeconds(2));
-
-            await Assert.ThrowsExactlyAsync<CacheMissException>(async () =>
-            {
-                var result = await _cacheService.GetCachedObjectAsync<CacheTestModel>(key, true);
-            });
-        }
         #endregion
     }
 }

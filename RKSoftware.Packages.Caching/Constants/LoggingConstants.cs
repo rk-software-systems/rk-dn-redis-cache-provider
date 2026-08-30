@@ -20,6 +20,6 @@ namespace RKSoftware.Packages.Caching
         internal const int RedisConnectionOpeneningInformation  = 600014;
         internal const int RedisConnectionOpenError             = 600015;
         internal const int RedisConnectionOpenedInformation     = 600014;
-
+        internal const int RedisGetOrSetObjectError             = 600016;
     }
 }

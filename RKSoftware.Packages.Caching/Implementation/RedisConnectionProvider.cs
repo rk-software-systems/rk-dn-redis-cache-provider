@@ -18,7 +18,7 @@ namespace RKSoftware.Packages.Caching.Implementation
         #region fields  
 
         private bool isDisposed;
-        private IConnectionMultiplexer[] _connectionMultiplexers;
+        private IConnectionMultiplexer[]? _connectionMultiplexers;
         private readonly object _multiplexerInitLock = new object();
         private readonly RedisCacheSettings _redisCacheSettings;
         private readonly ILogger _logger;
@@ -119,12 +119,18 @@ namespace RKSoftware.Packages.Caching.Implementation
 
         private IConnectionMultiplexer GetConnectionMultiplexer()
         {
+            if(_connectionMultiplexers == null || _connectionMultiplexers.Length == 0)
+            {
+                throw new InvalidOperationException("Connection multiplexers are not initialized.");
+            }
+            
             if (_connectionMultiplexers.Length == 1)
             {
                 return _connectionMultiplexers[0];
             }
 
-            return _connectionMultiplexers.OrderBy(x => x.OperationCount).FirstOrDefault();
+            // there will be no null and more than one connection multiplexers, so we can use OrderBy to get the one with the least operation count
+            return _connectionMultiplexers.OrderBy(x => x.OperationCount).FirstOrDefault()!;
         }
 
         private static string GetOptionsString(RedisCacheSettings settings)
@@ -194,17 +200,17 @@ namespace RKSoftware.Packages.Caching.Implementation
 
         #region logging
 
-        private static readonly Action<ILogger, Exception> _logRedisConnectionOpeneningInformation = LoggerMessage.Define(
+        private static readonly Action<ILogger, Exception?> _logRedisConnectionOpeneningInformation = LoggerMessage.Define(
            LogLevel.Information,
            LoggingConstants.RedisConnectionOpeneningInformation,
            LogMessageResource.RedisConnectionOpenening);
 
-        private static readonly Action<ILogger, Exception> _logRedisConnectionOpenError = LoggerMessage.Define(
+        private static readonly Action<ILogger, Exception?> _logRedisConnectionOpenError = LoggerMessage.Define(
             LogLevel.Error,
             LoggingConstants.RedisConnectionOpenError,
             LogMessageResource.RedisConnectionOpenError);
 
-        private static readonly Action<ILogger, Exception> _logRedisConnectionOpenedInformation = LoggerMessage.Define(
+        private static readonly Action<ILogger, Exception?> _logRedisConnectionOpenedInformation = LoggerMessage.Define(
            LogLevel.Information,
            LoggingConstants.RedisConnectionOpenedInformation,
            LogMessageResource.RedisConnectionOpened);

@@ -16,8 +16,8 @@ namespace RKSoftware.Packages.Caching.Tests
 {
     internal static class Initialization
     {
-        private static string _projectName => typeof(Initialization).Namespace;
-        private static MemoryCache _cache;
+        private static string _projectName => typeof(Initialization).Namespace!;
+        private static MemoryCache? _cache;
 
         internal static string ProjectName => _projectName;
 
@@ -73,7 +73,7 @@ namespace RKSoftware.Packages.Caching.Tests
                         .SetSize(1)
                         .SetSlidingExpiration(sec);
 
-                    _cache.Set<string>(key.ToString(), value, cacheEntryOptions);
+                    _cache.Set<string>(key.ToString(), value!, cacheEntryOptions);
                     return true;
                 });
             databaseMoq
@@ -84,14 +84,14 @@ namespace RKSoftware.Packages.Caching.Tests
                         .SetSize(1)
                         .SetSlidingExpiration(sec);
 
-                    _cache.Set<string>(key.ToString(), value, cacheEntryOptions);
+                    _cache.Set<string>(key.ToString(), value!, cacheEntryOptions);
                     return true;
                 });
             databaseMoq
                .Setup(x => x.StringGet(It.IsAny<RedisKey>(), It.IsAny<CommandFlags>()))
                .Returns((RedisKey key, CommandFlags flags) =>
                {
-                   _cache.TryGetValue<string>(key.ToString(), out string value);
+                   _cache.TryGetValue<string>(key.ToString(), out string? value);
                    return value;
                });
             databaseMoq
@@ -102,7 +102,7 @@ namespace RKSoftware.Packages.Caching.Tests
                         .SetSize(1)
                         .SetSlidingExpiration(sec);
 
-                    _cache.Set<string>(key.ToString(), value, cacheEntryOptions);
+                    _cache.Set<string>(key.ToString(), value!, cacheEntryOptions);
                     return Task.FromResult(true);
                 });
             databaseMoq
@@ -113,15 +113,15 @@ namespace RKSoftware.Packages.Caching.Tests
                         .SetSize(1)
                         .SetSlidingExpiration(sec);
 
-                    _cache.Set<string>(key.ToString(), value, cacheEntryOptions);
+                    _cache.Set<string>(key.ToString(), value!, cacheEntryOptions);
                     return Task.FromResult(true);
                 });
             databaseMoq
                .Setup(x => x.StringGetAsync(It.IsAny<RedisKey>(), It.IsAny<CommandFlags>()))
                .Returns((RedisKey key, CommandFlags flags) =>
                {
-                   _cache.TryGetValue<string>(key.ToString(), out string value);
-                   var result = new RedisValue(value);
+                   _cache.TryGetValue<string>(key.ToString(), out string? value);
+                   var result = new RedisValue(value!);
                    return Task.FromResult(result);
                });
             databaseMoq

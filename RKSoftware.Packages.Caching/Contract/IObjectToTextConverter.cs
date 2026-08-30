@@ -11,7 +11,7 @@
         /// <typeparam name="T">Type of target object</typeparam>
         /// <param name="obj">Target object value</param>
         /// <returns>String representation of the target object</returns>
-        string ToString<T>(T obj);
+        string ToString<T>(T obj) where T : class;
 
         /// <summary>
         /// Convert object from string
@@ -19,6 +19,6 @@
         /// <typeparam name="T">Type of destination object</typeparam>
         /// <param name="data">Object string representation</param>
         /// <returns>Converted object value</returns>
-        T FromString<T>(string data);
+        T FromString<T>(string data) where T : class;
     }
 }

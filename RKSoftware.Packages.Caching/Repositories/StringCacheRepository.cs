@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
 using RKSoftware.Packages.Caching.Contract;
-using RKSoftware.Packages.Caching.ErrorHandling;
 using StackExchange.Redis;
 
 namespace RKSoftware.Packages.Caching.Repositories
@@ -42,60 +41,18 @@ namespace RKSoftware.Packages.Caching.Repositories
         /// <param name="db">Cache storage handler</param>
         /// <param name="key">Cache storage key</param>
         /// <returns></returns>
-        public async Task<T> GetObjectAsync<T>(IDatabase db, string key)
+        public async Task<T?> GetObjectAsync<T>(IDatabase db, string key) where T : class
         {
             ArgumentNullException.ThrowIfNull(db);
 
             var result = await db.StringGetAsync(key, _connectionProvider.ReadFlags);
 
-            if (string.IsNullOrEmpty(result))
+            if(string.IsNullOrEmpty(result))
             {
-                throw new CacheMissException();
+                return default;
             }
 
-            return _objectConverter.FromString<T>(result);
-        }
-
-        /// <summary>
-        /// Get object from cache storage synchronously
-        /// </summary>
-        /// <typeparam name="T">object type to be stored</typeparam>
-        /// <param name="db">Cache storage handler</param>
-        /// <param name="key">Cache storage key</param>
-        /// <returns></returns>
-        public T GetObject<T>(IDatabase db, string key)
-        {
-            ArgumentNullException.ThrowIfNull(db);
-
-            var result = db.StringGet(key, _connectionProvider.ReadFlags);
-
-            if (string.IsNullOrEmpty(result))
-            {
-                throw new CacheMissException();
-            }
-
-            return _objectConverter.FromString<T>(result);
-        }
-
-        /// <summary>
-        /// Set object to cache storage synchronously
-        /// </summary>
-        /// <typeparam name="T">object type to be stored</typeparam>
-        /// <param name="db">Cache storage handler</param>
-        /// <param name="key">Cache storage key</param>
-        /// <param name="objectToCache">Object value to be stored</param>
-        /// <param name="storageDuration">Time span to keep value in cache storage, in seconds</param>
-        public void SetObject<T>(IDatabase db, string key, T objectToCache, long storageDuration)
-        {
-            ArgumentNullException.ThrowIfNull(db);
-
-            var value = _objectConverter.ToString(objectToCache);
-            db.StringSet(
-                    key,
-                    value,
-                    TimeSpan.FromSeconds(storageDuration),
-                    keepTtl: false,
-                    flags: _connectionProvider.WriteFlags);
+            return _objectConverter.FromString<T>(result!);
         }
 
         /// <summary>
@@ -107,7 +64,7 @@ namespace RKSoftware.Packages.Caching.Repositories
         /// <param name="objectToCache">Object value to be stored</param>
         /// <param name="storageDuration">Time span to keep value in cache storage, in seconds</param>
         /// <returns></returns>
-        public async Task SetObjectAsync<T>(IDatabase db, string key, T objectToCache, long storageDuration)
+        public async Task SetObjectAsync<T>(IDatabase db, string key, T objectToCache, long storageDuration) where T : class
         {
             ArgumentNullException.ThrowIfNull(db);
 
