@@ -12,6 +12,7 @@
     <RepositoryType>git</RepositoryType>
     <PackageTags>Redis, .NET core,</PackageTags>
     <PackageIcon>company-logo.png</PackageIcon>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -54,6 +55,10 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <None Include="README.md">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
     <None Include="..\company-logo.png">
       <Pack>True</Pack>
       <PackagePath></PackagePath>
