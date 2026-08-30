@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Threading.Tasks;
-using StackExchange.Redis;
 
 namespace RKSoftware.Packages.Caching.Implementation
 {
@@ -107,7 +106,7 @@ namespace RKSoftware.Packages.Caching.Implementation
                 }
             }catch(Exception ex)
             {
-                if (_redisCacheSettings.    UseLogging)
+                if (_redisCacheSettings.UseLogging)
                 {
                     _logRedisGetObjectError(_logger, key, ex);
                 }

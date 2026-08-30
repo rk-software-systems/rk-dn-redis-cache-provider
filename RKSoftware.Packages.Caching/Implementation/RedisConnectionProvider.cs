@@ -6,6 +6,7 @@ using StackExchange.Redis;
 using System;
 using System.Text;
 using System.Linq;
+using System.Threading;
 
 namespace RKSoftware.Packages.Caching.Implementation
 {
@@ -19,7 +20,7 @@ namespace RKSoftware.Packages.Caching.Implementation
 
         private bool isDisposed;
         private IConnectionMultiplexer[]? _connectionMultiplexers;
-        private readonly object _multiplexerInitLock = new object();
+        private readonly Lock _multiplexerInitLock = new Lock();
         private readonly RedisCacheSettings _redisCacheSettings;
         private readonly ILogger _logger;
         #endregion
@@ -69,7 +70,7 @@ namespace RKSoftware.Packages.Caching.Implementation
         #endregion
 
         #region methods
-        
+
         /// <summary>
         /// Get redis database connection multiplexer
         /// </summary>
@@ -83,10 +84,12 @@ namespace RKSoftware.Packages.Caching.Implementation
 
             lock (_multiplexerInitLock)
             {
+#pragma warning disable CA1508 // Avoid dead conditional code
                 if (_connectionMultiplexers != null)
                 {
                     return GetConnectionMultiplexer();
                 }
+#pragma warning restore CA1508 // Avoid dead conditional code
 
                 _logRedisConnectionOpeneningInformation(_logger, null);
 
@@ -112,18 +115,18 @@ namespace RKSoftware.Packages.Caching.Implementation
 
             return GetConnectionMultiplexer();
         }
-                
+
         #endregion
 
         #region helpers
 
         private IConnectionMultiplexer GetConnectionMultiplexer()
         {
-            if(_connectionMultiplexers == null || _connectionMultiplexers.Length == 0)
+            if (_connectionMultiplexers == null || _connectionMultiplexers.Length == 0)
             {
                 throw new InvalidOperationException("Connection multiplexers are not initialized.");
             }
-            
+
             if (_connectionMultiplexers.Length == 1)
             {
                 return _connectionMultiplexers[0];
@@ -164,7 +167,7 @@ namespace RKSoftware.Packages.Caching.Implementation
         /// <summary>
         /// Dispose pattern implementation
         /// </summary>
-        /// <param name="disposing">THis flag indicates if managed resource are subject o be disposed</param>
+        /// <param name="disposing">This flag indicates if managed resource are subject o be disposed</param>
         protected virtual void Dispose(bool disposing)
         {
             if (isDisposed)
@@ -190,7 +193,7 @@ namespace RKSoftware.Packages.Caching.Implementation
         }
 
         /// <summary>
-        /// Finilizer
+        /// Finalizer
         /// </summary>
         ~RedisConnectionProvider()
         {

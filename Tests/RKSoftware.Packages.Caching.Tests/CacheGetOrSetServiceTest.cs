@@ -3,7 +3,6 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RKSoftware.Packages.Caching.Contract;
 using RKSoftware.Packages.Caching.Tests.Models;
 using System;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace RKSoftware.Packages.Caching.Tests
