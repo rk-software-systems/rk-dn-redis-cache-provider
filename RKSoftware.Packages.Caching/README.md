@@ -140,7 +140,7 @@ constrained to `where T : class`:
 | `SetCachedObjectAsync<T>(key, objectToCache)`<br/>`(key, objectToCache, useGlobalCache)`<br/>`(key, obj, storageDuration, useGlobalCache)` | Write a value. Note that passing a duration also requires the `useGlobalCache` flag. |
 | `ResetAsync(key)`<br/>`ResetAsync(key, useGlobalCache)` | Remove a single entry. |
 | `ResetBulkAsync(IEnumerable<string> keys)`<br/>`ResetBulkAsync(keys, useGlobalCache)` | Remove several entries by exact key. |
-| `ResetBulkAsync(string partOfKey)`<br/>`ResetBulkAsync(partOfKey, globalCache)` | Remove every entry whose key contains the given substring. |
+| `ResetBulkAsync(string partOfKey)`<br/>`ResetBulkAsync(partOfKey, globalCache)` | Remove every entry whose key contains the given substring. Scans every connected master — see [Redis Cluster](#redis-cluster). |
 
 ## Extension points
 
@@ -163,6 +163,31 @@ are served by a replica.
 Writes and removals always use `CommandFlags.FireAndForget | CommandFlags.DemandMaster`. Because
 they are fire-and-forget, an awaited `SetCachedObjectAsync` or `ResetAsync` means the command has
 been dispatched — not that the server has already applied it.
+
+The two halves combine into a consistency caveat worth planning around: **a read issued immediately
+after a write or a reset may still return the previous value.** The removal is dispatched
+fire-and-forget to the master, while the following read is served by a replica that has not
+necessarily received the replication yet. Awaiting the reset does not close that window, so code
+that needs to observe its own writes should not rely on a read-back through the cache — re-read from
+the system of record, or register an `IConnectionProvider` of your own that returns flags without
+`FireAndForget` and without `DemandReplica`.
+
+## Redis Cluster
+
+Cluster mode is detected from the connection, and the reset methods adapt to it.
+
+`ResetBulkAsync(partOfKey)` enumerates keys on **every connected master**, so all shards of a
+cluster are covered. Replicas and Sentinel nodes are never scanned, and the call fails with
+`RedisConnectionException` when no master is reachable rather than silently reporting that nothing
+matched.
+
+Both `ResetBulkAsync` overloads then group the keys they are about to remove **by hash slot** and
+issue one `DEL` per slot. A cluster rejects a multi-key operation whose keys do not all hash to the
+same slot (`CROSSSLOT`), and grouping per slot is what keeps the removals within that rule — note
+that grouping per *node* is not sufficient, since one master owns thousands of slots. No `{hash tag}`
+in your keys and no per-key `ResetAsync` is needed.
+
+Off a cluster there is no slot constraint, so the keys are removed with a single `DEL`.
 
 ## Related packages
 

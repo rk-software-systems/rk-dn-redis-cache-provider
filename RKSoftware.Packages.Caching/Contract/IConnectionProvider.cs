@@ -16,12 +16,14 @@ namespace RKSoftware.Packages.Caching.Contract
 
         /// <summary>
         /// This flag indicates if particular connection is Sentinel one
-        /// it is used to determine if it is possible to use Redis replica fore read
+        /// it is used to determine if it is possible to use Redis replica for read
         /// </summary>
         bool IsSentinel { get; }
 
         /// <summary>
-        ///  Get read flags based on connection is Sentinel or not
+        ///  Get read flags based on connection is Sentinel or not.
+        ///  In Sentinel mode reads are served by a replica, whose keyspace may lag behind the master,
+        ///  so a read issued right after a write or a reset can still return the previous value.
         /// </summary>
         CommandFlags ReadFlags { get; }
 

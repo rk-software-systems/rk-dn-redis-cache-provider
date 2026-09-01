@@ -47,13 +47,13 @@ namespace RKSoftware.Packages.Caching.Repositories
             ArgumentNullException.ThrowIfNull(db);
 
             using var bytesValue = await db.StringGetLeaseAsync(key, _connectionProvider.ReadFlags);
-            if(bytesValue == null)
+            if (bytesValue == null)
             {
                 return default;
             }
 
             using var stream = bytesValue.AsStream();
-            if(stream == null)
+            if (stream == null)
             {
                 return default;
             }
@@ -74,9 +74,13 @@ namespace RKSoftware.Packages.Caching.Repositories
         public async Task SetObjectAsync<T>(IDatabase db, string key, T objectToCache, long storageDuration) where T : class
         {
             ArgumentNullException.ThrowIfNull(db);
+            if (storageDuration <= 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(storageDuration), "Storage duration must be greater than zero.");
+            }
 
             var bytesValue = _objectToStreamConverter.ToBytes(objectToCache);
-            await db.StringSetAsync(key, bytesValue, flags: _connectionProvider.WriteFlags);
+            await db.StringSetAsync(key, bytesValue, flags: _connectionProvider.WriteFlags, expiry: TimeSpan.FromSeconds(storageDuration));
         }
         #endregion
     }

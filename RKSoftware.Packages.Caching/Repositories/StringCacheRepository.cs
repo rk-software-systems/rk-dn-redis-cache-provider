@@ -68,6 +68,11 @@ namespace RKSoftware.Packages.Caching.Repositories
         {
             ArgumentNullException.ThrowIfNull(db);
 
+            if(storageDuration <= 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(storageDuration), "Storage duration must be greater than zero.");
+            }
+            
             var value = _objectConverter.ToString(objectToCache);
             await db.StringSetAsync(
                     key,

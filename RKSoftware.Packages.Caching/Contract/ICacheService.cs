@@ -122,20 +122,30 @@ namespace RKSoftware.Packages.Caching.Contract
         Task ResetBulkAsync(IEnumerable<string> keys);
 
         /// <summary>
-        /// Bulk reset entry in cache
+        /// Bulk reset entry in cache.
+        /// On a Redis Cluster the removals are batched per hash slot so that no single DEL spans
+        /// slots, everywhere else the keys are removed with one DEL.
         /// </summary>
         /// <param name="keys">Cache storage keys</param>
         /// <param name="useGlobalCache">This flag indicates if cache entry should be set in Global cache (available for all containers)</param>
         Task ResetBulkAsync(IEnumerable<string> keys, bool useGlobalCache);
 
         /// <summary>
-        /// Reset items which have a specific part of key
+        /// Reset items which have a specific part of key.
+        /// On a Redis Cluster the keys are enumerated on every connected master so that all shards
+        /// are covered, and the removals are batched per hash slot so that no single DEL spans slots.
+        /// On a standalone or Sentinel managed group one node holds the whole keyspace and the
+        /// matching keys are removed with a single DEL.
         /// </summary>
         /// <param name="partOfKey">substring of key between project system name and text resource key, for example "TextResource.en."</param>
         Task ResetBulkAsync(string partOfKey);
 
         /// <summary>
-        /// Reset items which have a specific part of key
+        /// Reset items which have a specific part of key.
+        /// On a Redis Cluster the keys are enumerated on every connected master so that all shards
+        /// are covered, and the removals are batched per hash slot so that no single DEL spans slots.
+        /// On a standalone or Sentinel managed group one node holds the whole keyspace and the
+        /// matching keys are removed with a single DEL.
         /// </summary>
         /// <param name="partOfKey">substring of key between project system name and text resource key, for example "TextResource.en."</param>
         /// <param name="globalCache">Reset in global cache</param>

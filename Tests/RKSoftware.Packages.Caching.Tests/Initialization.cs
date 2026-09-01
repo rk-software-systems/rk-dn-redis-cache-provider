@@ -10,6 +10,9 @@ using StackExchange.Redis;
 using System;
 using Microsoft.Extensions.Caching.Memory;
 using System.Threading.Tasks;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
 using RKSoftware.Packages.Caching.Converter.Mock;
 
 namespace RKSoftware.Packages.Caching.Tests
@@ -18,10 +21,28 @@ namespace RKSoftware.Packages.Caching.Tests
     {
         private static string _projectName => typeof(Initialization).Namespace!;
         private static MemoryCache? _cache;
+        private static readonly List<RedisKey[]> _deleteBatches = [];
 
         internal static string ProjectName => _projectName;
 
-        internal static IServiceScope CreateScope()
+        /// <summary>
+        /// Keys currently held by the cache storage behind the <see cref="IDatabase"/> mock
+        /// </summary>
+        internal static IEnumerable<string> CacheKeys =>
+            _cache == null ? [] : _cache.Keys.Select(key => key.ToString()!).ToArray();
+
+        /// <summary>
+        /// Multi key deletes that were issued against the <see cref="IDatabase"/> mock, one entry
+        /// per DEL command. Lets a test assert how the keys were batched, which is what decides
+        /// whether a delete is safe on a Redis Cluster.
+        /// </summary>
+        internal static IReadOnlyList<RedisKey[]> DeleteBatches => _deleteBatches;
+
+        internal static IServiceScope CreateScope() =>
+            CreateScope(RedisTopologyKind.Standalone, out _);
+
+        internal static IServiceScope CreateScope(RedisTopologyKind topology,
+            out IReadOnlyList<FakeRedisServer> servers)
         {
             var services = new ServiceCollection();
 
@@ -31,7 +52,7 @@ namespace RKSoftware.Packages.Caching.Tests
             services.UseRKSoftwareCache(configuration, _projectName)
                 .UseMockJsonTextConverter();
 
-            AddConnectionProvider(services);
+            servers = AddConnectionProvider(services, topology);
 
             var serviceProvider = services.BuildServiceProvider();
             var scope = serviceProvider.CreateScope();
@@ -57,12 +78,14 @@ namespace RKSoftware.Packages.Caching.Tests
             services.AddScoped<ILogger<RedisConnectionProvider>>(x => loggerConnectionMoq.Object);
         }
 
-        private static void AddConnectionProvider(ServiceCollection services)
+        private static IReadOnlyList<FakeRedisServer> AddConnectionProvider(ServiceCollection services,
+            RedisTopologyKind topology)
         {
             _cache = new MemoryCache(new MemoryCacheOptions
             {
                 SizeLimit = 1024
             });
+            _deleteBatches.Clear();
 
             var databaseMoq = new Mock<IDatabase>();
             databaseMoq
@@ -152,6 +175,7 @@ namespace RKSoftware.Packages.Caching.Tests
                .Setup(x => x.KeyDeleteAsync(It.IsAny<RedisKey[]>(), It.IsAny<CommandFlags>()))
                .Returns((RedisKey[] keys, CommandFlags flags) =>
                {
+                   _deleteBatches.Add(keys);
                    foreach (var key in keys)
                    {
                        _cache.Remove(key.ToString());
@@ -159,16 +183,33 @@ namespace RKSoftware.Packages.Caching.Tests
                    return Task.FromResult((long)keys.Length);
                });
 
+            var servers = FakeRedisTopology.Create(topology, () => CacheKeys);
+
             var connectionMultiplexerMoq = new Mock<IConnectionMultiplexer>();
             connectionMultiplexerMoq
                 .Setup(x => x.GetDatabase(It.IsAny<int>(), It.IsAny<object>()))
                 .Returns(databaseMoq.Object);
+            connectionMultiplexerMoq
+                .Setup(x => x.GetServers())
+                .Returns(servers.Select(server => server.Server).ToArray());
+            connectionMultiplexerMoq
+                .Setup(x => x.GetEndPoints(It.IsAny<bool>()))
+                .Returns(servers.Select(server => server.EndPoint).ToArray());
+            connectionMultiplexerMoq
+                .Setup(x => x.GetServer(It.IsAny<EndPoint>(), It.IsAny<object>()))
+                .Returns((EndPoint endPoint, object asyncState) =>
+                    servers.First(server => server.EndPoint.Equals(endPoint)).Server);
+            connectionMultiplexerMoq
+                .Setup(x => x.GetHashSlot(It.IsAny<RedisKey>()))
+                .Returns((RedisKey key) => FakeRedisTopology.SlotOf(key));
 
             var connectionProviderMoq = new Mock<IConnectionProvider>();
             connectionProviderMoq
                 .Setup(x => x.GetConnection())
                 .Returns(connectionMultiplexerMoq.Object);
             services.AddScoped<IConnectionProvider>(x => connectionProviderMoq.Object);
+
+            return servers;
         }
     }
 }

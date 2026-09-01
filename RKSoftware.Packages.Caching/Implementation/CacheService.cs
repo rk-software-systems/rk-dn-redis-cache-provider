@@ -4,7 +4,6 @@ using RKSoftware.Packages.Caching.Contract;
 using RKSoftware.Packages.Caching.Infrastructure;
 using StackExchange.Redis;
 using System;
-using System.Linq;
 
 namespace RKSoftware.Packages.Caching.Implementation
 {
@@ -111,21 +110,7 @@ namespace RKSoftware.Packages.Caching.Implementation
         {
             return GetFullyQualifiedKey($"*{keyPart}*", global);
         }
-
-        /// <summary>
-        /// Get all keys for specific part of key
-        /// </summary>
-        /// <param name="partOfKey">substring of key between project system name and text resource key, for example "TextResource.en."</param>
-        /// <param name="global">This flag indicates if cache entry should be set in Global cache (available for all containers)</param>
-        /// <returns>list of keys</returns>
-        private RedisKey[] GetKeys(string partOfKey, bool global)
-        {
-            var keyPattern = GetFullyQualifiedPartialKey(partOfKey, global);
-            var connection = _connectionProvider.GetConnection();
-            var endPoint = connection.GetEndPoints().First();
-            var keyArr = connection.GetServer(endPoint).Keys(pattern: $"{keyPattern}").ToArray();
-            return keyArr;
-        }
+        
         #endregion
 
         #region logging
