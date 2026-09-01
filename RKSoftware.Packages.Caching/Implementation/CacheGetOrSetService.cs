@@ -104,14 +104,16 @@ namespace RKSoftware.Packages.Caching.Implementation
                 {
                     _logRedisObjectNotFoundWarning(_logger, key, null);
                 }
-            }catch(Exception ex)
+            }
+            catch (Exception ex)
             {
+                // get or set should not fail on redis errors, so we just log the error and return the value obtained from objectReceiver
                 if (_redisCacheSettings.UseLogging)
                 {
                     _logRedisGetObjectError(_logger, key, ex);
                 }
             }
-            
+
 
             isSet = val != null;
 
@@ -121,13 +123,24 @@ namespace RKSoftware.Packages.Caching.Implementation
 
                 if (val != null)
                 {
-                    if (storageDuration.HasValue)
+                    try
                     {
-                        await SetCachedObjectAsync(key, val, storageDuration.Value, global);
+                        if (storageDuration.HasValue)
+                        {
+                            await SetCachedObjectAsync(key, val, storageDuration.Value, global);
+                        }
+                        else
+                        {
+                            await SetCachedObjectAsync(key, val, global);
+                        }
                     }
-                    else
+                    catch (Exception ex)
                     {
-                        await SetCachedObjectAsync(key, val, global);
+                        // get or set should not fail on redis errors, so we just log the error and return the value obtained from objectReceiver
+                        if (_redisCacheSettings.UseLogging)
+                        {
+                            _logRedisSetObjectError(_logger, key, ex);
+                        }
                     }
                 }
             }

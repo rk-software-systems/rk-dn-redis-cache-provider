@@ -45,7 +45,7 @@ Add a `RedisCacheSettings` section to `appsettings.json`:
 
 | Setting | Description |
 | --- | --- |
-| `RedisUrl` | Redis endpoint, following the StackExchange.Redis convention. Single instance: `localhost:6379`. Sentinel: `localhost:23679,serviceName=redis_master`. In Sentinel mode reads are served by a replica. |
+| `RedisUrl` | Redis endpoint, following the StackExchange.Redis convention. Single instance: `localhost:6379`. Sentinel: `localhost:23679,serviceName=redis_master`. In Sentinel mode reads are served by a replica, so a read straight after a write or a reset can return the previous value (see [Sentinel behaviour](RKSoftware.Packages.Caching/README.md#redis-sentinel)). |
 | `DefaultCacheDuration` | Lifetime, in seconds, used when a call does not pass an explicit duration. |
 | `GlobalCacheKey` | Prefix for global cache entries, shared across applications. Defaults to `RKSoftware.Global`. |
 | `SyncTimeout` | Time in milliseconds allowed for synchronous operations. Defaults to 5 seconds. |
