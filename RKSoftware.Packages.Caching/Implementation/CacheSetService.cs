@@ -10,6 +10,7 @@ namespace RKSoftware.Packages.Caching.Implementation
 
         /// <summary>
         /// Set object value in cache asynchronously
+        /// Entry is kept for <see cref="Infrastructure.RedisCacheSettings.DefaultCacheDuration"/> seconds
         /// </summary>
         /// <typeparam name="T">Type of the object to be set</typeparam>
         /// <param name="key">Object cache storage key</param>
@@ -22,6 +23,7 @@ namespace RKSoftware.Packages.Caching.Implementation
 
         /// <summary>
         /// Set object value in cache asynchronously
+        /// Entry is kept for <see cref="Infrastructure.RedisCacheSettings.DefaultCacheDuration"/> seconds
         /// </summary>
         /// <typeparam name="T">Type of the object to be set</typeparam>
         /// <param name="key">Object cache storage key</param>
@@ -42,11 +44,14 @@ namespace RKSoftware.Packages.Caching.Implementation
         /// <typeparam name="T">Type of the object to be set</typeparam>
         /// <param name="key">Object cache storage key</param>
         /// <param name="obj">Object to be stored</param>
-        /// <param name="storageDuration">Time span to keep value in cache, in seconds</param>
+        /// <param name="storageDuration">Time span to keep value in cache, in seconds. Has to be greater than zero.</param>
         /// <param name="useGlobalCache">This flag indicates if cache entry should be set in Global cache (available for all containers)</param>
         /// <returns>Task awaiter</returns>
+        /// <exception cref="ArgumentOutOfRangeException">Thrown when storageDuration is not greater than zero</exception>
         public Task SetCachedObjectAsync<T>(string key, T obj, long storageDuration, bool useGlobalCache) where T : class
         {
+            ArgumentOutOfRangeException.ThrowIfNegativeOrZero(storageDuration);
+
             return SetCachedObjectAsync(key, obj, storageDuration, useGlobalCache, _cacheRepository.SetObjectAsync);
         }
         #endregion

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using StackExchange.Redis;
 
 namespace RKSoftware.Packages.Caching.Implementation
 {
@@ -10,6 +11,7 @@ namespace RKSoftware.Packages.Caching.Implementation
         /// <summary>
         /// Get object from cache asynchronously using asynchronous obtainer
         /// In case object not found in cache, obtain its value and set it to cache
+        /// Entry is kept for <see cref="Infrastructure.RedisCacheSettings.DefaultCacheDuration"/> seconds
         /// </summary>
         /// <typeparam name="T">Resulting object type</typeparam>
         /// <param name="key">Cache key</param>
@@ -23,6 +25,7 @@ namespace RKSoftware.Packages.Caching.Implementation
         /// <summary>
         /// Get object from cache asynchronously using asynchronous obtainer
         /// In case object not found in cache, obtain its value and set it to cache
+        /// Entry is kept for <see cref="Infrastructure.RedisCacheSettings.DefaultCacheDuration"/> seconds
         /// </summary>
         /// <typeparam name="T">Resulting object type</typeparam>
         /// <param name="key">Cache key</param>
@@ -31,9 +34,10 @@ namespace RKSoftware.Packages.Caching.Implementation
         /// <returns>Object from cache. Null if not found and if objectReceiver returns null.</returns>
         public Task<T?> GetOrSetCachedObjectAsync<T>(string key, Func<Task<T?>> objectReceiver, bool useGlobalCache) where T : class
         {
-            ArgumentNullException.ThrowIfNull(objectReceiver);
-
-            return GetOrSetAsyncBase(key, objectReceiver, null, useGlobalCache);
+            return GetOrSetCachedObjectAsync(key,
+                objectReceiver,
+                _redisCacheSettings.DefaultCacheDuration,
+                useGlobalCache);
         }
 
         /// <summary>
@@ -43,7 +47,7 @@ namespace RKSoftware.Packages.Caching.Implementation
         /// <typeparam name="T">Resulting object type</typeparam>
         /// <param name="key">Cache key</param>
         /// <param name="objectReceiver">Async Delegate that allows us to obtain object to be cached</param>
-        /// <param name="storageDuration">Time span to keep value in cache, in seconds</param>
+        /// <param name="storageDuration">Time span to keep value in cache, in seconds. Has to be greater than zero.</param>
         /// <returns>Object from cache. Null if not found and if objectReceiver returns null.</returns>
         public Task<T?> GetOrSetCachedObjectAsync<T>(string key, Func<Task<T?>> objectReceiver, long storageDuration) where T : class
         {
@@ -57,12 +61,14 @@ namespace RKSoftware.Packages.Caching.Implementation
         /// <typeparam name="T">Resulting object type</typeparam>
         /// <param name="key">Cache key</param>
         /// <param name="objectReceiver">Async Delegate that allows us to obtain object to be cached</param>
-        /// <param name="storageDuration">Time span to keep value in cache, in seconds</param>
+        /// <param name="storageDuration">Time span to keep value in cache, in seconds. Has to be greater than zero.</param>
         /// <param name="useGlobalCache">This flag indicates if cache entry should be set in Global cache (available for all containers)</param>
         /// <returns>Object from cache. Null if not found and if objectReceiver returns null.</returns>
+        /// <exception cref="ArgumentOutOfRangeException">Thrown when storageDuration is not greater than zero</exception>
         public Task<T?> GetOrSetCachedObjectAsync<T>(string key, Func<Task<T?>> objectReceiver, long storageDuration, bool useGlobalCache) where T : class
         {
             ArgumentNullException.ThrowIfNull(objectReceiver);
+            ArgumentOutOfRangeException.ThrowIfNegativeOrZero(storageDuration);
 
             return GetOrSetAsyncBase(key, objectReceiver, storageDuration, useGlobalCache);
         }
@@ -73,17 +79,20 @@ namespace RKSoftware.Packages.Caching.Implementation
         /// <summary>
         /// Base method for getting object from cache asynchronously using asynchronous obtainer
         /// In case object not found in cache, obtain its value and set it to cache
+        /// Cache storage failures are logged and tolerated, the value obtained from objectReceiver
+        /// is still returned. Argument errors are not tolerated, they are validated by the public
+        /// overloads before this method is reached.
         /// </summary>
         /// <typeparam name="T">Resulting object type</typeparam>
         /// <param name="key">Cache key</param>
         /// <param name="objectReceiver">Async Delegate that allows us to obtain object to be cached</param>
-        /// <param name="storageDuration">Time span to keep value in cache, in seconds, nullable</param>
+        /// <param name="storageDuration">Time span to keep value in cache, in seconds</param>
         /// <param name="global">This flag indicates if cache entry should be set in Global cache (available for all containers)</param>
         /// <returns>Object from cache. Null if not found and if objectReceiver returns null.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1031:Do not catch general exception types", Justification = "This warning is suppressed as we need to return result no matter of Redis GET / SET operation result")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1031:Do not catch general exception types", Justification = "A failed cache read, a value that can no longer be deserialized included, is safely equivalent to a cache miss, so every read failure is logged and the value is obtained from objectReceiver instead")]
         private async Task<T?> GetOrSetAsyncBase<T>(string key,
             Func<Task<T?>> objectReceiver,
-            long? storageDuration,
+            long storageDuration,
             bool global) where T : class
         {
             if (string.IsNullOrEmpty(key))
@@ -93,7 +102,6 @@ namespace RKSoftware.Packages.Caching.Implementation
 
             ArgumentNullException.ThrowIfNull(objectReceiver);
 
-            bool isSet = false;
             T? val = null;
 
             try
@@ -107,17 +115,13 @@ namespace RKSoftware.Packages.Caching.Implementation
             }
             catch (Exception ex)
             {
-                // get or set should not fail on redis errors, so we just log the error and return the value obtained from objectReceiver
-                if (_redisCacheSettings.UseLogging)
-                {
-                    _logRedisGetObjectError(_logger, key, ex);
-                }
+                // Any failure to read is equivalent to a cache miss, so the value is obtained from
+                // objectReceiver instead. Logged unconditionally, UseLogging governs informational
+                // logging only and must never hide an error.
+                _logRedisGetObjectError(_logger, key, ex);
             }
 
-
-            isSet = val != null;
-
-            if (!isSet)
+            if (val == null)
             {
                 val = await objectReceiver();
 
@@ -125,28 +129,25 @@ namespace RKSoftware.Packages.Caching.Implementation
                 {
                     try
                     {
-                        if (storageDuration.HasValue)
-                        {
-                            await SetCachedObjectAsync(key, val, storageDuration.Value, global);
-                        }
-                        else
-                        {
-                            await SetCachedObjectAsync(key, val, global);
-                        }
+                        await SetCachedObjectAsync(key, val, storageDuration, global);
                     }
-                    catch (Exception ex)
+                    catch (RedisException ex)
                     {
-                        // get or set should not fail on redis errors, so we just log the error and return the value obtained from objectReceiver
-                        if (_redisCacheSettings.UseLogging)
-                        {
-                            _logRedisSetObjectError(_logger, key, ex);
-                        }
+                        // get or set should not fail on redis errors, so the error is logged and the
+                        // value obtained from objectReceiver is returned. Anything that is not a
+                        // storage failure, an unserializable value for instance, is left to surface.
+                        _logRedisSetObjectError(_logger, key, ex);
+                    }
+                    catch (TimeoutException ex)
+                    {
+                        // RedisTimeoutException derives from TimeoutException, not RedisException
+                        _logRedisSetObjectError(_logger, key, ex);
                     }
                 }
             }
 
             return val;
         }
-        #endregion        
+        #endregion
     }
 }

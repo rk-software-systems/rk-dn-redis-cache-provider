@@ -54,7 +54,7 @@ namespace RKSoftware.Packages.Caching.Contract
         /// <typeparam name="T">Resulting object type</typeparam>
         /// <param name="key">Cache key</param>
         /// <param name="objectReceiver">Async Delegate that allows us to obtain object to be cached</param>
-        /// <param name="storageDuration">Time span to keep value in cache, in seconds</param>
+        /// <param name="storageDuration">Time span to keep value in cache, in seconds. Has to be greater than zero.</param>
         /// <returns>Object from cache. Null value if not found or if objectReceiver returns null.</returns>
         Task<T?> GetOrSetCachedObjectAsync<T>(string key, Func<Task<T?>> objectReceiver, long storageDuration) where T : class;
 
@@ -65,7 +65,7 @@ namespace RKSoftware.Packages.Caching.Contract
         /// <typeparam name="T">Resulting object type</typeparam>
         /// <param name="key">Cache key</param>
         /// <param name="objectReceiver">Async Delegate that allows us to obtain object to be cached</param>
-        /// <param name="storageDuration">Time span to keep value in cache, in seconds</param>
+        /// <param name="storageDuration">Time span to keep value in cache, in seconds. Has to be greater than zero.</param>
         /// <param name="useGlobalCache">This flag indicates if cache entry should be set in Global cache (available for all containers)</param>
         /// <returns>Object from cache. Null value if not found or if objectReceiver returns null.</returns>
         Task<T?> GetOrSetCachedObjectAsync<T>(string key, Func<Task<T?>> objectReceiver, long storageDuration, bool useGlobalCache) where T : class;
@@ -95,7 +95,7 @@ namespace RKSoftware.Packages.Caching.Contract
         /// <typeparam name="T">Type of the object to be set</typeparam>
         /// <param name="key">Object cache storage key</param>
         /// <param name="obj">Object to be stored</param>
-        /// <param name="storageDuration">Time span to keep value in cache, in seconds</param>
+        /// <param name="storageDuration">Time span to keep value in cache, in seconds. Has to be greater than zero.</param>
         /// <param name="useGlobalCache">This flag indicates if cache entry should be set in Global cache (available for all containers)</param>
         /// <returns>Task awaiter</returns>
         Task SetCachedObjectAsync<T>(string key, T obj, long storageDuration, bool useGlobalCache) where T : class;
