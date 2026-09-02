@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using StackExchange.Redis;
 
 namespace RKSoftware.Packages.Caching.Contract
@@ -24,8 +25,9 @@ namespace RKSoftware.Packages.Caching.Contract
         /// <param name="db">Cache storage handler</param>
         /// <param name="key">Cache storage key</param>
         /// <param name="objectToCache">Object value to be stored</param>
-        /// <param name="storageDuration">Time span to keep value in cache storage, in seconds</param>
+        /// <param name="storageDuration">Time span to keep value in cache storage, in seconds. Has to be greater than zero.</param>
         /// <returns></returns>
+        /// <exception cref="ArgumentOutOfRangeException">Thrown when storageDuration is not greater than zero</exception>
         Task SetObjectAsync<T>(IDatabase db, string key, T objectToCache, long storageDuration) where T : class;
     }
 }

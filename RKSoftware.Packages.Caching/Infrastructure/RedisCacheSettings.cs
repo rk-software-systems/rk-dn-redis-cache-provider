@@ -16,9 +16,10 @@
         public required string RedisUrl { get; set; }
 
         /// <summary>
-        /// Amount of second to keep value in cache in case cache timeout have not been implicitly specified
+        /// Amount of seconds to keep value in cache in case cache timeout have not been implicitly specified.
+        /// Must be greater than zero.
         /// </summary>
-        public long DefaultCacheDuration { get; set; }
+        public required long DefaultCacheDuration { get; set; }
 
         /// <summary>
         /// This key prefix is going to be used as a prefix for Global cache entries

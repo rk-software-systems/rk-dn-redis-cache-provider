@@ -54,16 +54,19 @@ namespace RKSoftware.Packages.Caching.Infrastructure
 
         /// <summary>
         /// Register <see cref="RedisCacheSettings"/> data provider that uses AppSettings <see cref="IConfigurationSection"/> as source.
+        /// Settings are validated the first time they are read, so a missing <see cref="RedisCacheSettings.RedisUrl"/>
+        /// or a non positive <see cref="RedisCacheSettings.DefaultCacheDuration"/> throws <see cref="OptionsValidationException"/>.
         /// </summary>
         /// <param name="services">Service collection to register settings provider</param>
-        /// <param name="redisSettingsCondfigurationSection"><see cref="IConfigurationSection"/> with <see cref="RedisCacheSettings"/></param>
+        /// <param name="redisSettingsConfigurationSection"><see cref="IConfigurationSection"/> with <see cref="RedisCacheSettings"/></param>
         /// <returns>Services collection with registered service</returns>
         public static IServiceCollection UseAppSettingsSettingsProvider(this IServiceCollection services,
-            IConfigurationSection redisSettingsCondfigurationSection)
+            IConfigurationSection redisSettingsConfigurationSection)
         {
-            ArgumentNullException.ThrowIfNull(redisSettingsCondfigurationSection);
+            ArgumentNullException.ThrowIfNull(redisSettingsConfigurationSection);
 
-            services.Configure<RedisCacheSettings>(redisSettingsCondfigurationSection);
+            services.Configure<RedisCacheSettings>(redisSettingsConfigurationSection);
+            services.AddSingleton<IValidateOptions<RedisCacheSettings>, RedisCacheSettingsValidator>();
 
             return services;
         }

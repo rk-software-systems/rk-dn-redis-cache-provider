@@ -43,13 +43,24 @@ namespace RKSoftware.Packages.Caching.Implementation
             string scopedKeyPrefix)
         {
             ArgumentNullException.ThrowIfNull(redisCacheProvider);
+            ArgumentNullException.ThrowIfNull(logger);
+            ArgumentNullException.ThrowIfNull(connectionProvider);
+            ArgumentNullException.ThrowIfNull(cacheRepository);
+            ArgumentException.ThrowIfNullOrEmpty(scopedKeyPrefix);
 
-            if (string.IsNullOrEmpty(scopedKeyPrefix))
+            _redisCacheSettings = redisCacheProvider.Value
+                ?? throw new ArgumentException($"{nameof(RedisCacheSettings)} is not configured.", nameof(redisCacheProvider));
+
+            // Settings supplied through a mocked or hand built IOptions bypass the options factory,
+            // and with it RedisCacheSettingsValidator, so the duration is re-checked here. Otherwise
+            // a non positive duration would only be rejected deep inside a set operation.
+            if (_redisCacheSettings.DefaultCacheDuration <= 0)
             {
-                throw new ArgumentNullException(nameof(scopedKeyPrefix));
+                throw new ArgumentException(
+                    $"{nameof(RedisCacheSettings.DefaultCacheDuration)} must be greater than zero.",
+                    nameof(redisCacheProvider));
             }
 
-            _redisCacheSettings = redisCacheProvider.Value;
             _logger = logger;
             _connectionProvider = connectionProvider;
             _projectName = scopedKeyPrefix;

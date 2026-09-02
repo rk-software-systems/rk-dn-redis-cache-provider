@@ -41,7 +41,7 @@ Add a `RedisCacheSettings` section to `appsettings.json`:
 | Setting | Type | Description |
 | --- | --- | --- |
 | `RedisUrl` | `string` (**required**) | Redis endpoint, following the StackExchange.Redis convention. Single instance: `localhost:6379`. Sentinel: `localhost:23679,serviceName=redis_master`. |
-| `DefaultCacheDuration` | `long` | Lifetime, **in seconds**, applied when a call does not pass an explicit duration. |
+| `DefaultCacheDuration` | `long` (**required**) | Lifetime, **in seconds**, applied when a call does not pass an explicit duration. Must be greater than zero; a missing or non positive value throws `OptionsValidationException` the first time the settings are read. |
 | `GlobalCacheKey` | `string?` | Prefix used for global cache entries. Defaults to `RKSoftware.Global` when not set. |
 | `SyncTimeout` | `int?` | Time in milliseconds allowed for synchronous operations. Defaults to 5 seconds. |
 | `ConnectionMultiplexerPoolSize` | `int?` | Size of the connection multiplexer pool. |
@@ -90,7 +90,15 @@ public sealed class ProductService(ICacheService cache, IProductRepository repos
 ```
 
 All cached types must be reference types (`where T : class`), and every `storageDuration` is
-expressed **in seconds**.
+expressed **in seconds** and must be greater than zero — a non positive value throws
+`ArgumentOutOfRangeException`. Overloads that take no duration fall back to `DefaultCacheDuration`,
+which is itself validated when the settings are first read, so a cache entry can never be written
+with no lifetime.
+
+`GetOrSetCachedObjectAsync` deliberately tolerates cache storage failures: if Redis cannot be reached
+the value from `objectReceiver` is still returned and the failure is logged as an error, regardless of
+the `UseLogging` setting. It does not tolerate argument errors or a value that cannot be serialized —
+those surface to the caller rather than leaving the cache silently unpopulated.
 
 ## Registration options
 
