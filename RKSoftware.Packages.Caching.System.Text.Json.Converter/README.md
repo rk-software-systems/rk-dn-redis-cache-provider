@@ -71,6 +71,16 @@ Both members are constrained to `where T : class`, matching `ICacheService`. Ser
 `System.Text.Json` defaults, so annotate your models with `System.Text.Json.Serialization`
 attributes (`[JsonPropertyName]`, `[JsonIgnore]`, `[JsonConverter]`) to influence the output.
 
+## Hash fields
+
+The same converter backs the hash field API of `ICacheService`. `SetCachedHashFieldAsync<T>` stores
+the field as a JSON string, and `GetCachedHashFieldAsync<T>` deserializes it, with the same
+`InvalidOperationException` when the stored JSON is `null`. The `byte[]` setters bypass the
+converter and store bytes as is. `GetCachedHashFieldStreamAsync` returns a typed field as its UTF-8
+JSON text, not as the original object. See the
+[core package README](https://github.com/rk-software-systems/rk-dn-redis-cache-provider/blob/master/RKSoftware.Packages.Caching/README.md#hash-fields)
+for expiration and removal rules.
+
 ## Choosing a converter
 
 - Use **this package** for new code: `System.Text.Json` is built into the framework and adds no
