@@ -73,6 +73,15 @@ uses the `System.Text.Json` defaults, so annotate your models with
 `System.Text.Json.Serialization` attributes (`[JsonPropertyName]`, `[JsonIgnore]`,
 `[JsonConverter]`) to influence the output.
 
+## Hash fields
+
+The same converter backs the hash field API of `ICacheService`. `SetCachedHashFieldAsync<T>` stores
+the field as UTF-8 JSON bytes, and `GetCachedHashFieldAsync<T>` deserializes it straight from the
+stored buffer, returning `null` when the field is absent or its JSON is `null`. The `byte[]` setters
+bypass the converter and store bytes as is. See the
+[core package README](https://github.com/rk-software-systems/rk-dn-redis-cache-provider/blob/master/RKSoftware.Packages.Caching/README.md#hash-fields)
+for expiration and removal rules.
+
 ## When to use this instead of a text converter
 
 The two text converters serialize through an intermediate `string`; this one goes straight to and
@@ -85,7 +94,7 @@ entries that are easier to inspect with `redis-cli`.
 > **Register exactly one converter package.** All three register `ICacheRepository`, so adding more
 > than one leaves the last registration in effect and silently changes the storage format. Values
 > written by a text converter cannot be read back by this one, and vice versa — switching converters
-> in an existing deployment requires flushing the affected keys.
+> in an existing deployment requires flushing the affected keys, hashes with typed fields included.
 
 ## Related packages
 
