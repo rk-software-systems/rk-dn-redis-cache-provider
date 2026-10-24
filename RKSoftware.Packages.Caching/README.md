@@ -5,8 +5,8 @@
 
 Redis caching abstractions for .NET applications. This package provides `ICacheService` — a small,
 typed, async facade over [StackExchange.Redis](https://github.com/StackExchange/StackExchange.Redis)
-that handles key namespacing, expiration, get-or-set population, bulk invalidation and Redis
-Sentinel awareness, so your application code never talks to Redis directly.
+that handles key namespacing, expiration, get-or-set population, hash fields, bulk invalidation and
+Redis Sentinel awareness, so your application code never talks to Redis directly.
 
 > **This package on its own is not enough.** It defines *how* values are cached but not *how they
 > are serialized*. You must also register a converter — either one of the companion packages listed
@@ -136,16 +136,65 @@ the key:
 Use the scoped form for data owned by one application, and the global form for data deliberately
 shared between applications or containers that agree on the same `GlobalCacheKey`.
 
+## Hash fields
+
+A Redis hash groups related values under one key. Each value lives in its own field, so the group
+can be read and updated field by field and still expires as a unit.
+
+```csharp
+// Typed values go through the registered converter
+await cache.SetCachedHashFieldAsync("user.42", "profile", profile);
+var cachedProfile = await cache.GetCachedHashFieldAsync<Profile>("user.42", "profile");
+
+// Raw bytes are stored as is, several fields in one call
+await cache.SetCachedHashFieldsAsync("user.42", ("avatar", avatarBytes), ("thumb", thumbBytes));
+
+await using var avatar = await cache.GetCachedHashFieldStreamAsync("user.42", "avatar");
+
+// Remove individual fields, the rest of the hash is kept
+await cache.ResetHashFieldsAsync("user.42", ["thumb"]);
+```
+
+**Expiration applies to the whole hash, not to a field.** Every write refreshes the hash time to live
+to the given `storageDuration`, or to `DefaultCacheDuration` for overloads that take none. The field
+write and the expiration are sent together in one `MULTI` / `EXEC` transaction, so a hash is never
+left in Redis without an expiry. A hash that keeps receiving writes never expires, and neither do its
+oldest fields.
+
+**Bytes and typed values.** The `byte[]` setters store bytes exactly as given, with no conversion.
+`GetCachedHashFieldStreamAsync` returns the stored bytes unchanged, so it is meant for fields written
+with the `byte[]` setters; a field written with the typed setter comes back in its serialized form.
+The caller owns the returned stream and has to dispose it, which releases the pooled buffer behind it.
+Both getters return `null` when the key or the field is absent.
+
+**Removing.** `ResetHashFieldsAsync` removes individual fields (`HDEL`). The hash itself is an
+ordinary key, so `ResetAsync(key)` and both `ResetBulkAsync` overloads remove whole hashes,
+cluster-aware as described in [Redis Cluster](#redis-cluster).
+
+**Validation.** `key`, `field` and every field name must be non-empty, values must be non-null, the
+field list must not be empty, and `storageDuration` must be greater than zero. A violation throws
+`ArgumentException`, `ArgumentNullException` or `ArgumentOutOfRangeException` before anything is sent
+to Redis.
+
+Hash writes use the same fire-and-forget and replica-read flags as every other operation, so the
+[Redis Sentinel](#redis-sentinel) consistency caveat applies to them too.
+
 ## API overview
 
 `ICacheService` (namespace `RKSoftware.Packages.Caching.Contract`), all members asynchronous and
-constrained to `where T : class`:
+generic members constrained to `where T : class`:
 
 | Member | Purpose |
 | --- | --- |
 | `GetCachedObjectAsync<T>(key)`<br/>`GetCachedObjectAsync<T>(key, useGlobalCache)` | Read a value; returns `null` when the key is absent. |
 | `GetOrSetCachedObjectAsync<T>(key, objectReceiver)`<br/>`(key, objectReceiver, useGlobalCache)`<br/>`(key, objectReceiver, storageDuration)`<br/>`(key, objectReceiver, storageDuration, useGlobalCache)` | Read a value, populating it via the async delegate on a miss. |
 | `SetCachedObjectAsync<T>(key, objectToCache)`<br/>`(key, objectToCache, useGlobalCache)`<br/>`(key, obj, storageDuration, useGlobalCache)` | Write a value. Note that passing a duration also requires the `useGlobalCache` flag. |
+| `SetCachedHashFieldAsync<T>(key, field, value)`<br/>`(key, field, value, useGlobalCache)`<br/>`(key, field, value, storageDuration, useGlobalCache)` | Write one hash field, serialized by the converter. See [Hash fields](#hash-fields). |
+| `SetCachedHashFieldAsync(key, field, byte[] value)`<br/>`(key, field, value, useGlobalCache)`<br/>`(key, field, value, storageDuration, useGlobalCache)` | Write one hash field as raw bytes, with no conversion. |
+| `SetCachedHashFieldsAsync(key, params (string Field, byte[] Value)[] fieldValues)`<br/>`(key, fieldValues, useGlobalCache)`<br/>`(key, fieldValues, storageDuration, useGlobalCache)` | Write several hash fields as raw bytes in one call. |
+| `GetCachedHashFieldAsync<T>(key, field)`<br/>`(key, field, useGlobalCache)` | Read and deserialize one hash field; returns `null` when the key or the field is absent. |
+| `GetCachedHashFieldStreamAsync(key, field)`<br/>`(key, field, useGlobalCache)` | Read one hash field's stored bytes as a `Stream`; returns `null` when absent. The caller disposes the stream. |
+| `ResetHashFieldsAsync(key, fields)`<br/>`ResetHashFieldsAsync(key, fields, useGlobalCache)` | Remove fields from a hash. |
 | `ResetAsync(key)`<br/>`ResetAsync(key, useGlobalCache)` | Remove a single entry. |
 | `ResetBulkAsync(IEnumerable<string> keys)`<br/>`ResetBulkAsync(keys, useGlobalCache)` | Remove several entries by exact key. |
 | `ResetBulkAsync(string partOfKey)`<br/>`ResetBulkAsync(partOfKey, globalCache)` | Remove every entry whose key contains the given substring. Scans every connected master — see [Redis Cluster](#redis-cluster). |
@@ -162,13 +211,18 @@ Replace any of these by registering your own implementation instead of the defau
 | `IObjectToTextConverter` | Supplied by a text converter package | Scoped |
 | `IObjectToStreamConverter` | Supplied by the stream converter package | Scoped |
 
+A custom `ICacheRepository` also has to implement the hash members: `SetHashFieldAsync<T>`,
+`SetHashFieldAsync` (`byte[]`), `SetHashFieldsAsync`, `GetHashFieldAsync<T>` and `GetHashFieldAsync`
+(stream). Existing implementations will not compile until they do.
+
 ## Redis Sentinel
 
 `RedisConnectionProvider` treats a connection as a Sentinel one when `RedisUrl` contains
 `serviceName=`. In that mode read operations are issued with `CommandFlags.DemandReplica`, so they
 are served by a replica.
 
-Writes and removals always use `CommandFlags.FireAndForget | CommandFlags.DemandMaster`. Because
+Writes and removals, hash field writes and `ResetHashFieldsAsync` included, always use
+`CommandFlags.FireAndForget | CommandFlags.DemandMaster`. Because
 they are fire-and-forget, an awaited `SetCachedObjectAsync` or `ResetAsync` means the command has
 been dispatched — not that the server has already applied it.
 
