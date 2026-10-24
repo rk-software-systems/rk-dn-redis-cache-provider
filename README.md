@@ -9,7 +9,7 @@ converter packages that decide how cached objects are serialized.
 
 | Package | Version | Purpose | Documentation |
 | --- | --- | --- | --- |
-| `RKSoftware.Packages.Caching` | [![NuGet](https://img.shields.io/nuget/v/RKSoftware.Packages.Caching.svg)](https://www.nuget.org/packages/RKSoftware.Packages.Caching/) | Core abstractions: `ICacheService`, settings, DI registration, Redis connection and Sentinel support. | [README](RKSoftware.Packages.Caching/README.md) |
+| `RKSoftware.Packages.Caching` | [![NuGet](https://img.shields.io/nuget/v/RKSoftware.Packages.Caching.svg)](https://www.nuget.org/packages/RKSoftware.Packages.Caching/) | Core abstractions: `ICacheService` (objects and hash fields), settings, DI registration, Redis connection and Sentinel support. | [README](RKSoftware.Packages.Caching/README.md) |
 | `RKSoftware.Packages.Caching.System.Text.Json.Converter` | [![NuGet](https://img.shields.io/nuget/v/RKSoftware.Packages.Caching.System.Text.Json.Converter.svg)](https://www.nuget.org/packages/RKSoftware.Packages.Caching.System.Text.Json.Converter/) | JSON string serialization with `System.Text.Json`. | [README](RKSoftware.Packages.Caching.System.Text.Json.Converter/README.md) |
 | `RKSoftware.Packages.Caching.Newtonsoft.Json.Converter` | [![NuGet](https://img.shields.io/nuget/v/RKSoftware.Packages.Caching.Newtonsoft.Json.Converter.svg)](https://www.nuget.org/packages/RKSoftware.Packages.Caching.Newtonsoft.Json.Converter/) | JSON string serialization with `Newtonsoft.Json`. | [README](RKSoftware.Packages.Caching.Newtonsoft.Json.Converter/README.md) |
 | `RKSoftware.Packages.Caching.System.Text.Json.StreamConverter` | [![NuGet](https://img.shields.io/nuget/v/RKSoftware.Packages.Caching.System.Text.Json.StreamConverter.svg)](https://www.nuget.org/packages/RKSoftware.Packages.Caching.System.Text.Json.StreamConverter/) | UTF-8 byte and stream serialization with `System.Text.Json`, for large payloads. | [README](RKSoftware.Packages.Caching.System.Text.Json.StreamConverter/README.md) |
@@ -92,7 +92,7 @@ dotnet test Tests/RKSoftware.Packages.Caching.Tests
 
 The unit tests are MSTest based and run fully offline — they use the internal
 [Converter.Mock](RKSoftware.Packages.Caching.Converter.Mock/) package and a mocked
-`IConnectionProvider` backed by an in-memory cache, so no Redis instance is needed.
+`IConnectionProvider` backed by an in-memory cache and hash store, so no Redis instance is needed.
 
 For manual testing against real Redis, [docker-compose.yml](docker-compose.yml) brings up a
 standalone instance plus a master/replica/Sentinel cluster (password from [.env](.env)):

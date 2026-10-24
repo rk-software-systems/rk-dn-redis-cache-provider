@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace RKSoftware.Packages.Caching.Contract
@@ -150,5 +151,150 @@ namespace RKSoftware.Packages.Caching.Contract
         /// <param name="partOfKey">substring of key between project system name and text resource key, for example "TextResource.en."</param>
         /// <param name="globalCache">Reset in global cache</param>
         Task ResetBulkAsync(string partOfKey, bool globalCache);
+
+        /// <summary>
+        /// Set single hash field value in cache asynchronously (HSET). Value is serialized. Hash time to live is refreshed.
+        /// </summary>
+        /// <typeparam name="T">Type of the field value to be set</typeparam>
+        /// <param name="key">Hash cache storage key</param>
+        /// <param name="field">Hash field</param>
+        /// <param name="value">Field value to be stored</param>
+        /// <returns>Task awaiter</returns>
+        Task SetCachedHashFieldAsync<T>(string key, string field, T value) where T : class;
+
+        /// <summary>
+        /// Set single hash field value in cache asynchronously (HSET). Value is serialized. Hash time to live is refreshed.
+        /// </summary>
+        /// <typeparam name="T">Type of the field value to be set</typeparam>
+        /// <param name="key">Hash cache storage key</param>
+        /// <param name="field">Hash field</param>
+        /// <param name="value">Field value to be stored</param>
+        /// <param name="useGlobalCache">This flag indicates if cache entry should be set in Global cache (available for all containers)</param>
+        /// <returns>Task awaiter</returns>
+        Task SetCachedHashFieldAsync<T>(string key, string field, T value, bool useGlobalCache) where T : class;
+
+        /// <summary>
+        /// Set single hash field value in cache asynchronously (HSET). Value is serialized. Hash time to live is refreshed.
+        /// </summary>
+        /// <typeparam name="T">Type of the field value to be set</typeparam>
+        /// <param name="key">Hash cache storage key</param>
+        /// <param name="field">Hash field</param>
+        /// <param name="value">Field value to be stored</param>
+        /// <param name="storageDuration">Time span to keep hash in cache, in seconds. Has to be greater than zero.</param>
+        /// <param name="useGlobalCache">This flag indicates if cache entry should be set in Global cache (available for all containers)</param>
+        /// <returns>Task awaiter</returns>
+        Task SetCachedHashFieldAsync<T>(string key, string field, T value, long storageDuration, bool useGlobalCache) where T : class;
+
+        /// <summary>
+        /// Set single hash field value in cache asynchronously (HSET). Bytes are stored as is, with no conversion. Hash time to live is refreshed.
+        /// </summary>
+        /// <param name="key">Hash cache storage key</param>
+        /// <param name="field">Hash field</param>
+        /// <param name="value">Field value to be stored</param>
+        /// <returns>Task awaiter</returns>
+        Task SetCachedHashFieldAsync(string key, string field, byte[] value);
+
+        /// <summary>
+        /// Set single hash field value in cache asynchronously (HSET). Bytes are stored as is, with no conversion. Hash time to live is refreshed.
+        /// </summary>
+        /// <param name="key">Hash cache storage key</param>
+        /// <param name="field">Hash field</param>
+        /// <param name="value">Field value to be stored</param>
+        /// <param name="useGlobalCache">This flag indicates if cache entry should be set in Global cache (available for all containers)</param>
+        /// <returns>Task awaiter</returns>
+        Task SetCachedHashFieldAsync(string key, string field, byte[] value, bool useGlobalCache);
+
+        /// <summary>
+        /// Set single hash field value in cache asynchronously (HSET). Bytes are stored as is, with no conversion. Hash time to live is refreshed.
+        /// </summary>
+        /// <param name="key">Hash cache storage key</param>
+        /// <param name="field">Hash field</param>
+        /// <param name="value">Field value to be stored</param>
+        /// <param name="storageDuration">Time span to keep hash in cache, in seconds. Has to be greater than zero.</param>
+        /// <param name="useGlobalCache">This flag indicates if cache entry should be set in Global cache (available for all containers)</param>
+        /// <returns>Task awaiter</returns>
+        Task SetCachedHashFieldAsync(string key, string field, byte[] value, long storageDuration, bool useGlobalCache);
+
+        /// <summary>
+        /// Set multiple hash fields value in cache asynchronously (HSET). Bytes are stored as is, with no conversion. Hash time to live is refreshed.
+        /// </summary>
+        /// <param name="key">Hash cache storage key</param>
+        /// <param name="fieldValues">Hash fields and corresponding byte array values to be stored</param>
+        /// <returns>Task awaiter</returns>
+        Task SetCachedHashFieldsAsync(string key, params (string Field, byte[] Value)[] fieldValues);
+
+        /// <summary>
+        /// Set multiple hash fields value in cache asynchronously (HSET). Bytes are stored as is, with no conversion. Hash time to live is refreshed.
+        /// </summary>
+        /// <param name="key">Hash cache storage key</param>
+        /// <param name="fieldValues">Hash fields and corresponding byte array values to be stored</param>
+        /// <param name="useGlobalCache">This flag indicates if cache entry should be set in Global cache (available for all containers)</param>
+        /// <returns>Task awaiter</returns>
+        Task SetCachedHashFieldsAsync(string key, (string Field, byte[] Value)[] fieldValues, bool useGlobalCache);
+
+        /// <summary>
+        /// Set multiple hash fields value in cache asynchronously (HSET). Bytes are stored as is, with no conversion. Hash time to live is refreshed.
+        /// </summary>
+        /// <param name="key">Hash cache storage key</param>
+        /// <param name="fieldValues">Hash fields and corresponding byte array values to be stored</param>
+        /// <param name="storageDuration">Time span to keep hash in cache, in seconds. Has to be greater than zero.</param>
+        /// <param name="useGlobalCache">This flag indicates if cache entry should be set in Global cache (available for all containers)</param>
+        /// <returns>Task awaiter</returns>
+        Task SetCachedHashFieldsAsync(string key, (string Field, byte[] Value)[] fieldValues, long storageDuration, bool useGlobalCache);
+
+        /// <summary>
+        /// Get single hash field value from cache asynchronously (HGET). Value is deserialized.
+        /// </summary>
+        /// <typeparam name="T">Field value type</typeparam>
+        /// <param name="key">Hash cache storage key</param>
+        /// <param name="field">Hash field</param>
+        /// <returns>Field value. Null value if not found.</returns>
+        Task<T?> GetCachedHashFieldAsync<T>(string key, string field) where T : class;
+
+        /// <summary>
+        /// Get single hash field value from cache asynchronously (HGET). Value is deserialized.
+        /// </summary>
+        /// <typeparam name="T">Field value type</typeparam>
+        /// <param name="key">Hash cache storage key</param>
+        /// <param name="field">Hash field</param>
+        /// <param name="useGlobalCache">This flag indicates if cache entry should be set in Global cache (available for all containers)</param>
+        /// <returns>Field value. Null value if not found.</returns>
+        Task<T?> GetCachedHashFieldAsync<T>(string key, string field, bool useGlobalCache) where T : class;
+
+        /// <summary>
+        /// Get single hash field value from cache asynchronously (HGET). Bytes are returned as stored, with no conversion.
+        /// Intended for values written with the byte array setters, a serialized value is returned in its stored form.
+        /// </summary>
+        /// <param name="key">Hash cache storage key</param>
+        /// <param name="field">Hash field</param>
+        /// <returns>Field value. Null value if not found. Caller owns the stream and has to dispose it.</returns>
+        Task<Stream?> GetCachedHashFieldStreamAsync(string key, string field);
+
+        /// <summary>
+        /// Get single hash field value from cache asynchronously (HGET). Bytes are returned as stored, with no conversion.
+        /// Intended for values written with the byte array setters, a serialized value is returned in its stored form.
+        /// </summary>
+        /// <param name="key">Hash cache storage key</param>
+        /// <param name="field">Hash field</param>
+        /// <param name="useGlobalCache">This flag indicates if cache entry should be set in Global cache (available for all containers)</param>
+        /// <returns>Field value. Null value if not found. Caller owns the stream and has to dispose it.</returns>
+        Task<Stream?> GetCachedHashFieldStreamAsync(string key, string field, bool useGlobalCache);
+
+        /// <summary>
+        /// Remove fields from hash in cache asynchronously (HDEL)
+        /// </summary>
+        /// <param name="key">Hash cache storage key</param>
+        /// <param name="fields">Hash fields to be removed</param>
+        /// <returns>Task awaiter</returns>
+        Task ResetHashFieldsAsync(string key, IEnumerable<string> fields);
+
+        /// <summary>
+        /// Remove fields from hash in cache asynchronously (HDEL)
+        /// </summary>
+        /// <param name="key">Hash cache storage key</param>
+        /// <param name="fields">Hash fields to be removed</param>
+        /// <param name="useGlobalCache">This flag indicates if cache entry should be set in Global cache (available for all containers)</param>
+        /// <returns>Task awaiter</returns>
+        Task ResetHashFieldsAsync(string key, IEnumerable<string> fields, bool useGlobalCache);
     }
 }

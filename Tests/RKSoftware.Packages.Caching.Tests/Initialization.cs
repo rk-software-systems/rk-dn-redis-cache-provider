@@ -38,6 +38,14 @@ namespace RKSoftware.Packages.Caching.Tests
         /// </summary>
         internal static IReadOnlyList<RedisKey[]> DeleteBatches => _deleteBatches;
 
+        private static readonly Dictionary<string, Dictionary<string, byte[]>> _hashes = [];
+        private static readonly Dictionary<string, TimeSpan?> _hashTtls = [];
+
+        /// <summary>
+        /// Time to live last applied to every hash key behind the <see cref="IDatabase"/> mock
+        /// </summary>
+        internal static IReadOnlyDictionary<string, TimeSpan?> HashTtls => _hashTtls;
+
         internal static IServiceScope CreateScope() =>
             CreateScope(RedisTopologyKind.Standalone, out _);
 
@@ -183,6 +191,8 @@ namespace RKSoftware.Packages.Caching.Tests
                    return Task.FromResult((long)keys.Length);
                });
 
+            AddHashCommands(databaseMoq);
+
             var servers = FakeRedisTopology.Create(topology, () => CacheKeys);
 
             var connectionMultiplexerMoq = new Mock<IConnectionMultiplexer>();
@@ -211,5 +221,91 @@ namespace RKSoftware.Packages.Caching.Tests
 
             return servers;
         }
+
+        /// <summary>
+        /// Back the hash commands of the <see cref="IDatabase"/> mock with an in memory hash store.
+        /// Hash writes go through a transaction, whose queued commands are applied on execute only.
+        /// </summary>
+        private static void AddHashCommands(Mock<IDatabase> databaseMoq)
+        {
+            _hashes.Clear();
+            _hashTtls.Clear();
+
+            databaseMoq
+                .Setup(x => x.CreateTransaction(It.IsAny<object>()))
+                .Returns(() =>
+                {
+                    var pending = new List<Action>();
+                    var transactionMoq = new Mock<ITransaction>();
+                    transactionMoq
+                        .Setup(x => x.HashSetAsync(It.IsAny<RedisKey>(), It.IsAny<HashEntry[]>(), It.IsAny<CommandFlags>()))
+                        .Returns((RedisKey key, HashEntry[] entries, CommandFlags flags) =>
+                        {
+                            pending.Add(() =>
+                            {
+                                if (!_hashes.TryGetValue(key.ToString(), out var hash))
+                                {
+                                    hash = [];
+                                    _hashes[key.ToString()] = hash;
+                                }
+
+                                foreach (var entry in entries)
+                                {
+                                    hash[entry.Name.ToString()] = (byte[])entry.Value!;
+                                }
+                            });
+                            return Task.CompletedTask;
+                        });
+                    transactionMoq
+                        .Setup(x => x.KeyExpireAsync(It.IsAny<RedisKey>(), It.IsAny<TimeSpan?>(), It.IsAny<CommandFlags>()))
+                        .Returns((RedisKey key, TimeSpan? expiry, CommandFlags flags) =>
+                        {
+                            pending.Add(() => _hashTtls[key.ToString()] = expiry);
+                            return Task.FromResult(true);
+                        });
+                    transactionMoq
+                        .Setup(x => x.ExecuteAsync(It.IsAny<CommandFlags>()))
+                        .Returns(() =>
+                        {
+                            pending.ForEach(action => action());
+                            return Task.FromResult(true);
+                        });
+                    return transactionMoq.Object;
+                });
+            databaseMoq
+                .Setup(x => x.HashGetAsync(It.IsAny<RedisKey>(), It.IsAny<RedisValue>(), It.IsAny<CommandFlags>()))
+                .Returns((RedisKey key, RedisValue field, CommandFlags flags) =>
+                    Task.FromResult(GetHashField(key, field) is { } bytes ? (RedisValue)bytes : RedisValue.Null));
+            databaseMoq
+                .Setup(x => x.HashGetLeaseAsync(It.IsAny<RedisKey>(), It.IsAny<RedisValue>(), It.IsAny<CommandFlags>()))
+                .Returns((RedisKey key, RedisValue field, CommandFlags flags) =>
+                {
+                    var bytes = GetHashField(key, field);
+                    if (bytes == null)
+                    {
+                        return Task.FromResult<Lease<byte>?>(null);
+                    }
+
+                    var lease = Lease<byte>.Create(bytes.Length, false);
+                    bytes.CopyTo(lease.Memory);
+                    return Task.FromResult<Lease<byte>?>(lease);
+                });
+            databaseMoq
+                .Setup(x => x.HashDeleteAsync(It.IsAny<RedisKey>(), It.IsAny<RedisValue[]>(), It.IsAny<CommandFlags>()))
+                .Returns((RedisKey key, RedisValue[] fields, CommandFlags flags) =>
+                {
+                    if (!_hashes.TryGetValue(key.ToString(), out var hash))
+                    {
+                        return Task.FromResult(0L);
+                    }
+
+                    return Task.FromResult((long)fields.Count(field => hash.Remove(field.ToString())));
+                });
+        }
+
+        private static byte[]? GetHashField(RedisKey key, RedisValue field) =>
+            _hashes.TryGetValue(key.ToString(), out var hash) && hash.TryGetValue(field.ToString(), out var bytes)
+                ? bytes
+                : null;
     }
 }
